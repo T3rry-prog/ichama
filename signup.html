@@ -115,7 +115,7 @@
       margin-bottom: 7px;
     }
 
-    input {
+    input, select {
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--line);
@@ -126,10 +126,75 @@
       padding: 12px 14px;
       outline: none;
       transition: border-color 0.15s, background 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     input::placeholder { color: #A7AFA9; }
-    input:focus { border-color: var(--green); background: var(--card); }
+    input:focus, select:focus { border-color: var(--green); background: var(--card); }
+    select option { background: #fff; color: var(--ink); }
+
+    /* Phone row — country code + number */
+    .phone-row { display: flex; gap: 8px; }
+
+    .phone-row .code-wrap {
+      position: relative;
+      flex: 0 0 128px;
+    }
+
+    .phone-row .code-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-soft);
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .phone-row select { padding-right: 26px; font-size: 13.5px; }
+    .phone-row input { flex: 1; }
+
+    /* Password show/hide */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 46px; }
+
+    .pw-toggle {
+      position: absolute;
+      right: 13px; top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 17px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .pw-toggle:hover { color: var(--ink); }
+
+    .strength-bar {
+      height: 3px;
+      border-radius: 3px;
+      background: var(--line);
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .strength-text { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+
+    .match-text { font-size: 11px; margin-top: 4px; }
+    .match-ok { color: var(--green-d); }
+    .match-no { color: var(--error); }
 
     .btn-submit {
       width: 100%;
@@ -235,8 +300,65 @@
       </div>
 
       <div class="form-group">
-        <label for="phone">Phone number</label>
-        <input type="tel" id="phone" placeholder="e.g. 0712 345 678" autocomplete="tel" />
+        <label>Phone number</label>
+        <div class="phone-row">
+          <div class="code-wrap">
+            <select id="countryCode">
+              <option value="+234">🇳🇬 +234</option>
+              <option value="+254">🇰🇪 +254</option>
+              <option value="+255">🇹🇿 +255</option>
+              <option value="+256">🇺🇬 +256</option>
+              <option value="+250">🇷🇼 +250</option>
+              <option value="+251">🇪🇹 +251</option>
+              <option value="+233">🇬🇭 +233</option>
+              <option value="+27">🇿🇦 +27</option>
+              <option value="+20">🇪🇬 +20</option>
+              <option value="+212">🇲🇦 +212</option>
+              <option value="+213">🇩🇿 +213</option>
+              <option value="+216">🇹🇳 +216</option>
+              <option value="+218">🇱🇾 +218</option>
+              <option value="+220">🇬🇲 +220</option>
+              <option value="+221">🇸🇳 +221</option>
+              <option value="+223">🇲🇱 +223</option>
+              <option value="+224">🇬🇳 +224</option>
+              <option value="+225">🇨🇮 +225</option>
+              <option value="+226">🇧🇫 +226</option>
+              <option value="+227">🇳🇪 +227</option>
+              <option value="+228">🇹🇬 +228</option>
+              <option value="+229">🇧🇯 +229</option>
+              <option value="+230">🇲🇺 +230</option>
+              <option value="+231">🇱🇷 +231</option>
+              <option value="+232">🇸🇱 +232</option>
+              <option value="+235">🇹🇩 +235</option>
+              <option value="+236">🇨🇫 +236</option>
+              <option value="+237">🇨🇲 +237</option>
+              <option value="+238">🇨🇻 +238</option>
+              <option value="+239">🇸🇹 +239</option>
+              <option value="+240">🇬🇶 +240</option>
+              <option value="+241">🇬🇦 +241</option>
+              <option value="+242">🇨🇬 +242</option>
+              <option value="+243">🇨🇩 +243</option>
+              <option value="+244">🇦🇴 +244</option>
+              <option value="+245">🇬🇼 +245</option>
+              <option value="+248">🇸🇨 +248</option>
+              <option value="+249">🇸🇩 +249</option>
+              <option value="+252">🇸🇴 +252</option>
+              <option value="+253">🇩🇯 +253</option>
+              <option value="+257">🇧🇮 +257</option>
+              <option value="+258">🇲🇿 +258</option>
+              <option value="+260">🇿🇲 +260</option>
+              <option value="+263">🇿🇼 +263</option>
+              <option value="+264">🇳🇦 +264</option>
+              <option value="+265">🇲🇼 +265</option>
+              <option value="+266">🇱🇸 +266</option>
+              <option value="+267">🇧🇼 +267</option>
+              <option value="+268">🇸🇿 +268</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+1">🇺🇸 +1</option>
+            </select>
+          </div>
+          <input type="tel" id="phone" placeholder="712 345 678" autocomplete="tel" />
+        </div>
       </div>
 
       <div class="form-group">
@@ -246,7 +368,21 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" />
+        <div class="pw-wrap">
+          <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkStrength()" />
+          <button class="pw-toggle" type="button" onclick="togglePw('password', this)">👁</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-text" id="strengthText"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm password</label>
+        <div class="pw-wrap">
+          <input type="password" id="confirmPassword" placeholder="Repeat your password" autocomplete="new-password" oninput="checkMatch()" />
+          <button class="pw-toggle" type="button" onclick="togglePw('confirmPassword', this)">👁</button>
+        </div>
+        <div class="match-text" id="matchText"></div>
       </div>
 
       <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
@@ -269,10 +405,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     function showError(msg) {
       const el = document.getElementById('errorMsg');
       el.textContent = msg; el.classList.add('show');
@@ -285,17 +417,83 @@
       document.getElementById('errorMsg').classList.remove('show');
     }
 
+    // Defensive check: if the Supabase script failed to load (CDN blocked,
+    // offline, ad-blocker, etc.) tell the user instead of silently dying.
+    if (typeof window.supabase === 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        showError('Could not load required scripts. Please check your connection and reload the page.');
+        const btn = document.getElementById('signupBtn');
+        if (btn) btn.disabled = true;
+      });
+    }
+
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    function togglePw(id, btn) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function checkStrength() {
+      const pw = document.getElementById('password').value;
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+      const levels = [
+        { w: '0%', color: '', label: '' },
+        { w: '25%', color: '#D14343', label: 'Weak' },
+        { w: '50%', color: '#D97706', label: 'Fair' },
+        { w: '75%', color: '#3B82F6', label: 'Good' },
+        { w: '100%', color: '#30B54A', label: 'Strong' },
+      ];
+
+      fill.style.width = levels[score].w;
+      fill.style.background = levels[score].color;
+      text.textContent = levels[score].label;
+      text.style.color = levels[score].color;
+      checkMatch();
+    }
+
+    function checkMatch() {
+      const pw  = document.getElementById('password').value;
+      const pw2 = document.getElementById('confirmPassword').value;
+      const el  = document.getElementById('matchText');
+      if (!pw2) { el.textContent = ''; return; }
+      if (pw === pw2) {
+        el.textContent = '✓ Passwords match';
+        el.className = 'match-text match-ok';
+      } else {
+        el.textContent = '✗ Passwords do not match';
+        el.className = 'match-text match-no';
+      }
+    }
+
     async function handleSignup() {
-      const fullname = document.getElementById('fullname').value.trim();
-      const phone    = document.getElementById('phone').value.trim();
-      const email    = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const btn      = document.getElementById('signupBtn');
+      if (!supabase) return showError('App not fully loaded. Please reload the page.');
+
+      const fullname    = document.getElementById('fullname').value.trim();
+      const countryCode = document.getElementById('countryCode').value;
+      const phoneRaw     = document.getElementById('phone').value.trim();
+      const email       = document.getElementById('email').value.trim();
+      const password    = document.getElementById('password').value;
+      const confirmPw   = document.getElementById('confirmPassword').value;
+      const btn         = document.getElementById('signupBtn');
 
       if (!fullname) return showError('Please enter your full name.');
-      if (!phone)    return showError('Please enter your phone number.');
+      if (!phoneRaw) return showError('Please enter your phone number.');
       if (!email)    return showError('Please enter your email address.');
       if (password.length < 8) return showError('Password must be at least 8 characters.');
+      if (password !== confirmPw) return showError('Passwords do not match.');
+
+      const phone = countryCode + phoneRaw.replace(/^0/, '');
 
       btn.disabled = true; btn.textContent = 'Creating account...';
 
@@ -332,3 +530,4 @@
 
 </body>
 </html>
+
