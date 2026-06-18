@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iChama — Your Group. Protected.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:   #0DBF72;
+      --green-d: #09A05E;
+      --dark:    #0A0F0D;
+      --card:    #111A15;
+      --border:  #1E2E24;
+      --muted:   #6B7F73;
+      --white:   #F4FBF7;
+    }
+
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--green); }
+
+    .nav-btn {
+      background: var(--green);
+      color: var(--dark);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:hover { background: var(--green-d); }
+
+    .hero {
+      padding: 64px 24px 48px;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: #0DBF7222;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      border: 1px solid #0DBF7244;
+    }
+
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(32px, 8vw, 52px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+
+    .hero p {
+      color: #A8BFB2;
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: var(--dark);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--green-d); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 64px;
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 24px 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: 'Sora', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--green);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .features {
+      padding: 0 24px 64px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--green);
+      border-radius: 3px 0 0 3px;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .feature-card p {
+      color: #8AA898;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .trust {
+      text-align: center;
+      padding: 0 24px 64px;
+    }
+
+    .trust p {
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 320px;
+      margin: 0 auto 8px;
+    }
+
+    .countries {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .country {
+      font-size: 13px;
+      color: #6B7F73;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cta-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 24px;
+      text-align: center;
+      max-width: 592px;
+      margin: 0 auto 64px;
+    }
+
+    .cta-section h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .cta-section p {
+      color: #8AA898;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer a { color: var(--green); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">i<span>Chama</span></div>
+    <a href="login.html" class="nav-btn">Sign in</a>
+  </nav>
+
+  <section class="hero">
+    <div class="eyebrow">Built for Africa's savings groups</div>
+    <h1>Your group's money,<br /><em>finally protected.</em></h1>
+    <p>iChama stops theft before it happens, enforces your rules automatically, and turns your contributions into a credit score banks actually trust.</p>
+    <div class="hero-actions">
+      <a href="signup.html" class="btn-primary">Start for free</a>
+      <a href="login.html" class="btn-ghost">Sign in</a>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-number">1 in 3</span>
+      <div class="stat-label">Kenyans in a chama</div>
+    </div>
+    <div class="stat">
+      <span class="stat-number">1 in 8</span>
+      <div class="stat-label">Chamas lose to theft</div>
+    </div>
+    <div class="stat">
+      <span class="stat-number">200M+</span>
+      <div class="stat-label">Africans in savings groups</div>
+    </div>
+  </div>
+
+  <section class="features">
+    <div class="section-label">What makes iChama different</div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🔐</span>
+      <h3>No single person can withdraw alone</h3>
+      <p>Every withdrawal requires approval from multiple members. No chairman, treasurer, or secretary can move group money without the group knowing and agreeing.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">⚙️</span>
+      <h3>Rules enforce themselves</h3>
+      <p>Set your contribution amount, deadline, and penalty once. iChama applies late fees, sends reminders, and flags defaulters automatically — no awkward confrontations.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>Every member has an accountability score</h3>
+      <p>A 0–100 score tracks each member's contribution history, punctuality, and participation. Visible to all. Builds the financial reputation your group deserves.</p>
+    </div>
+
+  </section>
+
+  <div class="trust">
+    <p>Built for savings groups across Africa</p>
+    <div class="countries">
+      <span class="country">🇰🇪 Kenya</span>
+      <span class="country">🇹🇿 Tanzania</span>
+      <span class="country">🇺🇬 Uganda</span>
+      <span class="country">🇷🇼 Rwanda</span>
+      <span class="country">🇨🇩 DRC</span>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>Ready to protect your chama?</h2>
+    <p>Free to start. No bank account required. Set up in under 5 minutes.</p>
+    <a href="signup.html" class="btn-primary">Create your chama</a>
+  </div>
+
+  <footer>
+    <p>© 2026 iChama · <a href="#">ichama.africa</a> · Built for Africa</p>
+    <p style="margin-top:8px; font-size:12px; color:#3d5448;">A product of <span style="color:#6B9E88; font-weight:600;">Bytecast Prime</span></p>
+  </footer>
+
+</body>
+</html>
