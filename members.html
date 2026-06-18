@@ -573,7 +573,7 @@
       renderMembers(filtered);
     }
 
-    function showMember(index) {
+    async function showMember(index) {
       const m = allMembers[index];
       const name     = m.profiles?.full_name || 'Unknown';
       const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
@@ -583,10 +583,19 @@
       document.getElementById('modalName').textContent = name;
       document.getElementById('modalRole').textContent = m.role === 'admin' ? '👑 Admin' : 'Member';
       document.getElementById('modalScore').textContent = score;
-      document.getElementById('modalContribs').textContent = '—';
+      document.getElementById('modalContribs').textContent = '…';
       document.getElementById('modalStatus').textContent = m.paid_this_month ? '✅ Paid' : '⏳ Pending';
 
       document.getElementById('modalOverlay').classList.add('show');
+
+      const { count } = await supabase
+        .from('contributions')
+        .select('id', { count: 'exact', head: true })
+        .eq('chama_id', chamaData.id)
+        .eq('user_id', m.user_id)
+        .eq('status', 'paid');
+
+      document.getElementById('modalContribs').textContent = count ?? 0;
     }
 
     function closeModal(e) {
@@ -620,3 +629,4 @@
 
 </body>
 </html>
+
