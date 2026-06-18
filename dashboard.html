@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #0DBF72;
+      --green-d:    #09A05E;
+      --green-dim:  rgba(13,191,114,0.1);
+      --dark:       #0A0F0D;
+      --card:       #111A15;
+      --card2:      #162019;
+      --border:     #1E2E24;
+      --muted:      #6B7F73;
+      --white:      #F4FBF7;
+      --error:      #FF5B5B;
+      --gold:       #F4A534;
+    }
+
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--dark);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--green); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notif-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--dark);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 20px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── GREETING ── */
+    .greeting {
+      margin-bottom: 20px;
+    }
+
+    .greeting h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .greeting p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── SCORE CARD ── */
+    .score-card {
+      background: linear-gradient(135deg, #0f2a1a 0%, #162d1e 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .score-left h3 {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .score-left .score-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--green);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(13,191,114,0.4);
+    }
+
+    .score-left .score-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .score-ring {
+      width: 64px;
+      height: 64px;
+    }
+
+    /* ── CHAMA BALANCE CARD ── */
+    .balance-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .balance-header span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .chama-name-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      background: var(--green-dim);
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(13,191,114,0.2);
+    }
+
+    .balance-amount {
+      font-family: 'Sora', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .balance-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .balance-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+
+    .balance-stats {
+      display: flex;
+      gap: 0;
+    }
+
+    .balance-stat {
+      flex: 1;
+      text-align: center;
+    }
+
+    .balance-stat:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .balance-stat .val {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .balance-stat .lbl {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.1s;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      border-color: rgba(13,191,114,0.35);
+      transform: translateY(-2px);
+    }
+
+    .action-btn:active { transform: scale(0.97); }
+
+    .action-icon {
+      font-size: 22px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .action-label {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* ── MEMBERS ── */
+    .members-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .members-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .members-header span {
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .members-header a {
+      font-size: 12px;
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .member-row:last-child { border-bottom: none; }
+
+    .member-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1a2e22;
+      color: var(--green);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .member-info { flex: 1; }
+
+    .member-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .member-status {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .member-score {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .score-high { color: var(--green); }
+    .score-mid  { color: var(--gold); }
+    .score-low  { color: var(--error); }
+
+    .paid-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .paid-yes {
+      background: rgba(13,191,114,0.12);
+      color: var(--green);
+      border: 1px solid rgba(13,191,114,0.2);
+    }
+
+    .paid-no {
+      background: rgba(255,91,91,0.1);
+      color: var(--error);
+      border: 1px solid rgba(255,91,91,0.2);
+    }
+
+    /* ── RECENT ACTIVITY ── */
+    .activity-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .activity-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .activity-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .activity-row:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #1a2e22;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .activity-info { flex: 1; }
+
+    .activity-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .activity-amount {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .amount-in  { color: var(--green); }
+    .amount-out { color: var(--error); }
+
+    /* ── NO CHAMA STATE ── */
+    .no-chama {
+      background: var(--card);
+      border: 1px dashed rgba(13,191,114,0.3);
+      border-radius: 16px;
+      padding: 36px 24px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .no-chama .big-icon { font-size: 40px; margin-bottom: 16px; }
+
+    .no-chama h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .no-chama p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .no-chama-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: var(--dark);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-green:hover { background: var(--green-d); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--muted); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 10px 0 14px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .nav-icon { font-size: 20px; }
+
+    .nav-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .nav-item.active .nav-label { color: var(--green); }
+    .nav-item.active .nav-icon  { filter: none; }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #1a2e22 25%, #1f3828 50%, #1a2e22 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+      height: 16px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Logout menu */
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 160px;
+      display: none;
+      z-index: 200;
+    }
+
+    .dropdown.show { display: block; }
+
+    .dropdown-item {
+      display: block;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .dropdown-item:hover { background: #1a2e22; }
+    .dropdown-item.danger { color: var(--error); }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">i<span>Chama</span></div>
+    <div class="topbar-right">
+      <button class="notif-btn">🔔</button>
+      <div class="avatar" id="avatarBtn" onclick="toggleDropdown()">?</div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN MENU -->
+  <div class="dropdown" id="dropdown">
+    <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+    <button class="dropdown-item danger" onclick="handleLogout()">🚪 Sign out</button>
+  </div>
+
+  <div class="content">
+
+    <!-- GREETING -->
+    <div class="greeting">
+      <h2 id="greetingText">Good morning 👋</h2>
+      <p id="greetingName">Loading your account...</p>
+    </div>
+
+    <!-- SCORE CARD -->
+    <div class="score-card">
+      <div class="score-left">
+        <h3>Accountability Score</h3>
+        <div class="score-num" id="scoreNum">—</div>
+        <div class="score-label" id="scoreLabel">Loading...</div>
+      </div>
+      <svg class="score-ring" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="28" fill="none" stroke="#1E2E24" stroke-width="6"/>
+        <circle cx="32" cy="32" r="28" fill="none" stroke="#0DBF72" stroke-width="6"
+          stroke-dasharray="175.9" stroke-dashoffset="175.9"
+          stroke-linecap="round" transform="rotate(-90 32 32)"
+          id="scoreRing" style="transition: stroke-dashoffset 1s ease;"/>
+      </svg>
+    </div>
+
+    <!-- CHAMA SECTION — shown when user has a chama -->
+    <div id="chamaSection" style="display:none">
+
+      <div class="balance-card">
+        <div class="balance-header">
+          <span>Chama balance</span>
+          <span class="chama-name-badge" id="chamaNameBadge">—</span>
+        </div>
+        <div class="balance-amount" id="chamaBalance">KES —</div>
+        <div class="balance-sub" id="nextContrib">Next contribution: —</div>
+        <div class="balance-divider"></div>
+        <div class="balance-stats">
+          <div class="balance-stat">
+            <div class="val" id="statMembers">—</div>
+            <div class="lbl">Members</div>
+          </div>
+          <div class="balance-stat">
+            <div class="val" id="statPaid">—</div>
+            <div class="lbl">Paid this month</div>
+          </div>
+          <div class="balance-stat">
+            <div class="val" id="statPending">—</div>
+            <div class="lbl">Pending</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <p class="section-title">Quick actions</p>
+      <div class="actions-grid">
+        <a href="contribute.html" class="action-btn">
+          <span class="action-icon">💳</span>
+          <span class="action-label">Pay</span>
+        </a>
+        <a href="withdraw.html" class="action-btn">
+          <span class="action-icon">📤</span>
+          <span class="action-label">Withdraw</span>
+        </a>
+        <a href="vote.html" class="action-btn">
+          <span class="action-icon">🗳️</span>
+          <span class="action-label">Vote</span>
+        </a>
+        <a href="members.html" class="action-btn">
+          <span class="action-icon">👥</span>
+          <span class="action-label">Members</span>
+        </a>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="members-list">
+        <div class="members-header">
+          <span>Members</span>
+          <a href="members.html">See all</a>
+        </div>
+        <div id="membersList">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="activity-list">
+        <div class="activity-header">Recent activity</div>
+        <div id="activityList">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NO CHAMA STATE -->
+    <div id="noChamaSection" style="display:none">
+      <div class="no-chama">
+        <div class="big-icon">🏦</div>
+        <h3>You're not in a chama yet</h3>
+        <p>Create a new chama and invite your members, or join an existing one with an invite code.</p>
+        <div class="no-chama-btns">
+          <a href="create-chama.html" class="btn-green">+ Create a chama</a>
+          <a href="join-chama.html" class="btn-outline">Enter invite code</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="chama.html" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Chama</span>
+    </a>
+    <a href="vote.html" class="nav-item">
+      <span class="nav-icon">🗳️</span>
+      <span class="nav-label">Vote</span>
+    </a>
+    <a href="activity.html" class="nav-item">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Activity</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let userProfile = null;
+    let userChama   = null;
+
+    // Greeting based on time
+    function getGreeting() {
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+
+    // Score label
+    function scoreLabel(s) {
+      if (s >= 90) return '⭐ Excellent member';
+      if (s >= 75) return '✅ Good standing';
+      if (s >= 50) return '⚠️ Needs improvement';
+      return '🔴 At risk';
+    }
+
+    // Animate score ring
+    function animateScore(score) {
+      const circ = 175.9;
+      const offset = circ - (score / 100) * circ;
+      document.getElementById('scoreRing').style.strokeDashoffset = offset;
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('scoreLabel').textContent = scoreLabel(score);
+    }
+
+    // Format currency
+    function kes(n) {
+      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    }
+
+    // Toggle dropdown
+    function toggleDropdown() {
+      document.getElementById('dropdown').classList.toggle('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#avatarBtn') && !e.target.closest('#dropdown')) {
+        document.getElementById('dropdown').classList.remove('show');
+      }
+    });
+
+    // Logout
+    async function handleLogout() {
+      await supabase.auth.signOut();
+      window.location.href = 'index.html';
+    }
+
+    // Render members
+    function renderMembers(members) {
+      const el = document.getElementById('membersList');
+      if (!members || members.length === 0) {
+        el.innerHTML = '<div style="padding:20px;text-align:center;color:#6B7F73;font-size:13px;">No members yet</div>';
+        return;
+      }
+      el.innerHTML = members.slice(0, 4).map(m => {
+        const name    = m.profiles?.full_name || 'Unknown';
+        const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+        const score   = m.profiles?.accountability_score ?? 100;
+        const scoreClass = score >= 75 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
+        const paid    = m.paid_this_month;
+        return `
+          <div class="member-row">
+            <div class="member-avatar">${initials}</div>
+            <div class="member-info">
+              <div class="member-name">${name}</div>
+              <div class="member-status">${m.role === 'admin' ? '👑 Admin' : 'Member'}</div>
+            </div>
+            <span class="paid-badge ${paid ? 'paid-yes' : 'paid-no'}">${paid ? 'Paid' : 'Pending'}</span>
+            <div class="member-score ${scoreClass}">${score}</div>
+          </div>`;
+      }).join('');
+    }
+
+    // Render activity
+    function renderActivity(contributions) {
+      const el = document.getElementById('activityList');
+      if (!contributions || contributions.length === 0) {
+        el.innerHTML = '<div style="padding:20px;text-align:center;color:#6B7F73;font-size:13px;">No activity yet</div>';
+        return;
+      }
+      el.innerHTML = contributions.slice(0, 5).map(c => {
+        const name = c.profiles?.full_name || 'Unknown';
+        const date = new Date(c.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
+        const isMe = c.user_id === currentUser.id;
+        return `
+          <div class="activity-row">
+            <div class="activity-icon">💰</div>
+            <div class="activity-info">
+              <div class="activity-title">${isMe ? 'You' : name} contributed</div>
+              <div class="activity-time">${date} · ${c.status}</div>
+            </div>
+            <div class="activity-amount amount-in">+${kes(c.amount)}</div>
+          </div>`;
+      }).join('');
+    }
+
+    // Main load
+    async function loadDashboard() {
+      // Auth check
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = session.user;
+
+      // Set greeting
+      document.getElementById('greetingText').textContent = getGreeting() + ' 👋';
+
+      // Load profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      userProfile = profile;
+      const firstName = (profile?.full_name || 'there').split(' ')[0];
+      document.getElementById('greetingName').textContent = firstName;
+
+      // Set avatar initials
+      const initials = (profile?.full_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('avatarBtn').textContent = initials;
+
+      // Animate score
+      animateScore(profile?.accountability_score ?? 100);
+
+      // Load chama membership
+      const { data: membership } = await supabase
+        .from('chama_members')
+        .select('*, chamas(*)')
+        .eq('user_id', currentUser.id)
+        .limit(1)
+        .single();
+
+      if (!membership) {
+        document.getElementById('noChamaSection').style.display = 'block';
+        return;
+      }
+
+      userChama = membership.chamas;
+      document.getElementById('chamaSection').style.display = 'block';
+      document.getElementById('chamaNameBadge').textContent = userChama.name;
+      document.getElementById('nextContrib').textContent =
+        'Contribution: ' + kes(userChama.contribution_amount) + ' / ' + (userChama.contribution_frequency || 'month');
+
+      // Load all members of this chama
+      const { data: members } = await supabase
+        .from('chama_members')
+        .select('*, profiles(full_name, accountability_score)')
+        .eq('chama_id', userChama.id);
+
+      // Load contributions this month
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+
+      const { data: contribsThisMonth } = await supabase
+        .from('contributions')
+        .select('user_id')
+        .eq('chama_id', userChama.id)
+        .eq('status', 'paid')
+        .gte('paid_at', startOfMonth.toISOString());
+
+      const paidIds = new Set((contribsThisMonth || []).map(c => c.user_id));
+
+      // Merge paid status into members
+      const membersWithPaid = (members || []).map(m => ({
+        ...m,
+        paid_this_month: paidIds.has(m.user_id)
+      }));
+
+      document.getElementById('statMembers').textContent = members?.length ?? 0;
+      document.getElementById('statPaid').textContent = paidIds.size;
+      document.getElementById('statPending').textContent = (members?.length ?? 0) - paidIds.size;
+
+      renderMembers(membersWithPaid);
+
+      // Load total balance (sum of all paid contributions)
+      const { data: allContribs } = await supabase
+        .from('contributions')
+        .select('amount')
+        .eq('chama_id', userChama.id)
+        .eq('status', 'paid');
+
+      const total = (allContribs || []).reduce((s, c) => s + Number(c.amount), 0);
+      document.getElementById('chamaBalance').textContent = kes(total);
+
+      // Load recent activity
+      const { data: recentContribs } = await supabase
+        .from('contributions')
+        .select('*, profiles(full_name)')
+        .eq('chama_id', userChama.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      renderActivity(recentContribs);
+    }
+
+    loadDashboard();
+  </script>
+
+</body>
+</html>
