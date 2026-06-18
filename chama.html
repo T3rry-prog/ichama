@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chama — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
+      --gold:       #D97706;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .topbar h1 { font-weight: 600; font-size: 16px; }
+
+    .nav-right { margin-left: auto; }
+
+    .edit-toggle {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    main {
+      padding: 20px 20px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* HERO */
+    .chama-hero {
+      background: var(--green);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+    }
+
+    .chama-hero .name { font-weight: 800; font-size: 22px; color: #fff; letter-spacing: -0.4px; margin-bottom: 6px; }
+    .chama-hero .desc { font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+
+    .chama-hero .meta-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .chama-hero .meta-item .v { font-weight: 700; font-size: 15px; color: #fff; }
+    .chama-hero .meta-item .l { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+    /* PANEL */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+    }
+
+    .rule-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rule-row:last-child { border-bottom: none; }
+    .rule-key { font-size: 13.5px; color: var(--ink-soft); }
+    .rule-val { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+    /* EDIT FORM (hidden by default) */
+    .edit-form { display: none; }
+    .edit-form.show { display: block; }
+    .view-mode.hide { display: none; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 7px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    textarea { resize: vertical; min-height: 64px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
+
+    .row-2 { display: flex; gap: 12px; }
+    .row-2 .form-group { flex: 1; }
+
+    .amount-wrap { position: relative; }
+    .amount-wrap .prefix {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-soft); font-size: 14px; font-weight: 500;
+      pointer-events: none;
+    }
+    .amount-wrap input { padding-left: 50px; }
+
+    .stepper { display: flex; align-items: center; gap: 16px; }
+    .stepper button {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 17px;
+      cursor: pointer;
+    }
+    .stepper-val { font-weight: 700; font-size: 19px; min-width: 26px; text-align: center; color: var(--green-d); }
+
+    .btn-save {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .btn-save:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .msg {
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
+    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
+    .msg.show { display: block; }
+
+    .admin-only-note {
+      font-size: 12px;
+      color: var(--ink-soft);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .invite-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--green-tint);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .invite-row .code { font-weight: 800; font-size: 17px; color: var(--green-d); letter-spacing: 2px; }
+
+    .copy-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; }
+    .nav-icon { font-size: 19px; }
+    .nav-label { font-size: 10px; color: var(--ink-soft); }
+    .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Your chama</h1>
+    <div class="nav-right">
+      <button class="edit-toggle" id="editToggleBtn" onclick="toggleEdit()" style="display:none">Edit</button>
+    </div>
+  </div>
+
+  <main>
+    <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
+    <div id="mainContent" style="display:none">
+
+      <!-- VIEW MODE -->
+      <div class="view-mode" id="viewMode">
+        <div class="chama-hero">
+          <div class="name" id="chamaName">—</div>
+          <div class="desc" id="chamaDesc">—</div>
+          <div class="meta-row">
+            <div class="meta-item">
+              <div class="v" id="metaMembers">—</div>
+              <div class="l">Members</div>
+            </div>
+            <div class="meta-item">
+              <div class="v" id="metaCreated">—</div>
+              <div class="l">Created</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Contribution rules</div>
+          <div class="rule-row"><span class="rule-key">Amount per member</span><span class="rule-val" id="ruleAmount">—</span></div>
+          <div class="rule-row"><span class="rule-key">Frequency</span><span class="rule-val" id="ruleFreq">—</span></div>
+          <div class="rule-row"><span class="rule-key">Late penalty</span><span class="rule-val" id="rulePenalty">—</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Withdrawal security</div>
+          <div class="rule-row"><span class="rule-key">Approvals required</span><span class="rule-val" id="ruleApprovals">—</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Invite members</div>
+          <div class="invite-row">
+            <span class="code" id="inviteCode">——</span>
+            <button class="copy-btn" onclick="copyInvite()">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT MODE (admin only) -->
+      <div class="edit-form" id="editForm">
+        <div class="msg error" id="errorMsg"></div>
+        <div class="msg success" id="successMsg"></div>
+
+        <div class="panel">
+          <div class="panel-title">Chama details</div>
+          <div class="form-group">
+            <label for="editName">Chama name</label>
+            <input type="text" id="editName" />
+          </div>
+          <div class="form-group">
+            <label for="editDesc">Description</label>
+            <textarea id="editDesc"></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Contribution rules</div>
+          <div class="row-2" style="margin-bottom:14px;">
+            <div class="form-group">
+              <label for="editAmount">Amount per member</label>
+              <div class="amount-wrap">
+                <span class="prefix">KES</span>
+                <input type="number" id="editAmount" min="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editFreq">Frequency</label>
+              <select id="editFreq">
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editPenalty">Late penalty</label>
+            <div class="amount-wrap">
+              <span class="prefix">KES</span>
+              <input type="number" id="editPenalty" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Withdrawal security</div>
+          <div class="form-group">
+            <label>Approvals required per withdrawal</label>
+            <div class="stepper">
+              <button type="button" onclick="adjustApprovals(-1)">−</button>
+              <div class="stepper-val" id="editApprovalsVal">2</div>
+              <button type="button" onclick="adjustApprovals(1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-save" id="saveBtn" onclick="saveChanges()">Save changes</button>
+      </div>
+
+      <div class="admin-only-note" id="adminNote" style="display:none">Only the chama admin can edit these rules.</div>
+
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="chama.html" class="nav-item active">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Chama</span>
+    </a>
+    <a href="vote.html" class="nav-item">
+      <span class="nav-icon">🗳️</span>
+      <span class="nav-label">Vote</span>
+    </a>
+    <a href="activity.html" class="nav-item">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Activity</span>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let chamaData   = null;
+    let myMembership = null;
+    let isAdmin = false;
+    let approvalsEdit = 2;
+
+    function kes(n) {
+      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('successMsg').classList.remove('show');
+    }
+
+    function showSuccess(msg) {
+      const el = document.getElementById('successMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+
+    function adjustApprovals(delta) {
+      const next = approvalsEdit + delta;
+      if (next < 1 || next > 10) return;
+      approvalsEdit = next;
+      document.getElementById('editApprovalsVal').textContent = approvalsEdit;
+    }
+
+    function toggleEdit() {
+      const editForm = document.getElementById('editForm');
+      const viewMode = document.getElementById('viewMode');
+      const btn = document.getElementById('editToggleBtn');
+
+      if (editForm.classList.contains('show')) {
+        editForm.classList.remove('show');
+        viewMode.classList.remove('hide');
+        btn.textContent = 'Edit';
+      } else {
+        editForm.classList.add('show');
+        viewMode.classList.add('hide');
+        btn.textContent = 'Cancel';
+        populateEditForm();
+      }
+    }
+
+    function populateEditForm() {
+      document.getElementById('editName').value = chamaData.name || '';
+      document.getElementById('editDesc').value = chamaData.description || '';
+      document.getElementById('editAmount').value = chamaData.contribution_amount || '';
+      document.getElementById('editFreq').value = chamaData.contribution_frequency || 'monthly';
+      document.getElementById('editPenalty').value = chamaData.penalty_amount || 0;
+      approvalsEdit = chamaData.approvals_required || 2;
+      document.getElementById('editApprovalsVal').textContent = approvalsEdit;
+    }
+
+    async function loadPage() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
+      currentUser = session.user;
+
+      const { data: membership } = await supabase
+        .from('chama_members').select('*, chamas(*)')
+        .eq('user_id', currentUser.id).limit(1).single();
+
+      if (!membership) { window.location.href = 'dashboard.html'; return; }
+
+      myMembership = membership;
+      chamaData = membership.chamas;
+      isAdmin = membership.role === 'admin';
+
+      // Hero
+      document.getElementById('chamaName').textContent = chamaData.name;
+      document.getElementById('chamaDesc').textContent = chamaData.description || 'No description yet.';
+      document.getElementById('metaCreated').textContent = chamaData.created_at
+        ? new Date(chamaData.created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })
+        : '—';
+
+      const { count: memberCount } = await supabase
+        .from('chama_members').select('id', { count: 'exact', head: true })
+        .eq('chama_id', chamaData.id);
+      document.getElementById('metaMembers').textContent = memberCount ?? '—';
+
+      // Rules
+      document.getElementById('ruleAmount').textContent = kes(chamaData.contribution_amount);
+      document.getElementById('ruleFreq').textContent = chamaData.contribution_frequency || 'monthly';
+      document.getElementById('rulePenalty').textContent = chamaData.penalty_amount > 0 ? kes(chamaData.penalty_amount) : 'None';
+      document.getElementById('ruleApprovals').textContent = (chamaData.approvals_required || 2) + ' members';
+      document.getElementById('inviteCode').textContent = chamaData.invite_code || '——';
+
+      if (isAdmin) {
+        document.getElementById('editToggleBtn').style.display = 'inline-block';
+      } else {
+        document.getElementById('adminNote').style.display = 'block';
+      }
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    async function saveChanges() {
+      if (!isAdmin) return;
+
+      const name = document.getElementById('editName').value.trim();
+      const description = document.getElementById('editDesc').value.trim();
+      const contribution_amount = Number(document.getElementById('editAmount').value);
+      const contribution_frequency = document.getElementById('editFreq').value;
+      const penalty_amount = Number(document.getElementById('editPenalty').value || 0);
+      const btn = document.getElementById('saveBtn');
+
+      if (!name) return showError('Chama name cannot be empty.');
+      if (!contribution_amount || contribution_amount <= 0) return showError('Please enter a valid contribution amount.');
+
+      btn.disabled = true; btn.textContent = 'Saving...';
+
+      const { error } = await supabase.from('chamas').update({
+        name,
+        description,
+        contribution_amount,
+        contribution_frequency,
+        penalty_amount,
+        approvals_required: approvalsEdit
+      }).eq('id', chamaData.id);
+
+      if (error) {
+        showError(error.message);
+        btn.disabled = false; btn.textContent = 'Save changes';
+        return;
+      }
+
+      showSuccess('Chama rules updated.');
+      btn.textContent = 'Save changes';
+      btn.disabled = false;
+
+      // refresh local state and view
+      await loadPage();
+      toggleEdit();
+    }
+
+    function copyInvite() {
+      const code = chamaData?.invite_code || '';
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    loadPage();
+  </script>
+
+</body>
+</html>
