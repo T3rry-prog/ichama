@@ -352,6 +352,7 @@
 
     let currentUser = null;
     let chamaData   = null;
+    let myMembership = null;
     let allWithdrawals = [];
     let currentTab  = 'pending';
 
@@ -377,6 +378,7 @@
 
       if (!membership) { window.location.href = 'dashboard.html'; return; }
       chamaData = membership.chamas;
+      myMembership = membership;
 
       await loadWithdrawals();
 
@@ -503,7 +505,13 @@
         }
 
       } else {
-        // Reject — only admin can reject
+        // Reject — admin only
+        if (myMembership?.role !== 'admin') {
+          alert('Only the chama admin can reject a withdrawal request.');
+          parent.querySelectorAll('button').forEach(b => b.disabled = false);
+          btn.textContent = '✗ Reject';
+          return;
+        }
         await supabase.from('withdrawals').update({ status: 'rejected' }).eq('id', withdrawalId);
       }
 
