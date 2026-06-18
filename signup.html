@@ -56,7 +56,6 @@
 
     .nav-link:hover { color: var(--white); }
 
-    /* MAIN */
     main {
       flex: 1;
       display: flex;
@@ -92,7 +91,6 @@
       color: var(--muted);
     }
 
-    /* FORM */
     .form-group {
       margin-bottom: 18px;
     }
@@ -105,7 +103,13 @@
       margin-bottom: 7px;
     }
 
-    input {
+    .label-optional {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+
+    input, select {
       width: 100%;
       background: #0A0F0D;
       border: 1px solid var(--border);
@@ -116,10 +120,115 @@
       padding: 13px 16px;
       outline: none;
       transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     input::placeholder { color: #3d5448; }
-    input:focus { border-color: var(--green); }
+    input:focus, select:focus { border-color: var(--green); }
+
+    select option {
+      background: #111A15;
+      color: var(--white);
+    }
+
+    /* Phone row — code + number side by side */
+    .phone-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .phone-row .code-wrap {
+      position: relative;
+      flex: 0 0 140px;
+    }
+
+    .phone-row .code-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .phone-row select {
+      padding-right: 28px;
+    }
+
+    .phone-row input {
+      flex: 1;
+    }
+
+    /* Invite code box */
+    .invite-wrap {
+      background: rgba(13,191,114,0.05);
+      border: 1px dashed rgba(13,191,114,0.25);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .invite-wrap label {
+      color: var(--green);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .invite-wrap input {
+      background: transparent;
+      border-color: rgba(13,191,114,0.2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .invite-wrap input:focus {
+      border-color: var(--green);
+    }
+
+    .invite-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Password strength */
+    .strength-bar {
+      height: 3px;
+      border-radius: 3px;
+      background: var(--border);
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .strength-text {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Match indicator */
+    .match-text {
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .match-ok { color: var(--green); }
+    .match-no { color: var(--error); }
 
     .btn-submit {
       width: 100%;
@@ -160,7 +269,6 @@
       font-weight: 500;
     }
 
-    /* MESSAGES */
     .msg {
       border-radius: 10px;
       padding: 12px 16px;
@@ -183,7 +291,6 @@
 
     .msg.show { display: block; }
 
-    /* FOOTER */
     footer {
       border-top: 1px solid var(--border);
       padding: 20px 24px;
@@ -192,7 +299,6 @@
       font-size: 12px;
     }
 
-    footer span { color: #3d5448; }
     footer strong { color: #6B9E88; font-weight: 600; }
   </style>
 </head>
@@ -200,7 +306,7 @@
 
   <nav>
     <a href="index.html" class="logo">i<span>Chama</span></a>
-    <a href="login.html" class="nav-link">Already have an account?</a>
+    <a href="login.html" class="nav-link">Sign in instead</a>
   </nav>
 
   <main>
@@ -213,27 +319,69 @@
       <div class="msg error" id="errorMsg"></div>
       <div class="msg success" id="successMsg"></div>
 
+      <!-- Full name -->
       <div class="form-group">
         <label for="fullname">Full name</label>
         <input type="text" id="fullname" placeholder="e.g. Wanjiku Kamau" autocomplete="name" />
       </div>
 
+      <!-- Phone + country code -->
       <div class="form-group">
-        <label for="phone">Phone number</label>
-        <input type="tel" id="phone" placeholder="e.g. 0712 345 678" autocomplete="tel" />
+        <label>Phone number</label>
+        <div class="phone-row">
+          <div class="code-wrap">
+            <select id="countryCode">
+              <option value="+254">🇰🇪 +254</option>
+              <option value="+255">🇹🇿 +255</option>
+              <option value="+256">🇺🇬 +256</option>
+              <option value="+250">🇷🇼 +250</option>
+              <option value="+251">🇪🇹 +251</option>
+              <option value="+233">🇬🇭 +233</option>
+              <option value="+234">🇳🇬 +234</option>
+              <option value="+27">🇿🇦 +27</option>
+              <option value="+243">🇨🇩 +243</option>
+              <option value="+265">🇲🇼 +265</option>
+              <option value="+260">🇿🇲 +260</option>
+              <option value="+263">🇿🇼 +263</option>
+              <option value="+258">🇲🇿 +258</option>
+              <option value="+237">🇨🇲 +237</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+1">🇺🇸 +1</option>
+            </select>
+          </div>
+          <input type="tel" id="phone" placeholder="712 345 678" autocomplete="tel" />
+        </div>
       </div>
 
+      <!-- Email -->
       <div class="form-group">
         <label for="email">Email address</label>
         <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
       </div>
 
+      <!-- Password -->
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" />
+        <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkStrength()" />
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-text" id="strengthText"></div>
       </div>
 
-      <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account</button>
+      <!-- Confirm password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm password</label>
+        <input type="password" id="confirmPassword" placeholder="Repeat your password" autocomplete="new-password" oninput="checkMatch()" />
+        <div class="match-text" id="matchText"></div>
+      </div>
+
+      <!-- Invite code -->
+      <div class="invite-wrap">
+        <label for="inviteCode">Invite code <span class="label-optional">(optional)</span></label>
+        <input type="text" id="inviteCode" placeholder="e.g. IKA-449" maxlength="10" />
+        <p class="invite-hint">Have a code from your chama admin? Enter it here.</p>
+      </div>
+
+      <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
 
       <div class="divider">or</div>
 
@@ -247,12 +395,10 @@
     © 2026 iChama · <strong>A product of Bytecast Prime</strong>
   </footer>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
-
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function showError(msg) {
@@ -269,18 +415,62 @@
       document.getElementById('errorMsg').classList.remove('show');
     }
 
-    async function handleSignup() {
-      const fullname = document.getElementById('fullname').value.trim();
-      const phone    = document.getElementById('phone').value.trim();
-      const email    = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const btn      = document.getElementById('signupBtn');
+    function checkStrength() {
+      const pw = document.getElementById('password').value;
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
 
-      // Basic validation
-      if (!fullname) return showError('Please enter your full name.');
-      if (!phone)    return showError('Please enter your phone number.');
-      if (!email)    return showError('Please enter your email address.');
+      const levels = [
+        { w: '0%',   color: '',              label: '' },
+        { w: '25%',  color: '#FF5B5B',       label: 'Weak' },
+        { w: '50%',  color: '#FFA94D',       label: 'Fair' },
+        { w: '75%',  color: '#74C0FC',       label: 'Good' },
+        { w: '100%', color: '#0DBF72',       label: 'Strong' },
+      ];
+
+      fill.style.width = levels[score].w;
+      fill.style.background = levels[score].color;
+      text.textContent = levels[score].label;
+      text.style.color = levels[score].color;
+    }
+
+    function checkMatch() {
+      const pw  = document.getElementById('password').value;
+      const pw2 = document.getElementById('confirmPassword').value;
+      const el  = document.getElementById('matchText');
+      if (!pw2) { el.textContent = ''; return; }
+      if (pw === pw2) {
+        el.textContent = '✓ Passwords match';
+        el.className = 'match-text match-ok';
+      } else {
+        el.textContent = '✗ Passwords do not match';
+        el.className = 'match-text match-no';
+      }
+    }
+
+    async function handleSignup() {
+      const fullname     = document.getElementById('fullname').value.trim();
+      const countryCode  = document.getElementById('countryCode').value;
+      const phoneRaw     = document.getElementById('phone').value.trim();
+      const email        = document.getElementById('email').value.trim();
+      const password     = document.getElementById('password').value;
+      const confirmPw    = document.getElementById('confirmPassword').value;
+      const inviteCode   = document.getElementById('inviteCode').value.trim().toUpperCase();
+      const btn          = document.getElementById('signupBtn');
+
+      // Validation
+      if (!fullname)         return showError('Please enter your full name.');
+      if (!phoneRaw)         return showError('Please enter your phone number.');
+      if (!email)            return showError('Please enter your email address.');
       if (password.length < 8) return showError('Password must be at least 8 characters.');
+      if (password !== confirmPw) return showError('Passwords do not match.');
+
+      const phone = countryCode + phoneRaw.replace(/^0/, '');
 
       btn.disabled = true;
       btn.textContent = 'Creating account...';
@@ -290,19 +480,17 @@
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: { full_name: fullname, phone }
-          }
+          options: { data: { full_name: fullname, phone } }
         });
 
         if (error) {
           showError(error.message);
           btn.disabled = false;
-          btn.textContent = 'Create account';
+          btn.textContent = 'Create account →';
           return;
         }
 
-        // 2. Save profile to profiles table
+        // 2. Save profile
         if (data.user) {
           await supabase.from('profiles').insert({
             id: data.user.id,
@@ -310,9 +498,26 @@
             phone,
             email
           });
+
+          // 3. If invite code provided, look up chama and add member
+          if (inviteCode) {
+            const { data: chama } = await supabase
+              .from('chamas')
+              .select('id')
+              .eq('invite_code', inviteCode)
+              .single();
+
+            if (chama) {
+              await supabase.from('chama_members').insert({
+                chama_id: chama.id,
+                user_id: data.user.id,
+                role: 'member'
+              });
+            }
+          }
         }
 
-        showSuccess('Account created! Redirecting...');
+        showSuccess('Account created! Redirecting to your dashboard...');
         setTimeout(() => {
           window.location.href = 'dashboard.html';
         }, 1500);
@@ -320,11 +525,10 @@
       } catch (err) {
         showError('Something went wrong. Please try again.');
         btn.disabled = false;
-        btn.textContent = 'Create account';
+        btn.textContent = 'Create account →';
       }
     }
 
-    // Allow Enter key to submit
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleSignup();
     });
@@ -332,3 +536,4 @@
 
 </body>
 </html>
+
