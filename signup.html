@@ -4,286 +4,541 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — iChama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --green: #0DBF72;
-      --dark:  #0A0F0D;
-      --card:  #111A15;
-      --border:#1E2E24;
-      --muted: #6B7F73;
-      --white: #F4FBF7;
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
     }
+
     body {
-      background: var(--dark);
-      color: var(--white);
+      background: var(--bg);
+      color: var(--ink);
       font-family: 'Inter', sans-serif;
+      font-size: 16px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
+      padding: 18px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
+
     .logo {
-      font-family: 'Sora', sans-serif;
       font-weight: 700;
-      font-size: 22px;
-      color: var(--white);
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
+    .logo span { color: var(--green); }
+
+    .nav-link {
+      font-size: 14px;
+      color: var(--ink-soft);
       text-decoration: none;
     }
-    .logo span { color: var(--green); }
+
+    .nav-link:hover { color: var(--ink); }
+
     main {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      padding: 40px 20px;
     }
+
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
       padding: 32px 24px;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
-    h1 {
-      font-family: 'Sora', sans-serif;
-      font-size: 22px;
+
+    .card-header {
       text-align: center;
-      margin-bottom: 6px;
-    }
-    .sub {
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
       margin-bottom: 28px;
     }
+
+    .card-logo {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--ink);
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-logo span { color: var(--green); }
+
+    .card-header h1 {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
+    .form-group { margin-bottom: 16px; }
+
     label {
       display: block;
-      font-size: 13px;
-      color: #A8BFB2;
-      margin-bottom: 6px;
-      margin-top: 16px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 7px;
     }
+
     input, select {
       width: 100%;
-      background: #0A0F0D;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--white);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
       font-family: 'Inter', sans-serif;
       font-size: 15px;
-      padding: 13px 16px;
+      padding: 12px 14px;
       outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
     }
-    input:focus, select:focus { border-color: var(--green); }
-    input::placeholder { color: #3d5448; }
+
+    input::placeholder { color: #A7AFA9; }
+    input:focus, select:focus { border-color: var(--green); background: var(--card); }
+    select option { background: #fff; color: var(--ink); }
+
+    /* Phone row — country code + number */
     .phone-row { display: flex; gap: 8px; }
-    .phone-row select { flex: 0 0 120px; }
+
+    .phone-row .code-wrap {
+      position: relative;
+      flex: 0 0 128px;
+    }
+
+    .phone-row .code-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-soft);
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    .phone-row select { padding-right: 26px; font-size: 13.5px; }
     .phone-row input { flex: 1; }
-    #msg {
-      margin-top: 16px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      display: none;
-      word-break: break-word;
+
+    /* Password show/hide */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 46px; }
+
+    .pw-toggle {
+      position: absolute;
+      right: 13px; top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 17px;
+      padding: 0;
+      line-height: 1;
     }
-    #msg.error {
-      background: rgba(255,91,91,0.1);
-      border: 1px solid rgba(255,91,91,0.3);
-      color: #FF5B5B;
-      display: block;
+
+    .pw-toggle:hover { color: var(--ink); }
+
+    .strength-bar {
+      height: 3px;
+      border-radius: 3px;
+      background: var(--line);
+      margin-top: 8px;
+      overflow: hidden;
     }
-    #msg.success {
-      background: rgba(13,191,114,0.1);
-      border: 1px solid rgba(13,191,114,0.3);
-      color: var(--green);
-      display: block;
+
+    .strength-fill {
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
     }
-    #msg.info {
-      background: rgba(13,191,114,0.05);
-      border: 1px solid rgba(13,191,114,0.15);
-      color: #A8BFB2;
-      display: block;
-    }
-    button {
+
+    .strength-text { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+
+    .match-text { font-size: 11px; margin-top: 4px; }
+    .match-ok { color: var(--green-d); }
+    .match-no { color: var(--error); }
+
+    .btn-submit {
       width: 100%;
       background: var(--green);
-      color: #0A0F0D;
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
+      color: #fff;
+      font-weight: 600;
       font-size: 15px;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 13px;
+      border-radius: 9px;
       border: none;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 6px;
+      transition: background 0.15s, transform 0.1s;
     }
-    button:disabled { opacity: 0.6; }
-    .footer-link {
+
+    .btn-submit:hover { background: var(--green-d); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .divider {
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin: 18px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .login-link {
       text-align: center;
       font-size: 14px;
-      color: var(--muted);
-      margin-top: 20px;
+      color: var(--ink-soft);
     }
-    .footer-link a { color: var(--green); text-decoration: none; }
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 16px;
-      text-align: center;
+
+    .login-link a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+    .msg {
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
+    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
+    .msg.show { display: block; }
+
+    .terms {
       font-size: 12px;
-      color: var(--muted);
+      color: var(--ink-soft);
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
     }
-    footer strong { color: #6B9E88; }
+
+    .terms a { color: var(--green); text-decoration: none; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 12px;
+      background: var(--card);
+    }
+
+    footer strong { color: var(--ink); font-weight: 600; }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="logo">i<span>Chama</span></a>
-  <a href="login.html" style="font-size:14px;color:#6B7F73;text-decoration:none;">Sign in</a>
-</nav>
+  <nav>
+    <a href="index.html" class="logo">i<span>Chama</span></a>
+    <a href="login.html" class="nav-link">Already have an account?</a>
+  </nav>
 
-<main>
-  <div class="card">
-    <h1>Create account</h1>
-    <p class="sub">Join thousands of chamas managing money safely</p>
+  <main>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-logo">i<span>Chama</span></div>
+        <h1>Create your account</h1>
+        <p>Join thousands of chamas managing money safely</p>
+      </div>
 
-    <label>Full name</label>
-    <input type="text" id="fullname" placeholder="e.g. Wanjiku Kamau" />
+      <div class="msg error" id="errorMsg"></div>
+      <div class="msg success" id="successMsg"></div>
 
-    <label>Phone number</label>
-    <div class="phone-row">
-      <select id="code">
-        <option value="+254">🇰🇪 +254</option>
-        <option value="+255">🇹🇿 +255</option>
-        <option value="+256">🇺🇬 +256</option>
-        <option value="+250">🇷🇼 +250</option>
-        <option value="+251">🇪🇹 +251</option>
-        <option value="+233">🇬🇭 +233</option>
-        <option value="+234">🇳🇬 +234</option>
-        <option value="+27">🇿🇦 +27</option>
-        <option value="+44">🇬🇧 +44</option>
-        <option value="+1">🇺🇸 +1</option>
-      </select>
-      <input type="tel" id="phone" placeholder="712 345 678" />
+      <div class="form-group">
+        <label for="fullname">Full name</label>
+        <input type="text" id="fullname" placeholder="e.g. Wanjiku Kamau" autocomplete="name" />
+      </div>
+
+      <div class="form-group">
+        <label>Phone number</label>
+        <div class="phone-row">
+          <div class="code-wrap">
+            <select id="countryCode">
+              <option value="+234">🇳🇬 +234</option>
+              <option value="+254">🇰🇪 +254</option>
+              <option value="+255">🇹🇿 +255</option>
+              <option value="+256">🇺🇬 +256</option>
+              <option value="+250">🇷🇼 +250</option>
+              <option value="+251">🇪🇹 +251</option>
+              <option value="+233">🇬🇭 +233</option>
+              <option value="+27">🇿🇦 +27</option>
+              <option value="+20">🇪🇬 +20</option>
+              <option value="+212">🇲🇦 +212</option>
+              <option value="+213">🇩🇿 +213</option>
+              <option value="+216">🇹🇳 +216</option>
+              <option value="+218">🇱🇾 +218</option>
+              <option value="+220">🇬🇲 +220</option>
+              <option value="+221">🇸🇳 +221</option>
+              <option value="+223">🇲🇱 +223</option>
+              <option value="+224">🇬🇳 +224</option>
+              <option value="+225">🇨🇮 +225</option>
+              <option value="+226">🇧🇫 +226</option>
+              <option value="+227">🇳🇪 +227</option>
+              <option value="+228">🇹🇬 +228</option>
+              <option value="+229">🇧🇯 +229</option>
+              <option value="+230">🇲🇺 +230</option>
+              <option value="+231">🇱🇷 +231</option>
+              <option value="+232">🇸🇱 +232</option>
+              <option value="+235">🇹🇩 +235</option>
+              <option value="+236">🇨🇫 +236</option>
+              <option value="+237">🇨🇲 +237</option>
+              <option value="+238">🇨🇻 +238</option>
+              <option value="+239">🇸🇹 +239</option>
+              <option value="+240">🇬🇶 +240</option>
+              <option value="+241">🇬🇦 +241</option>
+              <option value="+242">🇨🇬 +242</option>
+              <option value="+243">🇨🇩 +243</option>
+              <option value="+244">🇦🇴 +244</option>
+              <option value="+245">🇬🇼 +245</option>
+              <option value="+248">🇸🇨 +248</option>
+              <option value="+249">🇸🇩 +249</option>
+              <option value="+252">🇸🇴 +252</option>
+              <option value="+253">🇩🇯 +253</option>
+              <option value="+257">🇧🇮 +257</option>
+              <option value="+258">🇲🇿 +258</option>
+              <option value="+260">🇿🇲 +260</option>
+              <option value="+263">🇿🇼 +263</option>
+              <option value="+264">🇳🇦 +264</option>
+              <option value="+265">🇲🇼 +265</option>
+              <option value="+266">🇱🇸 +266</option>
+              <option value="+267">🇧🇼 +267</option>
+              <option value="+268">🇸🇿 +268</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+1">🇺🇸 +1</option>
+            </select>
+          </div>
+          <input type="tel" id="phone" placeholder="712 345 678" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkStrength()" />
+          <button class="pw-toggle" type="button" onclick="togglePw('password', this)">👁</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-text" id="strengthText"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm password</label>
+        <div class="pw-wrap">
+          <input type="password" id="confirmPassword" placeholder="Repeat your password" autocomplete="new-password" oninput="checkMatch()" />
+          <button class="pw-toggle" type="button" onclick="togglePw('confirmPassword', this)">👁</button>
+        </div>
+        <div class="match-text" id="matchText"></div>
+      </div>
+
+      <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
+
+      <div class="divider">or</div>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+
+      <div class="terms">
+        By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </div>
     </div>
+  </main>
 
-    <label>Email address</label>
-    <input type="email" id="email" placeholder="you@example.com" />
+  <footer>
+    © 2026 iChama · <strong>A product of Bytecast Prime</strong>
+  </footer>
 
-    <label>Password</label>
-    <input type="password" id="password" placeholder="At least 8 characters" />
+  <script>
+    var SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    <label>Confirm password</label>
-    <input type="password" id="confirm" placeholder="Repeat password" />
-
-    <div id="msg"></div>
-
-    <button id="btn" onclick="doSignup()">Create account →</button>
-
-    <div class="footer-link">
-      Already have an account? <a href="login.html">Sign in</a>
-    </div>
-  </div>
-</main>
-
-<footer>© 2026 iChama · <strong>A product of Bytecast Prime</strong></footer>
-
-<script>
-  var SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-
-  function msg(text, type) {
-    var el = document.getElementById('msg');
-    el.textContent = text;
-    el.className = type;
-  }
-
-  async function doSignup() {
-    var fullname = document.getElementById('fullname').value.trim();
-    var code     = document.getElementById('code').value;
-    var phone    = document.getElementById('phone').value.trim();
-    var email    = document.getElementById('email').value.trim();
-    var password = document.getElementById('password').value;
-    var confirm  = document.getElementById('confirm').value;
-    var btn      = document.getElementById('btn');
-
-    if (!fullname) return msg('Please enter your full name.', 'error');
-    if (!phone)    return msg('Please enter your phone number.', 'error');
-    if (!email)    return msg('Please enter your email.', 'error');
-    if (password.length < 8) return msg('Password must be at least 8 characters.', 'error');
-    if (password !== confirm) return msg('Passwords do not match.', 'error');
-
-    btn.disabled = true;
-    btn.textContent = 'Creating account...';
-    msg('Connecting to server...', 'info');
-
-    var fullPhone = code + phone.replace(/^0/, '');
-
-    try {
-      var res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY
-        },
-        body: JSON.stringify({ email: email, password: password })
-      });
-
-      var data = await res.json();
-
-      if (!res.ok) {
-        msg('Error: ' + (data.msg || data.message || data.error_description || JSON.stringify(data)), 'error');
-        btn.disabled = false;
-        btn.textContent = 'Create account →';
-        return;
-      }
-
-      if (!data.id) {
-        msg('Unexpected response: ' + JSON.stringify(data), 'error');
-        btn.disabled = false;
-        btn.textContent = 'Create account →';
-        return;
-      }
-
-      // Save profile
-      msg('Saving your profile...', 'info');
-      await fetch(SUPABASE_URL + '/rest/v1/profiles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + data.access_token
-        },
-        body: JSON.stringify({
-          id: data.id,
-          full_name: fullname,
-          phone: fullPhone,
-          email: email
-        })
-      });
-
-      msg('Account created! Redirecting...', 'success');
-      setTimeout(function() {
-        window.location.href = 'dashboard.html';
-      }, 1500);
-
-    } catch(e) {
-      msg('Network error: ' + e.message, 'error');
-      btn.disabled = false;
-      btn.textContent = 'Create account →';
+    function showError(msg) {
+      var el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('successMsg').classList.remove('show');
     }
-  }
-</script>
+
+    function showSuccess(msg) {
+      var el = document.getElementById('successMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+
+    function togglePw(id, btn) {
+      var input = document.getElementById(id);
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function checkStrength() {
+      var pw = document.getElementById('password').value;
+      var fill = document.getElementById('strengthFill');
+      var text = document.getElementById('strengthText');
+      var score = 0;
+      if (pw.length >= 8) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+      var levels = [
+        { w: '0%', color: '', label: '' },
+        { w: '25%', color: '#D14343', label: 'Weak' },
+        { w: '50%', color: '#D97706', label: 'Fair' },
+        { w: '75%', color: '#3B82F6', label: 'Good' },
+        { w: '100%', color: '#30B54A', label: 'Strong' },
+      ];
+      fill.style.width = levels[score].w;
+      fill.style.background = levels[score].color;
+      text.textContent = levels[score].label;
+      text.style.color = levels[score].color;
+      checkMatch();
+    }
+
+    function checkMatch() {
+      var pw  = document.getElementById('password').value;
+      var pw2 = document.getElementById('confirmPassword').value;
+      var el  = document.getElementById('matchText');
+      if (!pw2) { el.textContent = ''; return; }
+      if (pw === pw2) {
+        el.textContent = '✓ Passwords match';
+        el.className = 'match-text match-ok';
+      } else {
+        el.textContent = '✗ Passwords do not match';
+        el.className = 'match-text match-no';
+      }
+    }
+
+    async function handleSignup() {
+      var fullname    = document.getElementById('fullname').value.trim();
+      var countryCode = document.getElementById('countryCode').value;
+      var phoneRaw    = document.getElementById('phone').value.trim();
+      var email       = document.getElementById('email').value.trim();
+      var password    = document.getElementById('password').value;
+      var confirmPw   = document.getElementById('confirmPassword').value;
+      var btn         = document.getElementById('signupBtn');
+
+      if (!fullname)           return showError('Please enter your full name.');
+      if (!phoneRaw)           return showError('Please enter your phone number.');
+      if (!email)              return showError('Please enter your email address.');
+      if (password.length < 8) return showError('Password must be at least 8 characters.');
+      if (password !== confirmPw) return showError('Passwords do not match.');
+
+      var phone = countryCode + phoneRaw.replace(/^0/, '');
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      try {
+        var res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY
+          },
+          body: JSON.stringify({ email: email, password: password })
+        });
+
+        var data = await res.json();
+
+        if (!res.ok) {
+          showError(data.msg || data.message || data.error_description || 'Signup failed.');
+          btn.disabled = false; btn.textContent = 'Create account →';
+          return;
+        }
+
+        var userId      = data.id || (data.user && data.user.id);
+        var accessToken = data.access_token || (data.session && data.session.access_token);
+
+        if (!userId) {
+          showError('Could not create account. Please try again.');
+          btn.disabled = false; btn.textContent = 'Create account →';
+          return;
+        }
+
+        // Save profile
+        await fetch(SUPABASE_URL + '/rest/v1/profiles', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + accessToken,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ id: userId, full_name: fullname, phone: phone, email: email })
+        });
+
+        // Store session for dashboard
+        localStorage.setItem('ichama_token', accessToken);
+        localStorage.setItem('ichama_user', JSON.stringify({ id: userId, email: email, full_name: fullname }));
+
+        showSuccess('Account created! Redirecting...');
+        setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+
+      } catch(e) {
+        showError('Network error: ' + e.message);
+        btn.disabled = false; btn.textContent = 'Create account →';
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
 
 </body>
 </html>
+
