@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
+      --gold:       #D97706;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    nav h1 { font-weight: 600; font-size: 16px; }
+
+    .nav-right {
+      margin-left: auto;
+    }
+
+    .invite-btn {
+      background: var(--green);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    main {
+      padding: 20px 20px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-card .val {
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .val.green { color: var(--green); }
+    .stat-card .val.gold  { color: var(--gold); }
+
+    .stat-card .lbl {
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+
+    /* INVITE CARD */
+    .invite-card {
+      background: var(--green-tint);
+      border: 1px solid rgba(48,181,74,0.2);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .invite-left .title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .invite-left .code {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green-d);
+      letter-spacing: 2px;
+    }
+
+    .invite-left .hint {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 3px;
+    }
+
+    .copy-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .copy-btn:hover { background: var(--green-d); }
+
+    /* SEARCH */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: var(--ink-soft);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px 11px 38px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder { color: #A7AFA9; }
+    .search-input:focus { border-color: var(--green); }
+
+    /* MEMBERS LIST */
+    .members-list {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .member-row:last-child { border-bottom: none; }
+    .member-row:hover { background: var(--bg); }
+
+    .member-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--green-tint);
+      color: var(--green-d);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .admin-crown {
+      position: absolute;
+      top: -4px; right: -4px;
+      font-size: 12px;
+    }
+
+    .member-info { flex: 1; min-width: 0; }
+
+    .member-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .member-phone {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .member-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .score-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
+
+    .score-high { background: var(--green-tint); color: var(--green-d); }
+    .score-mid  { background: #FEF3C7; color: #92400E; }
+    .score-low  { background: #FEE2E2; color: var(--error); }
+
+    .paid-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    .paid-yes { background: var(--green); }
+    .paid-no  { background: #FCD34D; }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+    }
+
+    /* MEMBER DETAIL MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px 40px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--line);
+      border-radius: 100px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--green-tint);
+      color: var(--green-d);
+      font-weight: 800;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .modal-name {
+      font-weight: 700;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .modal-role {
+      font-size: 13px;
+      color: var(--ink-soft);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .modal-stat {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .modal-stat .v {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .modal-stat .l {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 3px;
+    }
+
+    .modal-close {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Members</h1>
+    <div class="nav-right">
+      <button class="invite-btn" onclick="shareInvite()">+ Invite</button>
+    </div>
+  </nav>
+
+  <main>
+    <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
+    <div id="mainContent" style="display:none">
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="val" id="totalMembers">—</div>
+          <div class="lbl">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="val green" id="paidCount">—</div>
+          <div class="lbl">Paid this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="val gold" id="pendingCount">—</div>
+          <div class="lbl">Pending</div>
+        </div>
+      </div>
+
+      <!-- INVITE CODE -->
+      <div class="invite-card">
+        <div class="invite-left">
+          <div class="title">Invite code</div>
+          <div class="code" id="inviteCode">——</div>
+          <div class="hint">Share this code to add new members</div>
+        </div>
+        <button class="copy-btn" onclick="copyCode()">Copy</button>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search members..." oninput="filterMembers()" />
+      </div>
+
+      <!-- MEMBERS LIST -->
+      <div class="members-list" id="membersList"></div>
+
+    </div>
+  </main>
+
+  <!-- MEMBER DETAIL MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-avatar" id="modalAvatar">—</div>
+      <div class="modal-name" id="modalName">—</div>
+      <div class="modal-role" id="modalRole">—</div>
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <div class="v" id="modalScore">—</div>
+          <div class="l">Score</div>
+        </div>
+        <div class="modal-stat">
+          <div class="v" id="modalContribs">—</div>
+          <div class="l">Contributions</div>
+        </div>
+        <div class="modal-stat">
+          <div class="v" id="modalStatus">—</div>
+          <div class="l">This month</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let allMembers = [];
+    let chamaData  = null;
+    let currentUser = null;
+
+    function kes(n) {
+      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    }
+
+    function scoreClass(s) {
+      if (s >= 75) return 'score-high';
+      if (s >= 50) return 'score-mid';
+      return 'score-low';
+    }
+
+    async function loadPage() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
+      currentUser = session.user;
+
+      const { data: membership } = await supabase
+        .from('chama_members').select('*, chamas(*)')
+        .eq('user_id', currentUser.id).limit(1).single();
+
+      if (!membership) { window.location.href = 'dashboard.html'; return; }
+      chamaData = membership.chamas;
+
+      document.getElementById('inviteCode').textContent = chamaData.invite_code || '——';
+
+      // Load all members with profiles
+      const { data: members } = await supabase
+        .from('chama_members')
+        .select('*, profiles(full_name, phone, accountability_score)')
+        .eq('chama_id', chamaData.id)
+        .order('role', { ascending: true });
+
+      // Check who paid this month
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+
+      const { data: contribs } = await supabase
+        .from('contributions').select('user_id, amount')
+        .eq('chama_id', chamaData.id).eq('status', 'paid')
+        .gte('paid_at', startOfMonth.toISOString());
+
+      const paidIds = new Set((contribs || []).map(c => c.user_id));
+
+      allMembers = (members || []).map(m => ({
+        ...m,
+        paid_this_month: paidIds.has(m.user_id)
+      }));
+
+      const paidCount = allMembers.filter(m => m.paid_this_month).length;
+
+      document.getElementById('totalMembers').textContent = allMembers.length;
+      document.getElementById('paidCount').textContent = paidCount;
+      document.getElementById('pendingCount').textContent = allMembers.length - paidCount;
+
+      renderMembers(allMembers);
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    function renderMembers(list) {
+      const el = document.getElementById('membersList');
+      if (!list.length) {
+        el.innerHTML = '<div class="empty-state">No members found</div>';
+        return;
+      }
+
+      el.innerHTML = list.map((m, i) => {
+        const name     = m.profiles?.full_name || 'Unknown';
+        const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+        const score    = m.profiles?.accountability_score ?? 100;
+        const paid     = m.paid_this_month;
+        const isAdmin  = m.role === 'admin';
+
+        return `
+          <div class="member-row" onclick="showMember(${i})">
+            <div class="member-avatar">
+              ${initials}
+              ${isAdmin ? '<span class="admin-crown">👑</span>' : ''}
+            </div>
+            <div class="member-info">
+              <div class="member-name">${name}${m.user_id === currentUser.id ? ' (You)' : ''}</div>
+              <div class="member-phone">${m.profiles?.phone || '—'}</div>
+            </div>
+            <div class="member-right">
+              <span class="score-pill ${scoreClass(score)}">${score}</span>
+              <div class="paid-dot ${paid ? 'paid-yes' : 'paid-no'}"></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function filterMembers() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allMembers.filter(m =>
+        (m.profiles?.full_name || '').toLowerCase().includes(q) ||
+        (m.profiles?.phone || '').includes(q)
+      );
+      renderMembers(filtered);
+    }
+
+    function showMember(index) {
+      const m = allMembers[index];
+      const name     = m.profiles?.full_name || 'Unknown';
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      const score    = m.profiles?.accountability_score ?? 100;
+
+      document.getElementById('modalAvatar').textContent = initials;
+      document.getElementById('modalName').textContent = name;
+      document.getElementById('modalRole').textContent = m.role === 'admin' ? '👑 Admin' : 'Member';
+      document.getElementById('modalScore').textContent = score;
+      document.getElementById('modalContribs').textContent = '—';
+      document.getElementById('modalStatus').textContent = m.paid_this_month ? '✅ Paid' : '⏳ Pending';
+
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target === document.getElementById('modalOverlay')) {
+        document.getElementById('modalOverlay').classList.remove('show');
+      }
+    }
+
+    function copyCode() {
+      const code = chamaData?.invite_code || '';
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    function shareInvite() {
+      const code = chamaData?.invite_code || '';
+      const text = `Join our chama on iChama! Use invite code: ${code}\n\nhttps://ichama.africa`;
+      if (navigator.share) {
+        navigator.share({ title: 'Join our chama', text });
+      } else {
+        navigator.clipboard.writeText(text);
+        alert('Invite message copied to clipboard!');
+      }
+    }
+
+    loadPage();
+  </script>
+
+</body>
+</html>

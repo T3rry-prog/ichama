@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create a chama — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    nav h1 {
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.1px;
+    }
+
+    main {
+      padding: 20px 16px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .intro-card {
+      background: var(--green-tint);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+
+    .intro-card p {
+      font-size: 13.5px;
+      color: #2E5A35;
+      line-height: 1.55;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 18px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 7px;
+    }
+
+    .optional { color: var(--ink-soft); font-weight: 400; font-size: 12.5px; }
+
+    .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    textarea { resize: vertical; min-height: 64px; }
+    input::placeholder, textarea::placeholder { color: #A7AFA9; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--green);
+      background: var(--card);
+    }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 36px;
+    }
+
+    .row-2 { display: flex; gap: 12px; }
+    .row-2 .form-group { flex: 1; margin-bottom: 0; }
+
+    .amount-wrap { position: relative; }
+    .amount-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 500;
+      pointer-events: none;
+    }
+    .amount-wrap input { padding-left: 50px; }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stepper button {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .stepper button:active { background: var(--line); }
+
+    .stepper-val {
+      font-weight: 700;
+      font-size: 19px;
+      min-width: 26px;
+      text-align: center;
+      color: var(--green-d);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-submit:hover { background: var(--green-d); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .msg {
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .msg.error {
+      background: #FDEDED;
+      border: 1px solid #F5C6C6;
+      color: var(--error);
+    }
+
+    .msg.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Create a chama</h1>
+  </nav>
+
+  <main>
+    <div class="intro-card">
+      <p>Set up your chama's rules once. Contributions, penalties, and withdrawal approvals are enforced automatically from here on — no member, including admins, can override them.</p>
+    </div>
+
+    <div class="msg error" id="errorMsg"></div>
+
+    <div class="panel">
+      <div class="panel-title">Chama details</div>
+      <div class="form-group">
+        <label for="chamaName">Chama name</label>
+        <input type="text" id="chamaName" placeholder="e.g. Familia Investment Group" />
+      </div>
+      <div class="form-group">
+        <label for="chamaDesc">Description <span class="optional">(optional)</span></label>
+        <textarea id="chamaDesc" placeholder="What is this chama for?"></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Contribution rules</div>
+      <div class="row-2" style="margin-bottom: 16px;">
+        <div class="form-group">
+          <label for="contribAmount">Amount per member</label>
+          <div class="amount-wrap">
+            <span class="prefix">KES</span>
+            <input type="number" id="contribAmount" placeholder="1000" min="0" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contribFreq">Frequency</label>
+          <select id="contribFreq">
+            <option value="weekly">Weekly</option>
+            <option value="monthly" selected>Monthly</option>
+            <option value="quarterly">Quarterly</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="penaltyAmount">Late penalty <span class="optional">(optional)</span></label>
+        <div class="amount-wrap">
+          <span class="prefix">KES</span>
+          <input type="number" id="penaltyAmount" placeholder="0" min="0" />
+        </div>
+        <p class="hint">Applied automatically to any member who misses a contribution deadline.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Withdrawal security</div>
+      <div class="form-group">
+        <label>Approvals required per withdrawal</label>
+        <div class="stepper">
+          <button type="button" onclick="adjustApprovals(-1)">−</button>
+          <div class="stepper-val" id="approvalsVal">2</div>
+          <button type="button" onclick="adjustApprovals(1)">+</button>
+        </div>
+        <p class="hint">No single member can withdraw funds without this many approvals.</p>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="createBtn" onclick="handleCreate()">Create chama</button>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let approvalsRequired = 2;
+    let currentUser = null;
+
+    function adjustApprovals(delta) {
+      const next = approvalsRequired + delta;
+      if (next < 1 || next > 10) return;
+      approvalsRequired = next;
+      document.getElementById('approvalsVal').textContent = approvalsRequired;
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function generateInviteCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      return code;
+    }
+
+    async function handleCreate() {
+      const name        = document.getElementById('chamaName').value.trim();
+      const description  = document.getElementById('chamaDesc').value.trim();
+      const contribAmount = document.getElementById('contribAmount').value;
+      const contribFreq  = document.getElementById('contribFreq').value;
+      const penaltyAmount = document.getElementById('penaltyAmount').value || 0;
+      const btn = document.getElementById('createBtn');
+
+      if (!name) return showError('Please enter a chama name.');
+      if (!contribAmount || Number(contribAmount) <= 0) return showError('Please enter a contribution amount.');
+
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          window.location.href = 'login.html';
+          return;
+        }
+        currentUser = session.user;
+
+        const inviteCode = generateInviteCode();
+
+        const { data: chama, error: chamaError } = await supabase
+          .from('chamas')
+          .insert({
+            name,
+            description,
+            contribution_amount: Number(contribAmount),
+            contribution_frequency: contribFreq,
+            penalty_amount: Number(penaltyAmount),
+            approvals_required: approvalsRequired,
+            invite_code: inviteCode,
+            created_by: currentUser.id
+          })
+          .select()
+          .single();
+
+        if (chamaError) {
+          showError(chamaError.message);
+          btn.disabled = false;
+          btn.textContent = 'Create chama';
+          return;
+        }
+
+        const { error: memberError } = await supabase
+          .from('chama_members')
+          .insert({
+            chama_id: chama.id,
+            user_id: currentUser.id,
+            role: 'admin'
+          });
+
+        if (memberError) {
+          showError(memberError.message);
+          btn.disabled = false;
+          btn.textContent = 'Create chama';
+          return;
+        }
+
+        window.location.href = 'dashboard.html';
+
+      } catch (err) {
+        showError('Something went wrong. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Create chama';
+      }
+    }
+  </script>
+
+</body>
+</html>

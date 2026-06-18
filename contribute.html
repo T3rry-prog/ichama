@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contribute — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    nav h1 {
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.1px;
+    }
+
+    main {
+      padding: 20px 20px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* AMOUNT DUE CARD */
+    .due-card {
+      background: var(--green);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .due-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 6px;
+    }
+
+    .due-amount {
+      font-weight: 800;
+      font-size: 42px;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .due-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* STATUS CARD */
+    .status-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .status-row:last-child { border-bottom: none; }
+
+    .status-key {
+      font-size: 13.5px;
+      color: var(--ink-soft);
+    }
+
+    .status-val {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .badge-paid { background: var(--green-tint); color: var(--green-d); }
+    .badge-pending { background: #FEF3C7; color: #92400E; }
+
+    /* PANEL */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-soft);
+      margin-bottom: 16px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 7px;
+    }
+
+    .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    textarea { resize: vertical; min-height: 72px; }
+    input::placeholder, textarea::placeholder { color: #A7AFA9; }
+    input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 36px;
+    }
+
+    .amount-wrap { position: relative; }
+    .amount-prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 500;
+      pointer-events: none;
+    }
+    .amount-wrap input { padding-left: 52px; }
+
+    .msg {
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
+    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
+    .msg.show { display: block; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-submit:hover { background: var(--green-d); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .already-paid {
+      background: var(--green-tint);
+      border: 1px solid rgba(48,181,74,0.25);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .already-paid .check { font-size: 36px; margin-bottom: 8px; }
+    .already-paid h3 { font-weight: 700; font-size: 16px; color: var(--green-d); margin-bottom: 4px; }
+    .already-paid p { font-size: 13px; color: var(--ink-soft); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Make a contribution</h1>
+  </nav>
+
+  <main>
+    <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
+    <div id="mainContent" style="display:none">
+
+      <!-- AMOUNT DUE -->
+      <div class="due-card">
+        <div class="due-label">Amount due this month</div>
+        <div class="due-amount" id="dueAmount">KES —</div>
+        <div class="due-sub" id="chamaName">—</div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-card">
+        <div class="status-row">
+          <span class="status-key">This month</span>
+          <span class="status-val" id="monthLabel">—</span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">Your status</span>
+          <span id="paidBadge" class="badge badge-pending">Pending</span>
+        </div>
+        <div class="status-row">
+          <span class="status-key">Accountability score</span>
+          <span class="status-val" id="myScore">—</span>
+        </div>
+      </div>
+
+      <!-- ALREADY PAID STATE -->
+      <div id="alreadyPaid" class="already-paid" style="display:none">
+        <div class="check">✅</div>
+        <h3>You've already paid this month</h3>
+        <p>Your contribution has been recorded. Great work!</p>
+      </div>
+
+      <!-- PAYMENT FORM -->
+      <div id="paymentForm">
+        <div class="msg error" id="errorMsg"></div>
+        <div class="msg success" id="successMsg"></div>
+
+        <div class="panel">
+          <div class="panel-title">Payment details</div>
+
+          <div class="form-group">
+            <label for="amount">Amount (KES)</label>
+            <div class="amount-wrap">
+              <span class="amount-prefix">KES</span>
+              <input type="number" id="amount" min="1" placeholder="0" />
+            </div>
+            <p class="hint">Required amount is pre-filled. You may pay more.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="method">Payment method</label>
+            <select id="method">
+              <option value="mpesa">M-Pesa</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reference">Reference / Transaction code <span style="color:#A7AFA9;font-weight:400;font-size:12px;">(optional)</span></label>
+            <input type="text" id="reference" placeholder="e.g. QHJ7Y3KL9P" />
+          </div>
+
+          <div class="form-group">
+            <label for="note">Note <span style="color:#A7AFA9;font-weight:400;font-size:12px;">(optional)</span></label>
+            <textarea id="note" placeholder="Any note for the group..."></textarea>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="handleContribute()">Record contribution →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let chamaData   = null;
+    let alreadyPaid = false;
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('successMsg').classList.remove('show');
+    }
+
+    function showSuccess(msg) {
+      const el = document.getElementById('successMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+
+    function kes(n) {
+      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    }
+
+    function monthLabel() {
+      return new Date().toLocaleDateString('en-KE', { month: 'long', year: 'numeric' });
+    }
+
+    async function loadPage() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
+      currentUser = session.user;
+
+      // Load profile
+      const { data: profile } = await supabase
+        .from('profiles').select('*').eq('id', currentUser.id).single();
+
+      // Load chama membership
+      const { data: membership } = await supabase
+        .from('chama_members').select('*, chamas(*)')
+        .eq('user_id', currentUser.id).limit(1).single();
+
+      if (!membership) { window.location.href = 'dashboard.html'; return; }
+
+      chamaData = membership.chamas;
+
+      // Set UI
+      document.getElementById('dueAmount').textContent = kes(chamaData.contribution_amount);
+      document.getElementById('chamaName').textContent = chamaData.name;
+      document.getElementById('monthLabel').textContent = monthLabel();
+      document.getElementById('myScore').textContent = (profile?.accountability_score ?? 100) + ' / 100';
+      document.getElementById('amount').value = chamaData.contribution_amount;
+
+      // Check if already paid this month
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+
+      const { data: existing } = await supabase
+        .from('contributions')
+        .select('id')
+        .eq('chama_id', chamaData.id)
+        .eq('user_id', currentUser.id)
+        .eq('status', 'paid')
+        .gte('paid_at', startOfMonth.toISOString())
+        .limit(1);
+
+      if (existing && existing.length > 0) {
+        alreadyPaid = true;
+        document.getElementById('paidBadge').className = 'badge badge-paid';
+        document.getElementById('paidBadge').textContent = 'Paid ✓';
+        document.getElementById('alreadyPaid').style.display = 'block';
+        document.getElementById('paymentForm').style.display = 'none';
+      }
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    async function handleContribute() {
+      if (alreadyPaid) return;
+
+      const amount    = parseFloat(document.getElementById('amount').value);
+      const method    = document.getElementById('method').value;
+      const reference = document.getElementById('reference').value.trim();
+      const note      = document.getElementById('note').value.trim();
+      const btn       = document.getElementById('submitBtn');
+
+      if (!amount || amount <= 0) return showError('Please enter a valid amount.');
+
+      btn.disabled = true; btn.textContent = 'Recording...';
+
+      try {
+        const now = new Date().toISOString();
+
+        const { error } = await supabase.from('contributions').insert({
+          chama_id:   chamaData.id,
+          user_id:    currentUser.id,
+          amount,
+          status:     'paid',
+          paid_at:    now,
+          method,
+          reference:  reference || null,
+          note:       note || null
+        });
+
+        if (error) {
+          showError(error.message);
+          btn.disabled = false; btn.textContent = 'Record contribution →';
+          return;
+        }
+
+        // Update accountability score — bump by 2 points (max 100)
+        const { data: profile } = await supabase
+          .from('profiles').select('accountability_score').eq('id', currentUser.id).single();
+
+        const newScore = Math.min(100, (profile?.accountability_score ?? 100) + 2);
+        await supabase.from('profiles').update({ accountability_score: newScore }).eq('id', currentUser.id);
+
+        showSuccess('Contribution recorded! ✓');
+        btn.textContent = 'Recorded ✓';
+
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+
+      } catch (err) {
+        showError('Something went wrong. Please try again.');
+        btn.disabled = false; btn.textContent = 'Record contribution →';
+      }
+    }
+
+    loadPage();
+  </script>
+
+</body>
+</html>
