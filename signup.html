@@ -403,7 +403,7 @@
     © 2026 iChama · <strong>A product of Bytecast Prime</strong>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
     function showError(msg) {
       const el = document.getElementById('errorMsg');
@@ -477,16 +477,21 @@
     }
 
     async function handleSignup() {
-      if (!supabase) return showError('App not fully loaded. Please reload the page.');
+      // Step 1: check Supabase loaded
+      if (!supabase) {
+        showError('ERROR: Supabase library did not load. Check your internet connection and reload.');
+        return;
+      }
 
       const fullname    = document.getElementById('fullname').value.trim();
       const countryCode = document.getElementById('countryCode').value;
-      const phoneRaw     = document.getElementById('phone').value.trim();
+      const phoneRaw    = document.getElementById('phone').value.trim();
       const email       = document.getElementById('email').value.trim();
       const password    = document.getElementById('password').value;
       const confirmPw   = document.getElementById('confirmPassword').value;
       const btn         = document.getElementById('signupBtn');
 
+      // Step 2: validation
       if (!fullname) return showError('Please enter your full name.');
       if (!phoneRaw) return showError('Please enter your phone number.');
       if (!email)    return showError('Please enter your email address.');
@@ -495,31 +500,55 @@
 
       const phone = countryCode + phoneRaw.replace(/^0/, '');
 
-      btn.disabled = true; btn.textContent = 'Creating account...';
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+      showError(''); // clear errors
 
       try {
+        // Step 3: create auth account
+        showError('Step 1/3: Connecting to server...');
         const { data, error } = await supabase.auth.signUp({
           email, password,
           options: { data: { full_name: fullname, phone } }
         });
 
         if (error) {
-          showError(error.message);
-          btn.disabled = false; btn.textContent = 'Create account →'; return;
+          showError('Auth error: ' + error.message);
+          btn.disabled = false;
+          btn.textContent = 'Create account →';
+          return;
         }
 
-        if (data.user) {
-          await supabase.from('profiles').insert({
-            id: data.user.id, full_name: fullname, phone, email
-          });
+        if (!data.user) {
+          showError('No user returned. Try a different email address.');
+          btn.disabled = false;
+          btn.textContent = 'Create account →';
+          return;
         }
 
-        showSuccess('Account created! Redirecting...');
+        // Step 4: save profile
+        showError('Step 2/3: Saving your profile...');
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: data.user.id,
+          full_name: fullname,
+          phone,
+          email
+        });
+
+        if (profileError) {
+          // Profile save failed but account created — still continue
+          showError('Profile note: ' + profileError.message + ' — continuing anyway...');
+          await new Promise(r => setTimeout(r, 1500));
+        }
+
+        // Step 5: done
+        showSuccess('✓ Account created! Redirecting to dashboard...');
         setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
 
       } catch (err) {
-        showError('Something went wrong. Please try again.');
-        btn.disabled = false; btn.textContent = 'Create account →';
+        showError('Unexpected error: ' + (err.message || JSON.stringify(err)));
+        btn.disabled = false;
+        btn.textContent = 'Create account →';
       }
     }
 
