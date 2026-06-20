@@ -172,18 +172,41 @@
     // ── SHARE INVITE ──
     document.getElementById('shareBtn').addEventListener('click', function() {
       var code = chamaData && chamaData.invite_code ? chamaData.invite_code : '';
-      var text = 'Join our chama on iChama! Use invite code: ' + code + '\n\nhttps://ichamaa.netlify.app';
-      if (navigator.share) {
-        navigator.share({ title: 'Join our chama', text: text });
-      } else {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(text);
-        } else {
-          var ta = document.createElement('textarea');
-          ta.value = text; document.body.appendChild(ta); ta.select();
-          document.execCommand('copy'); document.body.removeChild(ta);
+      if (!code) { alert('Invite code not loaded yet. Please wait.'); return; }
+      var text = 'Join our chama on iChama!\nInvite code: ' + code + '\nhttps://ichamaa.netlify.app';
+
+      function fallback() {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(function() {
+              alert('Invite message copied! Paste it anywhere to share.');
+            }).catch(function() {
+              alert('Invite code: ' + code + '\n\nShare this with your members.');
+            });
+          } else {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus(); ta.select();
+            try { document.execCommand('copy'); alert('Invite message copied!'); }
+            catch(e) { alert('Invite code: ' + code + '\n\nShare this with your members.'); }
+            document.body.removeChild(ta);
+          }
+        } catch(e) {
+          alert('Invite code: ' + code + '\n\nShare this with your members.');
         }
-        alert('Invite message copied to clipboard!');
+      }
+
+      if (navigator.share) {
+        navigator.share({ title: 'Join our chama on iChama', text: text })
+          .catch(function(err) {
+            // User cancelled or share failed — fall back silently
+            if (err.name !== 'AbortError') fallback();
+          });
+      } else {
+        fallback();
       }
     });
 
@@ -301,4 +324,3 @@
 
 </body>
 </html>
-
