@@ -7,290 +7,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
-      --gold:       #D97706;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
-
-    /* TOP BAR */
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px; height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
-    .topbar h1 { font-weight: 600; font-size: 16px; }
-
-    .badge-count {
-      margin-left: auto;
-      background: var(--error);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 100px;
-      display: none;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 80px; }
+    .topbar { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
+    .topbar h1 { font-weight: 600; font-size: 16px; flex: 1; }
+    .badge-count { background: var(--error); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: none; }
     .badge-count.show { display: block; }
-
-    main {
-      padding: 20px 20px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* TABS */
-    .tabs {
-      display: flex;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 20px;
-      gap: 4px;
-    }
-
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 9px;
-      border-radius: 7px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink-soft);
-      cursor: pointer;
-      transition: all 0.15s;
-      border: none;
-      background: none;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .tab.active {
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-    }
-
-    /* WITHDRAWAL CARD */
-    .withdrawal-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 12px;
-    }
-
-    .w-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-
-    .w-amount {
-      font-weight: 800;
-      font-size: 24px;
-      color: var(--ink);
-      letter-spacing: -0.5px;
-    }
-
-    .w-badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 100px;
-    }
-
+    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+    .tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
+    .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
+    .tab.active { background: var(--green); color: #fff; font-weight: 600; }
+    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .w-amount { font-weight: 800; font-size: 24px; color: var(--ink); letter-spacing: -0.5px; }
+    .w-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; }
     .w-pending  { background: #FEF3C7; color: #92400E; }
     .w-approved { background: var(--green-tint); color: var(--green-d); }
     .w-rejected { background: #FEE2E2; color: var(--error); }
-
-    .w-reason {
-      font-size: 14px;
-      color: var(--ink);
-      margin-bottom: 8px;
-      line-height: 1.5;
-      font-weight: 500;
-    }
-
-    .w-meta {
-      font-size: 12.5px;
-      color: var(--ink-soft);
-      margin-bottom: 14px;
-      line-height: 1.6;
-    }
-
-    /* APPROVAL PROGRESS */
+    .w-reason { font-size: 14px; color: var(--ink); margin-bottom: 8px; line-height: 1.5; font-weight: 500; }
+    .w-meta { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 14px; line-height: 1.6; }
     .progress-wrap { margin-bottom: 14px; }
-
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12.5px;
-      color: var(--ink-soft);
-      margin-bottom: 6px;
-    }
-
-    .progress-bar {
-      background: var(--line);
-      border-radius: 100px;
-      height: 7px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: var(--green);
-      height: 100%;
-      border-radius: 100px;
-      transition: width 0.4s ease;
-    }
-
-    /* APPROVERS */
-    .approvers {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .approver-chip {
-      background: var(--green-tint);
-      color: var(--green-d);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 4px 10px;
-      border-radius: 100px;
-    }
-
-    /* ACTION BUTTONS */
-    .action-btns {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-approve {
-      flex: 1;
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 12px;
-      border-radius: 9px;
-      border: none;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.15s;
-    }
-
+    .progress-header { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
+    .progress-bar { background: var(--line); border-radius: 100px; height: 7px; overflow: hidden; }
+    .progress-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.4s ease; }
+    .approvers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .approver-chip { background: var(--green-tint); color: var(--green-d); font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 100px; }
+    .action-btns { display: flex; gap: 10px; }
+    .btn-approve { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
     .btn-approve:hover { background: var(--green-d); }
     .btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .btn-reject {
-      flex: 1;
-      background: var(--bg);
-      color: var(--error);
-      font-weight: 600;
-      font-size: 14px;
-      padding: 12px;
-      border-radius: 9px;
-      border: 1.5px solid #FECACA;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.15s;
-    }
-
+    .btn-reject { flex: 1; background: var(--bg); color: var(--error); font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: 1.5px solid #FECACA; cursor: pointer; font-family: 'Inter', sans-serif; }
     .btn-reject:hover { background: #FEE2E2; }
     .btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .already-voted {
-      text-align: center;
-      padding: 10px;
-      font-size: 13px;
-      color: var(--ink-soft);
-      background: var(--bg);
-      border-radius: 8px;
-    }
-
-    /* EMPTY STATE */
-    .empty-state {
-      text-align: center;
-      padding: 48px 20px;
-    }
-
+    .already-voted { text-align: center; padding: 10px; font-size: 13px; color: var(--ink-soft); background: var(--bg); border-radius: 8px; }
+    .empty-state { text-align: center; padding: 48px 20px; }
     .empty-icon { font-size: 48px; margin-bottom: 14px; }
-
-    .empty-state h3 {
-      font-weight: 700;
-      font-size: 17px;
-      margin-bottom: 6px;
-      color: var(--ink);
-    }
-
-    .empty-state p {
-      font-size: 13.5px;
-      color: var(--ink-soft);
-    }
-
-    /* BOTTOM NAV */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--card);
-      border-top: 1px solid var(--line);
-      display: flex;
-      justify-content: space-around;
-      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
-      z-index: 100;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      text-decoration: none;
-      padding: 5px 14px;
-      border-radius: 10px;
-    }
-
+    .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--ink); }
+    .empty-state p { font-size: 13.5px; color: var(--ink-soft); }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; border-radius: 10px; }
     .nav-icon { font-size: 19px; }
     .nav-label { font-size: 10px; color: var(--ink-soft); }
     .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
@@ -307,207 +67,205 @@
   <main>
     <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
     <div id="mainContent" style="display:none">
-
-      <!-- TABS -->
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('pending', this)">Pending</button>
-        <button class="tab" onclick="switchTab('approved', this)">Approved</button>
-        <button class="tab" onclick="switchTab('rejected', this)">Rejected</button>
+        <button class="tab active" data-tab="pending">Pending</button>
+        <button class="tab" data-tab="approved">Approved</button>
+        <button class="tab" data-tab="rejected">Rejected</button>
       </div>
-
       <div id="withdrawalList"></div>
-
     </div>
   </main>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">Home</span>
-    </a>
-    <a href="chama.html" class="nav-item">
-      <span class="nav-icon">👥</span>
-      <span class="nav-label">Chama</span>
-    </a>
-    <a href="vote.html" class="nav-item active">
-      <span class="nav-icon">🗳️</span>
-      <span class="nav-label">Vote</span>
-    </a>
-    <a href="activity.html" class="nav-item">
-      <span class="nav-icon">📋</span>
-      <span class="nav-label">Activity</span>
-    </a>
-    <a href="profile.html" class="nav-item">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">Profile</span>
-    </a>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a href="chama.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">Chama</span></a>
+    <a href="vote.html" class="nav-item active"><span class="nav-icon">🗳️</span><span class="nav-label">Vote</span></a>
+    <a href="activity.html" class="nav-item"><span class="nav-icon">📋</span><span class="nav-label">Activity</span></a>
+    <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
   </nav>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let currentUser = null;
-    let chamaData   = null;
-    let allWithdrawals = [];
-    let currentTab  = 'pending';
+    var currentUser    = null;
+    var chamaData      = null;
+    var allWithdrawals = [];
+    var currentTab     = 'pending';
 
-    function kes(n) {
-      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
+    }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
+
+    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+
+    async function sbGet(path) {
+      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
+      if (res.status === 401) { doLogout(); return null; }
+      return res.ok ? res.json() : null;
     }
 
-    function switchTab(tab, btn) {
-      currentTab = tab;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      renderList();
+    // ── TABS ──
+    document.querySelectorAll('.tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currentTab = this.getAttribute('data-tab');
+        document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        renderList();
+      });
+    });
+
+    // ── RENDER ──
+    function renderList() {
+      var filtered = allWithdrawals.filter(function(w) { return w.status === currentTab; });
+      var el       = document.getElementById('withdrawalList');
+      var approvalsRequired = chamaData.approvals_required || 2;
+
+      if (!filtered.length) {
+        var icon = currentTab === 'pending' ? '🗳️' : currentTab === 'approved' ? '✅' : '❌';
+        var msg  = currentTab === 'pending' ? 'All withdrawal requests have been resolved.' : 'No withdrawals have been ' + currentTab + ' yet.';
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon + '</div><h3>No ' + currentTab + ' requests</h3><p>' + msg + '</p></div>';
+        return;
+      }
+
+      el.innerHTML = filtered.map(function(w) {
+        var approvals     = w.withdrawal_approvals || [];
+        var approvalCount = approvals.length;
+        var pct           = Math.min(100, (approvalCount / approvalsRequired) * 100);
+        var hasVoted      = approvals.some(function(a) { return a.user_id === currentUser.id; });
+        var isRequester   = w.requested_by === currentUser.id;
+        var requester     = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
+        var date          = new Date(w.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+        var approverNames = approvals.map(function(a) {
+          return a.profiles && a.profiles.full_name ? a.profiles.full_name.split(' ')[0] : 'Member';
+        });
+        var badgeClass = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
+        var badgeText  = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
+
+        var progressHtml = '';
+        var approversHtml = '';
+        var actionsHtml = '';
+
+        if (w.status === 'pending') {
+          progressHtml = '<div class="progress-wrap">' +
+            '<div class="progress-header"><span>Approvals</span><span>' + approvalCount + ' of ' + approvalsRequired + '</span></div>' +
+            '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+          '</div>';
+
+          if (approverNames.length) {
+            approversHtml = '<div class="approvers">' +
+              approverNames.map(function(n) { return '<span class="approver-chip">✓ ' + n + '</span>'; }).join('') +
+            '</div>';
+          }
+
+          if (!hasVoted && !isRequester) {
+            actionsHtml = '<div class="action-btns">' +
+              '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
+              '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
+            '</div>';
+          } else {
+            actionsHtml = '<div class="already-voted">' +
+              (isRequester ? '⏳ Waiting for member approvals' : '✓ You have already voted') +
+            '</div>';
+          }
+        }
+
+        return '<div class="withdrawal-card">' +
+          '<div class="w-header"><div class="w-amount">' + kes(w.amount) + '</div><span class="w-badge ' + badgeClass + '">' + badgeText + '</span></div>' +
+          '<div class="w-reason">' + (w.reason || 'No reason provided') + '</div>' +
+          '<div class="w-meta">Requested by ' + (isRequester ? 'you' : requester) + ' · ' + date +
+            (w.destination ? '<br>→ ' + w.destination : '') + '</div>' +
+          progressHtml + approversHtml + actionsHtml +
+        '</div>';
+      }).join('');
+
+      // Attach vote listeners
+      el.querySelectorAll('.btn-approve, .btn-reject').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          castVote(this.getAttribute('data-id'), this.getAttribute('data-vote'), this);
+        });
+      });
     }
 
-    async function loadPage() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
-      currentUser = session.user;
+    async function castVote(withdrawalId, vote, btn) {
+      var parent = btn.closest('.action-btns');
+      parent.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
+      btn.textContent = vote === 'approve' ? 'Approving...' : 'Rejecting...';
 
-      const { data: membership } = await supabase
-        .from('chama_members').select('*, chamas(*)')
-        .eq('user_id', currentUser.id).limit(1).single();
-
-      if (!membership) { window.location.href = 'dashboard.html'; return; }
-      chamaData = membership.chamas;
-
-      await loadWithdrawals();
-
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
+      try {
+        if (vote === 'approve') {
+          var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
+          });
+          if (!res.ok) {
+            var err = await res.json();
+            alert(err.message || 'Failed to approve.');
+            parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; }); return;
+          }
+          // Check threshold
+          var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.' + withdrawalId + '&select=id');
+          if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
+            await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
+              method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'approved' })
+            });
+          }
+        } else {
+          await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
+            method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'rejected' })
+          });
+        }
+        await loadWithdrawals();
+      } catch(err) {
+        alert('Network error. Please try again.');
+        parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; });
+      }
     }
 
     async function loadWithdrawals() {
-      const { data: withdrawals } = await supabase
-        .from('withdrawals')
-        .select('*, profiles(full_name), withdrawal_approvals(user_id, profiles(full_name))')
-        .eq('chama_id', chamaData.id)
-        .order('created_at', { ascending: false });
-
+      var withdrawals = await sbGet(
+        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
+        '&select=*,profiles(full_name),withdrawal_approvals(user_id,profiles(full_name))&order=created_at.desc'
+      );
       allWithdrawals = withdrawals || [];
 
-      const pendingCount = allWithdrawals.filter(w => w.status === 'pending').length;
-      const countEl = document.getElementById('pendingCount');
+      var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
+      var countEl = document.getElementById('pendingCount');
       if (pendingCount > 0) {
         countEl.textContent = pendingCount;
         countEl.classList.add('show');
       } else {
         countEl.classList.remove('show');
       }
-
       renderList();
     }
 
-    function renderList() {
-      const filtered = allWithdrawals.filter(w => w.status === currentTab);
-      const el = document.getElementById('withdrawalList');
+    async function loadPage() {
+      try {
+        currentUser = getUser();
+        if (!currentUser) { doLogout(); return; }
 
-      if (!filtered.length) {
-        el.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">${currentTab === 'pending' ? '🗳️' : currentTab === 'approved' ? '✅' : '❌'}</div>
-            <h3>No ${currentTab} requests</h3>
-            <p>${currentTab === 'pending' ? 'All withdrawal requests have been resolved.' : 'No withdrawals have been ' + currentTab + ' yet.'}</p>
-          </div>`;
-        return;
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
+        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
+        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
+
+        chamaData = membership.chamas;
+        await loadWithdrawals();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
+
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error loading votes.';
       }
-
-      const approvalsRequired = chamaData.approvals_required || 2;
-
-      el.innerHTML = filtered.map(w => {
-        const approvals    = w.withdrawal_approvals || [];
-        const approvalCount = approvals.length;
-        const pct          = Math.min(100, (approvalCount / approvalsRequired) * 100);
-        const hasVoted     = approvals.some(a => a.user_id === currentUser.id);
-        const isRequester  = w.requested_by === currentUser.id;
-        const requester    = w.profiles?.full_name || 'Unknown';
-        const date         = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
-        const approverNames = approvals.map(a => a.profiles?.full_name?.split(' ')[0] || 'Member');
-
-        const badgeClass = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
-        const badgeText  = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
-
-        return `
-          <div class="withdrawal-card">
-            <div class="w-header">
-              <div class="w-amount">${kes(w.amount)}</div>
-              <span class="w-badge ${badgeClass}">${badgeText}</span>
-            </div>
-            <div class="w-reason">${w.reason || 'No reason provided'}</div>
-            <div class="w-meta">
-              Requested by ${isRequester ? 'you' : requester} · ${date}
-              ${w.destination ? '<br>→ ' + w.destination : ''}
-            </div>
-
-            ${w.status === 'pending' ? `
-              <div class="progress-wrap">
-                <div class="progress-header">
-                  <span>Approvals</span>
-                  <span>${approvalCount} of ${approvalsRequired}</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width:${pct}%"></div>
-                </div>
-              </div>
-
-              ${approverNames.length ? `
-                <div class="approvers">
-                  ${approverNames.map(n => `<span class="approver-chip">✓ ${n}</span>`).join('')}
-                </div>` : ''}
-
-              ${!hasVoted && !isRequester ? `
-                <div class="action-btns">
-                  <button class="btn-approve" onclick="castVote('${w.id}', 'approve', this)">✓ Approve</button>
-                  <button class="btn-reject" onclick="castVote('${w.id}', 'reject', this)">✗ Reject</button>
-                </div>` : `
-                <div class="already-voted">
-                  ${isRequester ? '⏳ Waiting for member approvals' : '✓ You have already voted'}
-                </div>`
-              }
-            ` : ''}
-          </div>`;
-      }).join('');
-    }
-
-    async function castVote(withdrawalId, vote, btn) {
-      const parent = btn.closest('.action-btns');
-      parent.querySelectorAll('button').forEach(b => b.disabled = true);
-      btn.textContent = vote === 'approve' ? 'Approving...' : 'Rejecting...';
-
-      if (vote === 'approve') {
-        const { error } = await supabase.from('withdrawal_approvals').insert({
-          withdrawal_id: withdrawalId,
-          user_id:       currentUser.id,
-          chama_id:      chamaData.id
-        });
-
-        if (error) {
-          alert('Error: ' + error.message);
-          parent.querySelectorAll('button').forEach(b => b.disabled = false);
-          return;
-        }
-
-        // Check if enough approvals
-        const { data: approvals } = await supabase
-          .from('withdrawal_approvals').select('id').eq('withdrawal_id', withdrawalId);
-
-        if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
-          await supabase.from('withdrawals').update({ status: 'approved' }).eq('id', withdrawalId);
-        }
-
-      } else {
-        // Reject — only admin can reject
-        await supabase.from('withdrawals').update({ status: 'rejected' }).eq('id', withdrawalId);
-      }
-
-      await loadWithdrawals();
     }
 
     loadPage();
