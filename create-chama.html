@@ -7,216 +7,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
-    nav h1 {
-      font-weight: 600;
-      font-size: 16px;
-      letter-spacing: -0.1px;
-    }
-
-    main {
-      padding: 20px 16px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .intro-card {
-      background: var(--green-tint);
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 20px;
-    }
-
-    .intro-card p {
-      font-size: 13.5px;
-      color: #2E5A35;
-      line-height: 1.55;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 20px 18px;
-      margin-bottom: 16px;
-    }
-
-    .panel-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--ink-soft);
-      margin-bottom: 16px;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
+    nav h1 { font-weight: 600; font-size: 16px; letter-spacing: -0.1px; }
+    main { padding: 20px 16px 48px; max-width: 480px; margin: 0 auto; }
+    .intro-card { background: var(--green-tint); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; }
+    .intro-card p { font-size: 13.5px; color: #2E5A35; line-height: 1.55; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 18px; margin-bottom: 16px; }
+    .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
     .form-group:last-child { margin-bottom: 0; }
-
-    label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      margin-bottom: 7px;
-    }
-
+    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
     .optional { color: var(--ink-soft); font-weight: 400; font-size: 12.5px; }
-
     .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
-
-    input, select, textarea {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color 0.15s, background 0.15s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
+    input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
     textarea { resize: vertical; min-height: 64px; }
     input::placeholder, textarea::placeholder { color: #A7AFA9; }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--green);
-      background: var(--card);
-    }
-
-    select {
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
-      padding-right: 36px;
-    }
-
+    input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
+    select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
     .row-2 { display: flex; gap: 12px; }
     .row-2 .form-group { flex: 1; margin-bottom: 0; }
-
     .amount-wrap { position: relative; }
-    .amount-wrap .prefix {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--ink-soft);
-      font-size: 14px;
-      font-weight: 500;
-      pointer-events: none;
-    }
+    .amount-wrap .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
     .amount-wrap input { padding-left: 50px; }
-
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .stepper button {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: var(--bg);
-      color: var(--ink);
-      font-size: 17px;
-      cursor: pointer;
-    }
-
+    .stepper { display: flex; align-items: center; gap: 16px; }
+    .stepper button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 17px; cursor: pointer; font-family: 'Inter', sans-serif; }
     .stepper button:active { background: var(--line); }
-
-    .stepper-val {
-      font-weight: 700;
-      font-size: 19px;
-      min-width: 26px;
-      text-align: center;
-      color: var(--green-d);
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      margin-top: 4px;
-      transition: background 0.15s, transform 0.1s;
-    }
-
+    .stepper-val { font-weight: 700; font-size: 19px; min-width: 26px; text-align: center; color: var(--green-d); }
+    .btn-submit { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; margin-top: 4px; transition: background 0.15s; font-family: 'Inter', sans-serif; }
     .btn-submit:hover { background: var(--green-d); }
-    .btn-submit:active { transform: scale(0.98); }
     .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .msg {
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .msg.error {
-      background: #FDEDED;
-      border: 1px solid #F5C6C6;
-      color: var(--error);
-    }
-
+    .msg { border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.show { display: block; }
   </style>
 </head>
@@ -248,7 +76,7 @@
 
     <div class="panel">
       <div class="panel-title">Contribution rules</div>
-      <div class="row-2" style="margin-bottom: 16px;">
+      <div class="row-2" style="margin-bottom:16px;">
         <div class="form-group">
           <label for="contribAmount">Amount per member</label>
           <div class="amount-wrap">
@@ -280,116 +108,121 @@
       <div class="form-group">
         <label>Approvals required per withdrawal</label>
         <div class="stepper">
-          <button type="button" onclick="adjustApprovals(-1)">−</button>
+          <button type="button" id="btnMinus">−</button>
           <div class="stepper-val" id="approvalsVal">2</div>
-          <button type="button" onclick="adjustApprovals(1)">+</button>
+          <button type="button" id="btnPlus">+</button>
         </div>
         <p class="hint">No single member can withdraw funds without this many approvals.</p>
       </div>
     </div>
 
-    <button class="btn-submit" id="createBtn" onclick="handleCreate()">Create chama</button>
+    <button class="btn-submit" id="createBtn">Create chama</button>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_TReV1aiW6oT0X4peP7zKQw_1R6gH0XV';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let approvalsRequired = 2;
-    let currentUser = null;
+    var approvalsRequired = 2;
 
-    function adjustApprovals(delta) {
-      const next = approvalsRequired + delta;
-      if (next < 1 || next > 10) return;
-      approvalsRequired = next;
-      document.getElementById('approvalsVal').textContent = approvalsRequired;
+    // ── AUTH ──
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
     }
 
+    if (!getToken()) { window.location.href = 'login.html'; }
+
+    // ── STEPPER ──
+    document.getElementById('btnMinus').addEventListener('click', function() {
+      if (approvalsRequired > 1) { approvalsRequired--; document.getElementById('approvalsVal').textContent = approvalsRequired; }
+    });
+    document.getElementById('btnPlus').addEventListener('click', function() {
+      if (approvalsRequired < 10) { approvalsRequired++; document.getElementById('approvalsVal').textContent = approvalsRequired; }
+    });
+
+    // ── HELPERS ──
     function showError(msg) {
-      const el = document.getElementById('errorMsg');
-      el.textContent = msg;
-      el.classList.add('show');
+      var el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function generateInviteCode() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let code = '';
-      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var code = '';
+      for (var i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
       return code;
     }
 
-    async function handleCreate() {
-      const name        = document.getElementById('chamaName').value.trim();
-      const description  = document.getElementById('chamaDesc').value.trim();
-      const contribAmount = document.getElementById('contribAmount').value;
-      const contribFreq  = document.getElementById('contribFreq').value;
-      const penaltyAmount = document.getElementById('penaltyAmount').value || 0;
-      const btn = document.getElementById('createBtn');
+    // ── CREATE ──
+    document.getElementById('createBtn').addEventListener('click', async function() {
+      var name           = document.getElementById('chamaName').value.trim();
+      var description    = document.getElementById('chamaDesc').value.trim();
+      var contribAmount  = document.getElementById('contribAmount').value;
+      var contribFreq    = document.getElementById('contribFreq').value;
+      var penaltyAmount  = document.getElementById('penaltyAmount').value || 0;
+      var btn            = this;
 
-      if (!name) return showError('Please enter a chama name.');
-      if (!contribAmount || Number(contribAmount) <= 0) return showError('Please enter a contribution amount.');
+      if (!name)                                   return showError('Please enter a chama name.');
+      if (!contribAmount || Number(contribAmount) <= 0) return showError('Please enter a valid contribution amount.');
 
-      btn.disabled = true;
-      btn.textContent = 'Creating...';
+      btn.disabled = true; btn.textContent = 'Creating...';
 
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          window.location.href = 'login.html';
-          return;
-        }
-        currentUser = session.user;
+        var user = getUser();
+        if (!user) { window.location.href = 'login.html'; return; }
 
-        const inviteCode = generateInviteCode();
+        var inviteCode = generateInviteCode();
 
-        const { data: chama, error: chamaError } = await supabase
-          .from('chamas')
-          .insert({
-            name,
-            description,
+        // Insert chama
+        var chamaRes = await fetch(SUPABASE_URL + '/rest/v1/chamas', {
+          method: 'POST',
+          headers: Object.assign({}, authHeaders(), { 'Prefer': 'return=representation' }),
+          body: JSON.stringify({
+            name: name,
+            description: description,
             contribution_amount: Number(contribAmount),
             contribution_frequency: contribFreq,
             penalty_amount: Number(penaltyAmount),
             approvals_required: approvalsRequired,
             invite_code: inviteCode,
-            created_by: currentUser.id
+            created_by: user.id
           })
-          .select()
-          .single();
+        });
 
-        if (chamaError) {
-          showError(chamaError.message);
-          btn.disabled = false;
-          btn.textContent = 'Create chama';
-          return;
+        if (!chamaRes.ok) {
+          var chamaErr = await chamaRes.json();
+          showError(chamaErr.message || chamaErr.details || 'Failed to create chama.');
+          btn.disabled = false; btn.textContent = 'Create chama'; return;
         }
 
-        const { error: memberError } = await supabase
-          .from('chama_members')
-          .insert({
-            chama_id: chama.id,
-            user_id: currentUser.id,
-            role: 'admin'
-          });
+        var chamaData = await chamaRes.json();
+        var chama = Array.isArray(chamaData) ? chamaData[0] : chamaData;
 
-        if (memberError) {
-          showError(memberError.message);
-          btn.disabled = false;
-          btn.textContent = 'Create chama';
-          return;
+        // Add creator as admin member
+        var memberRes = await fetch(SUPABASE_URL + '/rest/v1/chama_members', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ chama_id: chama.id, user_id: user.id, role: 'admin' })
+        });
+
+        if (!memberRes.ok) {
+          var memberErr = await memberRes.json();
+          showError(memberErr.message || 'Chama created but failed to add you as member. Contact support.');
+          btn.disabled = false; btn.textContent = 'Create chama'; return;
         }
 
         window.location.href = 'dashboard.html';
 
-      } catch (err) {
-        showError('Something went wrong. Please try again.');
-        btn.disabled = false;
-        btn.textContent = 'Create chama';
+      } catch(err) {
+        showError('Network error. Please check your connection and try again.');
+        btn.disabled = false; btn.textContent = 'Create chama';
       }
-    }
+    });
   </script>
 
 </body>
 </html>
+
