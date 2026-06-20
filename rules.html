@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chama Rules — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
+    }
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 40px; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; flex-shrink: 0; }
+    .topbar-title { font-weight: 600; font-size: 16px; flex: 1; }
+    .edit-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 13px; font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; display: none; }
+    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+
+    /* SYSTEM RULES */
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin: 0 0 10px; }
+    .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .rule-tile { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .rule-tile .lbl { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 4px; }
+    .rule-tile .val { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .rule-tile.accent { background: var(--green-tint); border-color: rgba(48,181,74,0.2); }
+    .rule-tile.accent .val { color: var(--green-d); }
+
+    /* GROUP RULES DOCUMENT */
+    .rules-panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .rules-panel .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 14px; }
+    .rules-body { font-size: 14px; color: var(--ink); line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+    .rules-empty { font-size: 14px; color: var(--ink-soft); font-style: italic; text-align: center; padding: 20px 0; }
+
+    /* EDIT FORM */
+    .edit-form { display: none; }
+    .edit-form.show { display: block; }
+    .view-mode.hide { display: none; }
+
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      padding: 14px;
+      outline: none;
+      resize: vertical;
+      min-height: 280px;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--green); background: var(--card); }
+    textarea::placeholder { color: #A7AFA9; }
+
+    .edit-hint { font-size: 12px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+
+    /* SYSTEM RULES EDIT */
+    .sys-edit-panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+    input, select { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
+    input:focus, select:focus { border-color: var(--green); background: var(--card); }
+    select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; }
+    .row-2 { display: flex; gap: 12px; }
+    .row-2 .form-group { flex: 1; }
+    .amount-wrap { position: relative; }
+    .amount-wrap .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
+    .amount-wrap input { padding-left: 50px; }
+    .stepper { display: flex; align-items: center; gap: 16px; }
+    .stepper button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 17px; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .stepper-val { font-weight: 700; font-size: 19px; min-width: 26px; text-align: center; color: var(--green-d); }
+
+    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
+    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
+    .msg.show { display: block; }
+
+    .btn-save { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+    .btn-save:hover { background: var(--green-d); }
+    .btn-save:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .admin-note { font-size: 12.5px; color: var(--ink-soft); text-align: center; padding: 10px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="chama.html" class="back-btn">←</a>
+    <span class="topbar-title">Chama rules</span>
+    <button class="edit-btn" id="editBtn">Edit</button>
+  </nav>
+
+  <main>
+    <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
+    <div id="mainContent" style="display:none">
+
+      <!-- VIEW MODE -->
+      <div class="view-mode" id="viewMode">
+
+        <div class="section-label" style="margin-bottom:10px;">System rules</div>
+        <div class="rules-grid">
+          <div class="rule-tile accent">
+            <div class="lbl">Contribution</div>
+            <div class="val" id="viewAmount">—</div>
+          </div>
+          <div class="rule-tile">
+            <div class="lbl">Frequency</div>
+            <div class="val" id="viewFreq">—</div>
+          </div>
+          <div class="rule-tile">
+            <div class="lbl">Deadline</div>
+            <div class="val" id="viewDeadline">—</div>
+          </div>
+          <div class="rule-tile">
+            <div class="lbl">Late penalty</div>
+            <div class="val" id="viewPenalty">—</div>
+          </div>
+          <div class="rule-tile" style="grid-column:1/-1">
+            <div class="lbl">Approvals required per withdrawal</div>
+            <div class="val" id="viewApprovals">—</div>
+          </div>
+        </div>
+
+        <div class="rules-panel">
+          <div class="panel-title">Group rules & constitution</div>
+          <div id="viewRules">
+            <div class="rules-empty">No group rules have been set yet.</div>
+          </div>
+        </div>
+
+        <div class="admin-note" id="adminNote" style="display:none">Only the chama admin can edit these rules.</div>
+
+      </div>
+
+      <!-- EDIT MODE (admin only) -->
+      <div class="edit-form" id="editForm">
+        <div class="msg error" id="errorMsg"></div>
+        <div class="msg success" id="successMsg"></div>
+
+        <div class="sys-edit-panel">
+          <div class="panel-title" style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);margin-bottom:14px;">System rules</div>
+
+          <div class="row-2">
+            <div class="form-group">
+              <label for="editAmount">Amount per member</label>
+              <div class="amount-wrap">
+                <span class="prefix">KES</span>
+                <input type="number" id="editAmount" min="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editFreq">Frequency</label>
+              <select id="editFreq">
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="form-group">
+              <label for="editDay">Deadline day</label>
+              <input type="number" id="editDay" min="1" max="28" placeholder="e.g. 25" />
+            </div>
+            <div class="form-group">
+              <label for="editPenalty">Late penalty (KES)</label>
+              <div class="amount-wrap">
+                <span class="prefix">KES</span>
+                <input type="number" id="editPenalty" min="0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Approvals required per withdrawal</label>
+            <div class="stepper">
+              <button type="button" id="appMinusBtn">−</button>
+              <div class="stepper-val" id="editApprovalsVal">2</div>
+              <button type="button" id="appPlusBtn">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rules-panel">
+          <div class="panel-title" style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);margin-bottom:14px;">Group rules & constitution</div>
+          <textarea id="editRules" placeholder="Write your group's rules here. Include anything your members need to know — meeting schedules, loan policies, how decisions are made, consequences for non-payment, etc."></textarea>
+          <p class="edit-hint">Plain text. Write each rule on a new line. Members will see this exactly as you type it.</p>
+        </div>
+
+        <button class="btn-save" id="saveBtn">Save rules</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
+
+    var chamaData    = null;
+    var isAdmin      = false;
+    var approvalsEdit = 2;
+
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
+    }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
+
+    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+    function ordinal(n) {
+      var s = ['th','st','nd','rd']; var v = n % 100;
+      return n + (s[(v-20)%10] || s[v] || s[0]);
+    }
+
+    function showError(msg) {
+      var el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('successMsg').classList.remove('show');
+    }
+    function showSuccess(msg) {
+      var el = document.getElementById('successMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+
+    async function sbGet(path) {
+      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
+      if (res.status === 401) { doLogout(); return null; }
+      return res.ok ? res.json() : null;
+    }
+
+    // ── STEPPER ──
+    document.getElementById('appMinusBtn').addEventListener('click', function() {
+      if (approvalsEdit > 1) { approvalsEdit--; document.getElementById('editApprovalsVal').textContent = approvalsEdit; }
+    });
+    document.getElementById('appPlusBtn').addEventListener('click', function() {
+      if (approvalsEdit < 10) { approvalsEdit++; document.getElementById('editApprovalsVal').textContent = approvalsEdit; }
+    });
+
+    // ── EDIT TOGGLE ──
+    document.getElementById('editBtn').addEventListener('click', function() {
+      var editForm = document.getElementById('editForm');
+      var viewMode = document.getElementById('viewMode');
+      if (editForm.classList.contains('show')) {
+        editForm.classList.remove('show');
+        viewMode.classList.remove('hide');
+        this.textContent = 'Edit';
+      } else {
+        editForm.classList.add('show');
+        viewMode.classList.add('hide');
+        this.textContent = 'Cancel';
+        populateForm();
+      }
+    });
+
+    function populateForm() {
+      document.getElementById('editAmount').value  = chamaData.contribution_amount || '';
+      document.getElementById('editFreq').value    = chamaData.contribution_frequency || 'monthly';
+      document.getElementById('editDay').value     = chamaData.contribution_day || 25;
+      document.getElementById('editPenalty').value = chamaData.penalty_amount || 0;
+      document.getElementById('editRules').value   = chamaData.group_rules || '';
+      approvalsEdit = chamaData.approvals_required || 2;
+      document.getElementById('editApprovalsVal').textContent = approvalsEdit;
+    }
+
+    // ── SAVE ──
+    document.getElementById('saveBtn').addEventListener('click', async function() {
+      var amount  = Number(document.getElementById('editAmount').value);
+      var freq    = document.getElementById('editFreq').value;
+      var day     = Number(document.getElementById('editDay').value);
+      var penalty = Number(document.getElementById('editPenalty').value || 0);
+      var rules   = document.getElementById('editRules').value.trim();
+      var btn     = this;
+
+      if (!amount || amount <= 0) return showError('Please enter a valid contribution amount.');
+      if (!day || day < 1 || day > 28) return showError('Deadline day must be between 1 and 28.');
+
+      btn.disabled = true; btn.textContent = 'Saving...';
+
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/chamas?id=eq.' + chamaData.id, {
+          method: 'PATCH',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            contribution_amount:    amount,
+            contribution_frequency: freq,
+            contribution_day:       day,
+            penalty_amount:         penalty,
+            approvals_required:     approvalsEdit,
+            group_rules:            rules || null
+          })
+        });
+
+        if (!res.ok) {
+          var err = await res.json();
+          showError(err.message || 'Failed to save.');
+          btn.disabled = false; btn.textContent = 'Save rules'; return;
+        }
+
+        showSuccess('Rules saved successfully.');
+        btn.disabled = false; btn.textContent = 'Save rules';
+        await loadPage();
+        document.getElementById('editForm').classList.remove('show');
+        document.getElementById('viewMode').classList.remove('hide');
+        document.getElementById('editBtn').textContent = 'Edit';
+
+      } catch(err) {
+        showError('Network error. Please try again.');
+        btn.disabled = false; btn.textContent = 'Save rules';
+      }
+    });
+
+    // ── LOAD ──
+    async function loadPage() {
+      try {
+        var user = getUser();
+        if (!user) { doLogout(); return; }
+
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + user.id + '&select=*,chamas(*)&limit=1');
+        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
+        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
+
+        chamaData = membership.chamas;
+        isAdmin   = membership.role === 'admin';
+
+        // System rules
+        document.getElementById('viewAmount').textContent   = kes(chamaData.contribution_amount);
+        document.getElementById('viewFreq').textContent     = chamaData.contribution_frequency || 'monthly';
+        document.getElementById('viewDeadline').textContent = chamaData.contribution_day ? ordinal(chamaData.contribution_day) + ' of every month' : 'Not set';
+        document.getElementById('viewPenalty').textContent  = chamaData.penalty_amount > 0 ? kes(chamaData.penalty_amount) : 'None';
+        document.getElementById('viewApprovals').textContent = (chamaData.approvals_required || 2) + ' members';
+
+        // Group rules document
+        var rulesEl = document.getElementById('viewRules');
+        if (chamaData.group_rules && chamaData.group_rules.trim()) {
+          rulesEl.innerHTML = '<div class="rules-body">' + chamaData.group_rules.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+        } else {
+          rulesEl.innerHTML = '<div class="rules-empty">No group rules have been set yet.' + (isAdmin ? ' Click Edit to add them.' : '') + '</div>';
+        }
+
+        if (isAdmin) {
+          document.getElementById('editBtn').style.display = 'inline-block';
+        } else {
+          document.getElementById('adminNote').style.display = 'block';
+        }
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
+
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error loading rules.';
+      }
+    }
+
+    loadPage();
+  </script>
+
+</body>
+</html>
