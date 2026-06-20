@@ -23,17 +23,15 @@
     .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
     .tab.active { background: var(--green); color: #fff; font-weight: 600; }
 
-    /* WITHDRAWAL CARD */
-    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
-    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
     .w-amount { font-weight: 800; font-size: 26px; color: var(--ink); letter-spacing: -0.5px; }
     .w-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; flex-shrink: 0; }
     .w-pending  { background: #FEF3C7; color: #92400E; }
     .w-approved { background: var(--green-tint); color: var(--green-d); }
     .w-rejected { background: #FEE2E2; color: var(--error); }
 
-    /* DETAIL ROWS */
-    .w-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .w-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
     .w-detail { background: var(--bg); border-radius: 8px; padding: 9px 12px; }
     .w-detail .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 2px; }
     .w-detail .dv { font-size: 13px; font-weight: 600; color: var(--ink); }
@@ -41,30 +39,52 @@
     .w-reason-block .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; }
     .w-reason-block .dv { font-size: 13.5px; color: var(--ink); line-height: 1.5; }
 
-    /* LIVE POLL */
-    .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green-d); font-weight: 600; margin-bottom: 8px; }
+    /* LIVE */
+    .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green-d); font-weight: 600; margin-bottom: 10px; }
     .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-    .progress-wrap { margin-bottom: 10px; }
+
+    /* PROGRESS */
+    .progress-wrap { margin-bottom: 12px; }
     .progress-header { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
     .progress-bar { background: var(--line); border-radius: 100px; height: 7px; overflow: hidden; }
     .progress-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.4s ease; }
-    .approvers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-    .approver-chip { background: var(--green-tint); color: var(--green-d); font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 100px; }
-    .action-btns { display: flex; gap: 10px; }
-    .btn-approve { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
-    .btn-approve:hover { background: var(--green-d); }
+
+    /* VOTE FEED */
+    .votes-feed { margin-bottom: 12px; }
+    .vote-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .vote-item:last-child { border-bottom: none; }
+    .vote-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--green-tint); color: var(--green-d); font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .vote-avatar.reject { background: #FEE2E2; color: var(--error); }
+    .vote-body { flex: 1; }
+    .vote-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+    .vote-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .vote-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
+    .vt-approve { background: var(--green-tint); color: var(--green-d); }
+    .vt-reject  { background: #FEE2E2; color: var(--error); }
+    .vote-reason { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+    .vote-time { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+    /* VOTE FORM */
+    .vote-form { border-top: 1px solid var(--line); padding-top: 12px; }
+    .vote-form label { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+    .vote-form textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; padding: 10px 12px; outline: none; resize: none; height: 72px; transition: border-color 0.15s; }
+    .vote-form textarea:focus { border-color: var(--green); background: var(--card); }
+    .vote-form textarea::placeholder { color: #A7AFA9; }
+    .action-btns { display: flex; gap: 10px; margin-top: 10px; }
+    .btn-approve { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
     .btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-reject { flex: 1; background: var(--bg); color: var(--error); font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: 1.5px solid #FECACA; cursor: pointer; font-family: 'Inter', sans-serif; }
-    .btn-reject:hover { background: #FEE2E2; }
     .btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
-    .already-voted { text-align: center; padding: 10px; font-size: 13px; color: var(--ink-soft); background: var(--bg); border-radius: 8px; }
+    .already-voted { text-align: center; padding: 10px; font-size: 13px; color: var(--ink-soft); background: var(--bg); border-radius: 8px; margin-top: 10px; }
+
     .empty-state { text-align: center; padding: 48px 20px; }
     .empty-icon { font-size: 48px; margin-bottom: 14px; }
-    .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--ink); }
+    .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
     .empty-state p { font-size: 13.5px; color: var(--ink-soft); }
+
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; border-radius: 10px; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; }
     .nav-icon { font-size: 19px; }
     .nav-label { font-size: 10px; color: var(--ink-soft); }
     .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
@@ -115,6 +135,13 @@
     if (!getToken()) { window.location.href = 'login.html'; }
 
     function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+    function timeAgo(dateStr) {
+      var diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+      if (diff < 60) return 'just now';
+      if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+      return new Date(dateStr).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
+    }
 
     async function sbGet(path) {
       var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
@@ -122,151 +149,177 @@
       return res.ok ? res.json() : null;
     }
 
-    // ── TABS ──
     document.querySelectorAll('.tab').forEach(function(btn) {
       btn.addEventListener('click', function() {
         currentTab = this.getAttribute('data-tab');
         document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
         this.classList.add('active');
         renderList();
-        // Only poll on pending tab
-        if (currentTab === 'pending') { startPolling(); } else { stopPolling(); }
+        if (currentTab === 'pending') startPolling(); else stopPolling();
       });
     });
 
-    // ── LIVE POLLING ──
     function startPolling() {
       stopPolling();
-      pollInterval = setInterval(function() {
-        if (currentTab === 'pending') { silentRefresh(); }
-      }, 10000);
+      pollInterval = setInterval(silentRefresh, 10000);
     }
-
     function stopPolling() {
       if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
     }
-
     async function silentRefresh() {
-      var withdrawals = await sbGet(
-        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
-        '&select=*,profiles(full_name),withdrawal_approvals(user_id,profiles(full_name))&order=created_at.desc'
-      );
-      if (!withdrawals) return;
-      allWithdrawals = withdrawals;
-      var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
-      var countEl = document.getElementById('pendingCount');
-      if (pendingCount > 0) { countEl.textContent = pendingCount; countEl.classList.add('show'); }
-      else { countEl.classList.remove('show'); }
-      renderList();
+      await loadWithdrawals();
     }
+    window.addEventListener('beforeunload', stopPolling);
 
-    // ── RENDER ──
     function renderList() {
       var filtered = allWithdrawals.filter(function(w) { return w.status === currentTab; });
-      var el       = document.getElementById('withdrawalList');
+      var el = document.getElementById('withdrawalList');
       var approvalsRequired = chamaData.approvals_required || 2;
 
       if (!filtered.length) {
         var icon = currentTab === 'pending' ? '🗳️' : currentTab === 'approved' ? '✅' : '❌';
-        var msg  = currentTab === 'pending' ? 'No pending withdrawal requests.' : 'No withdrawals have been ' + currentTab + ' yet.';
-        el.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon + '</div><h3>No ' + currentTab + ' requests</h3><p>' + msg + '</p></div>';
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon + '</div><h3>No ' + currentTab + ' requests</h3><p>' + (currentTab === 'pending' ? 'No pending withdrawal requests.' : 'No withdrawals ' + currentTab + ' yet.') + '</p></div>';
         return;
       }
 
       el.innerHTML = filtered.map(function(w) {
-        var approvals     = w.withdrawal_approvals || [];
-        var approvalCount = approvals.length;
-        var pct           = Math.min(100, (approvalCount / approvalsRequired) * 100);
-        var hasVoted      = approvals.some(function(a) { return a.user_id === currentUser.id; });
-        var isRequester   = w.requested_by === currentUser.id;
-        var requester     = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
-        var date          = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
-        var approverNames = approvals.map(function(a) {
-          return a.profiles && a.profiles.full_name ? a.profiles.full_name.split(' ')[0] : 'Member';
-        });
-        var badgeClass = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
-        var badgeText  = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
+        var votes        = w.withdrawal_votes || [];
+        var approveVotes = votes.filter(function(v) { return v.vote === 'approve'; });
+        var rejectVotes  = votes.filter(function(v) { return v.vote === 'reject'; });
+        var approvalCount = approveVotes.length;
+        var pct          = Math.min(100, (approvalCount / approvalsRequired) * 100);
+        var myVote       = votes.find(function(v) { return v.user_id === currentUser.id; });
+        var isRequester  = w.requested_by === currentUser.id;
+        var requester    = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
+        var date         = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
+        var badgeClass   = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
+        var badgeText    = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
 
-        // Full detail grid
+        // Detail grid
         var detailHtml =
           '<div class="w-detail-grid">' +
             '<div class="w-detail"><div class="dl">Requested by</div><div class="dv">' + (isRequester ? 'You' : requester) + '</div></div>' +
             '<div class="w-detail"><div class="dl">Date</div><div class="dv">' + date + '</div></div>' +
             (w.destination ? '<div class="w-detail" style="grid-column:1/-1"><div class="dl">Send to</div><div class="dv">' + w.destination + '</div></div>' : '') +
           '</div>' +
-          '<div class="w-reason-block"><div class="dl">Reason</div><div class="dv">' + (w.reason || 'No reason provided') + '</div></div>';
+          '<div class="w-reason-block"><div class="dl">Reason for withdrawal</div><div class="dv">' + (w.reason || 'No reason provided') + '</div></div>';
 
+        // Progress
         var progressHtml = '';
-        var approversHtml = '';
-        var actionsHtml = '';
-        var liveHtml = '';
+        var voteFeedHtml = '';
+        var voteFormHtml = '';
 
         if (w.status === 'pending') {
-          liveHtml = '<div class="live-indicator"><div class="live-dot"></div>Live · updates every 10s</div>';
           progressHtml =
+            '<div class="live-indicator"><div class="live-dot"></div>Live · updates every 10s</div>' +
             '<div class="progress-wrap">' +
-              '<div class="progress-header"><span>Approvals needed</span><span>' + approvalCount + ' / ' + approvalsRequired + '</span></div>' +
+              '<div class="progress-header"><span>Approvals</span><span>' + approvalCount + ' of ' + approvalsRequired + ' needed</span></div>' +
               '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
             '</div>';
 
-          if (approverNames.length) {
-            approversHtml = '<div class="approvers">' +
-              approverNames.map(function(n) { return '<span class="approver-chip">✓ ' + n + '</span>'; }).join('') +
+          // Vote feed — show all votes with reasons
+          if (votes.length > 0) {
+            voteFeedHtml = '<div class="votes-feed">' +
+              votes.map(function(v) {
+                var vname = v.profiles && v.profiles.full_name ? v.profiles.full_name : 'Member';
+                var initials = vname.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+                var isApprove = v.vote === 'approve';
+                return '<div class="vote-item">' +
+                  '<div class="vote-avatar' + (isApprove ? '' : ' reject') + '">' + initials + '</div>' +
+                  '<div class="vote-body">' +
+                    '<div class="vote-header">' +
+                      '<span class="vote-name">' + vname + '</span>' +
+                      '<span class="vote-type ' + (isApprove ? 'vt-approve' : 'vt-reject') + '">' + (isApprove ? '✓ Approved' : '✗ Rejected') + '</span>' +
+                    '</div>' +
+                    (v.reason ? '<div class="vote-reason">"' + v.reason + '"</div>' : '') +
+                    '<div class="vote-time">' + timeAgo(v.created_at) + '</div>' +
+                  '</div>' +
+                '</div>';
+              }).join('') +
             '</div>';
           }
 
-          if (!hasVoted && !isRequester) {
-            actionsHtml =
-              '<div class="action-btns">' +
-                '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
-                '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
+          // Vote form
+          if (!myVote && !isRequester) {
+            voteFormHtml =
+              '<div class="vote-form">' +
+                '<label>Your reason for voting (optional)</label>' +
+                '<textarea id="voteReason_' + w.id + '" placeholder="Explain your decision to the group..."></textarea>' +
+                '<div class="action-btns">' +
+                  '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
+                  '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
+                '</div>' +
               '</div>';
+          } else if (isRequester) {
+            voteFormHtml = '<div class="already-voted">⏳ You submitted this request — waiting for member votes</div>';
           } else {
-            actionsHtml = '<div class="already-voted">' + (isRequester ? '⏳ Waiting for member approvals' : '✓ You have already voted') + '</div>';
+            voteFormHtml = '<div class="already-voted">✓ You voted ' + myVote.vote + (myVote.reason ? ' · "' + myVote.reason + '"' : '') + '</div>';
           }
         }
 
         return '<div class="withdrawal-card">' +
           '<div class="w-header"><div class="w-amount">' + kes(w.amount) + '</div><span class="w-badge ' + badgeClass + '">' + badgeText + '</span></div>' +
-          detailHtml +
-          liveHtml +
-          progressHtml + approversHtml + actionsHtml +
+          detailHtml + progressHtml + voteFeedHtml + voteFormHtml +
         '</div>';
       }).join('');
 
+      // Attach vote listeners
       el.querySelectorAll('.btn-approve, .btn-reject').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          castVote(this.getAttribute('data-id'), this.getAttribute('data-vote'), this);
+          var wid   = this.getAttribute('data-id');
+          var vote  = this.getAttribute('data-vote');
+          var reason = document.getElementById('voteReason_' + wid) ? document.getElementById('voteReason_' + wid).value.trim() : '';
+          castVote(wid, vote, reason, this);
         });
       });
     }
 
-    async function castVote(withdrawalId, vote, btn) {
+    async function castVote(withdrawalId, vote, reason, btn) {
       var parent = btn.closest('.action-btns');
       parent.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
       btn.textContent = vote === 'approve' ? 'Approving...' : 'Rejecting...';
 
       try {
+        // Insert into withdrawal_votes (new table with reasons)
+        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_votes', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            withdrawal_id: withdrawalId,
+            user_id:       currentUser.id,
+            chama_id:      chamaData.id,
+            vote:          vote,
+            reason:        reason || null
+          })
+        });
+
+        if (!res.ok) {
+          var err = await res.json();
+          alert(err.message || 'Failed to vote.');
+          parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; }); return;
+        }
+
+        // Also insert into withdrawal_approvals for backward compatibility
         if (vote === 'approve') {
-          var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
+          await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
             method: 'POST', headers: authHeaders(),
             body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
           });
-          if (!res.ok) {
-            var err = await res.json(); alert(err.message || 'Failed to approve.');
-            parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; }); return;
-          }
-          var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.' + withdrawalId + '&select=id');
+
+          // Check if threshold reached
+          var approvals = await sbGet('/rest/v1/withdrawal_votes?withdrawal_id=eq.' + withdrawalId + '&vote=eq.approve&select=id');
           if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
             await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
               method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'approved' })
             });
           }
         } else {
+          // Reject — update withdrawal status
           await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
             method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'rejected' })
           });
         }
+
         await loadWithdrawals();
       } catch(err) {
         alert('Network error. Please try again.');
@@ -275,11 +328,14 @@
     }
 
     async function loadWithdrawals() {
+      // Fetch withdrawals with votes (using new withdrawal_votes table)
       var withdrawals = await sbGet(
         '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
-        '&select=*,profiles(full_name),withdrawal_approvals(user_id,profiles(full_name))&order=created_at.desc'
+        '&select=*,profiles(full_name),withdrawal_votes(id,user_id,vote,reason,created_at,profiles(full_name))' +
+        '&order=created_at.desc'
       );
       allWithdrawals = withdrawals || [];
+
       var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
       var countEl = document.getElementById('pendingCount');
       if (pendingCount > 0) { countEl.textContent = pendingCount; countEl.classList.add('show'); }
@@ -302,18 +358,13 @@
 
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('mainContent').style.display  = 'block';
-
       } catch(err) {
-        document.getElementById('loadingState').textContent = 'Error loading votes.';
+        document.getElementById('loadingState').textContent = 'Error: ' + (err.message || err);
       }
     }
 
-    // Stop polling when user leaves page
-    window.addEventListener('beforeunload', stopPolling);
-
     loadPage();
   </script>
-
 </body>
 </html>
 
