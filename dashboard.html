@@ -750,6 +750,7 @@
 
     /* ── MAIN LOAD ── */
     async function loadDashboard() {
+      try {
       // Auth check via Supabase JS (handles token refresh automatically)
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -774,12 +775,13 @@
       animateScore(profile?.accountability_score ?? 100);
 
       // Membership (first chama only — extend later for multi-chama)
+      // maybeSingle() returns null instead of error when no rows found
       const { data: membership } = await supabase
         .from('chama_members')
         .select('*, chamas(*)')
         .eq('user_id', currentUser.id)
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (!membership) {
         document.getElementById('noChamaSection').style.display = 'block';
@@ -877,6 +879,16 @@
       renderActivity(activity);
 
       document.getElementById('loadingOverlay').classList.add('hidden');
+
+      } catch (err) {
+        document.getElementById('loadingOverlay').innerHTML =
+          '<div style="padding:30px;text-align:center;font-family:Inter,sans-serif;">' +
+          '<div style="font-size:32px;margin-bottom:12px;">⚠️</div>' +
+          '<div style="font-weight:600;color:#1A1F1C;margin-bottom:8px;">Error — send this to Terry</div>' +
+          '<div style="font-size:12px;color:#5C6760;word-break:break-all;max-width:320px;margin:0 auto;">' +
+          (err && err.message ? err.message : JSON.stringify(err)) +
+          '</div></div>';
+      }
     }
 
     loadDashboard();
