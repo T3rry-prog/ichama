@@ -264,6 +264,21 @@
 
     .terms a { color: var(--green); text-decoration: none; }
 
+    /* INVITE CODE FIELD */
+    .invite-field {
+      display: none;
+      margin-top: 12px;
+    }
+    .invite-field.show { display: block; }
+    .invite-input {
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+    }
+    .invite-hint { font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; text-align: center; }
+
     /* INTENT SELECTOR */
     .intent-label {
       display: block;
@@ -433,6 +448,10 @@
             <span class="opt-sub">Join with an invite code</span>
           </div>
         </div>
+        <div class="invite-field" id="inviteField">
+          <input type="text" id="inviteCode" class="invite-input" placeholder="XXXXXX" maxlength="6" autocomplete="off" />
+          <p class="invite-hint">Enter the 6-character code shared by your chama admin.</p>
+        </div>
       </div>
 
       <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
@@ -518,6 +537,7 @@
       userIntent = intent;
       document.getElementById('intentCreate').classList.toggle('selected', intent === 'create');
       document.getElementById('intentJoin').classList.toggle('selected', intent === 'join');
+      document.getElementById('inviteField').classList.toggle('show', intent === 'join');
     }
 
     window.handleSignup = async function() {
@@ -534,6 +554,12 @@
       if (!email)              return showError('Please enter your email address.');
       if (password.length < 8) return showError('Password must be at least 8 characters.');
       if (password !== confirmPw) return showError('Passwords do not match.');
+
+      var inviteCode = '';
+      if (userIntent === 'join') {
+        inviteCode = document.getElementById('inviteCode').value.trim().toUpperCase();
+        if (!inviteCode || inviteCode.length !== 6) return showError('Please enter your 6-character invite code.');
+      }
 
       var phone = countryCode + phoneRaw.replace(/^0/, '');
 
@@ -599,9 +625,29 @@
           })
         }).catch(function(e) { console.log('Email error:', e); });
 
-        showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
-        var dest = userIntent === 'join' ? 'join-chama.html' : 'create-chama.html';
-        setTimeout(function() { window.location.href = dest; }, 2000);
+        if (userIntent === 'join' && inviteCode) {
+          // Look up chama by invite code
+          var chamaRes = await fetch(SUPABASE_URL + '/rest/v1/chamas?invite_code=eq.' + inviteCode + '&select=id,name&limit=1', {
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + accessToken }
+          });
+          var chamaList = await chamaRes.json();
+          if (!chamaList || chamaList.length === 0) {
+            showError('Invite code not found. Please check the code and try again.');
+            btn.disabled = false; btn.textContent = 'Create account →'; return;
+          }
+          var chama = chamaList[0];
+          // Add as member
+          await fetch(SUPABASE_URL + '/rest/v1/chama_members', {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chama_id: chama.id, user_id: userId, role: 'member' })
+          });
+          showSuccess('Account created! You have joined ' + chama.name + ' 🎉 Redirecting...');
+          setTimeout(function() { window.location.href = 'dashboard.html'; }, 2000);
+        } else {
+          showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
+          setTimeout(function() { window.location.href = 'create-chama.html'; }, 2000);
+        }
 
       } catch(e) {
         showError('Network error: ' + e.message);
