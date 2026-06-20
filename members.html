@@ -29,7 +29,6 @@
     .invite-left .code { font-size: 20px; font-weight: 800; color: var(--green-d); letter-spacing: 2px; }
     .invite-left .hint { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
     .copy-btn { background: var(--green); color: #fff; border: none; border-radius: 9px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
-    .copy-btn:hover { background: var(--green-d); }
     .search-wrap { position: relative; margin-bottom: 14px; }
     .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--ink-soft); pointer-events: none; }
     .search-input { width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 10px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; padding: 11px 14px 11px 38px; outline: none; transition: border-color 0.15s; }
@@ -49,10 +48,15 @@
     .score-high { background: var(--green-tint); color: var(--green-d); }
     .score-mid  { background: #FEF3C7; color: #92400E; }
     .score-low  { background: #FEE2E2; color: var(--error); }
-    .paid-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .paid-yes { background: var(--green); }
-    .paid-no  { background: #FCD34D; }
+    /* Payment status dots */
+    .paid-dot     { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-full     { background: var(--green); }
+    .dot-partial  { background: var(--gold); }
+    .dot-none     { background: #FCA5A5; }
+    /* Penalty chip */
+    .penalty-chip { font-size: 10px; font-weight: 600; background: #FEF3C7; color: #92400E; padding: 2px 7px; border-radius: 100px; white-space: nowrap; }
     .empty-state { text-align: center; padding: 32px; color: var(--ink-soft); font-size: 13.5px; }
+    /* MODAL */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
     .modal-overlay.show { display: flex; }
     .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; animation: slideUp 0.25s ease; }
@@ -63,8 +67,10 @@
     .modal-role { font-size: 13px; color: var(--ink-soft); text-align: center; margin-bottom: 20px; }
     .modal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
     .modal-stat { background: var(--bg); border-radius: 10px; padding: 12px; text-align: center; }
-    .modal-stat .v { font-weight: 700; font-size: 18px; color: var(--ink); }
+    .modal-stat .v { font-weight: 700; font-size: 16px; color: var(--ink); }
     .modal-stat .l { font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
+    .modal-penalty { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #78350F; margin-bottom: 16px; text-align: center; display: none; }
+    .modal-penalty.show { display: block; }
     .modal-close { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; }
   </style>
 </head>
@@ -82,7 +88,7 @@
 
       <div class="stats-row">
         <div class="stat-card"><div class="val" id="totalMembers">—</div><div class="lbl">Total</div></div>
-        <div class="stat-card"><div class="val green" id="paidCount">—</div><div class="lbl">Paid this month</div></div>
+        <div class="stat-card"><div class="val green" id="paidCount">—</div><div class="lbl">Fully paid</div></div>
         <div class="stat-card"><div class="val gold" id="pendingCount">—</div><div class="lbl">Pending</div></div>
       </div>
 
@@ -105,14 +111,15 @@
   </main>
 
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modal">
+    <div class="modal">
       <div class="modal-handle"></div>
       <div class="modal-avatar" id="modalAvatar">—</div>
       <div class="modal-name" id="modalName">—</div>
       <div class="modal-role" id="modalRole">—</div>
+      <div class="modal-penalty" id="modalPenalty">⚠️ Late penalty applied this month</div>
       <div class="modal-stats">
         <div class="modal-stat"><div class="v" id="modalScore">—</div><div class="l">Score</div></div>
-        <div class="modal-stat"><div class="v" id="modalContribs">—</div><div class="l">Contributions</div></div>
+        <div class="modal-stat"><div class="v" id="modalContribs">—</div><div class="l">Total paid</div></div>
         <div class="modal-stat"><div class="v" id="modalStatus">—</div><div class="l">This month</div></div>
       </div>
       <button class="modal-close" id="modalCloseBtn">Close</button>
@@ -123,26 +130,20 @@
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    var allMembers  = [];
-    var chamaData   = null;
-    var currentUser = null;
+    var allMembers   = [];
+    var chamaData    = null;
+    var currentUser  = null;
+    var memberTotals = {};
+    var penalisedIds = new Set();
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
-    function authHeaders() {
-      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
-    }
-    function doLogout() {
-      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
-      window.location.href = 'login.html';
-    }
+    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
+    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
     if (!getToken()) { window.location.href = 'login.html'; }
 
-    function scoreClass(s) {
-      if (s >= 75) return 'score-high';
-      if (s >= 50) return 'score-mid';
-      return 'score-low';
-    }
+    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+    function scoreClass(s) { if (s >= 75) return 'score-high'; if (s >= 50) return 'score-mid'; return 'score-low'; }
 
     async function sbGet(path) {
       var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
@@ -150,98 +151,71 @@
       return res.ok ? res.json() : null;
     }
 
-    // ── COPY INVITE ──
+    // ── COPY ──
     document.getElementById('copyBtn').addEventListener('click', function() {
       var code = chamaData && chamaData.invite_code ? chamaData.invite_code : '';
       if (!code) return;
       var btn = this;
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(code).then(function() {
-          btn.textContent = 'Copied!';
-          setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
-        });
+        navigator.clipboard.writeText(code).then(function() { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Copy'; }, 2000); });
       } else {
-        var ta = document.createElement('textarea');
-        ta.value = code; document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); document.body.removeChild(ta);
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+        var ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
       }
     });
 
-    // ── SHARE INVITE ──
+    // ── SHARE ──
     document.getElementById('shareBtn').addEventListener('click', function() {
       var code = chamaData && chamaData.invite_code ? chamaData.invite_code : '';
-      if (!code) { alert('Invite code not loaded yet. Please wait.'); return; }
+      if (!code) { alert('Invite code not loaded yet.'); return; }
       var text = 'Join our chama on iChama!\nInvite code: ' + code + '\nhttps://ichamaa.netlify.app';
-
       function fallback() {
         try {
           if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(text).then(function() {
-              alert('Invite message copied! Paste it anywhere to share.');
-            }).catch(function() {
-              alert('Invite code: ' + code + '\n\nShare this with your members.');
-            });
+            navigator.clipboard.writeText(text).then(function() { alert('Invite copied! Paste anywhere to share.'); }).catch(function() { alert('Invite code: ' + code); });
           } else {
-            var ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.focus(); ta.select();
-            try { document.execCommand('copy'); alert('Invite message copied!'); }
-            catch(e) { alert('Invite code: ' + code + '\n\nShare this with your members.'); }
+            var ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select();
+            try { document.execCommand('copy'); alert('Invite message copied!'); } catch(e) { alert('Invite code: ' + code); }
             document.body.removeChild(ta);
           }
-        } catch(e) {
-          alert('Invite code: ' + code + '\n\nShare this with your members.');
-        }
+        } catch(e) { alert('Invite code: ' + code); }
       }
-
-      if (navigator.share) {
-        navigator.share({ title: 'Join our chama on iChama', text: text })
-          .catch(function(err) {
-            // User cancelled or share failed — fall back silently
-            if (err.name !== 'AbortError') fallback();
-          });
-      } else {
-        fallback();
-      }
+      if (navigator.share) { navigator.share({ title: 'Join our chama', text: text }).catch(function(err) { if (err.name !== 'AbortError') fallback(); }); }
+      else { fallback(); }
     });
 
     // ── SEARCH ──
     document.getElementById('searchInput').addEventListener('input', function() {
       var q = this.value.toLowerCase();
-      var filtered = allMembers.filter(function(m) {
+      renderMembers(allMembers.filter(function(m) {
         return (m.profiles && m.profiles.full_name ? m.profiles.full_name.toLowerCase() : '').includes(q) ||
                (m.profiles && m.profiles.phone ? m.profiles.phone : '').includes(q);
-      });
-      renderMembers(filtered);
+      }));
     });
 
     // ── MODAL ──
-    document.getElementById('modalOverlay').addEventListener('click', function(e) {
-      if (e.target === this) this.classList.remove('show');
-    });
-    document.getElementById('modalCloseBtn').addEventListener('click', function() {
-      document.getElementById('modalOverlay').classList.remove('show');
-    });
+    document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('show'); });
+    document.getElementById('modalCloseBtn').addEventListener('click', function() { document.getElementById('modalOverlay').classList.remove('show'); });
 
     // ── RENDER ──
     function renderMembers(list) {
       var el = document.getElementById('membersList');
-      if (!list.length) {
-        el.innerHTML = '<div class="empty-state">No members found</div>';
-        return;
-      }
+      if (!list.length) { el.innerHTML = '<div class="empty-state">No members found</div>'; return; }
+      var required = Number(chamaData && chamaData.contribution_amount ? chamaData.contribution_amount : 0);
+
       el.innerHTML = list.map(function(m, i) {
         var name     = m.profiles && m.profiles.full_name ? m.profiles.full_name : 'Unknown';
         var initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
         var score    = m.profiles && m.profiles.accountability_score != null ? m.profiles.accountability_score : 100;
-        var paid     = m.paid_this_month;
         var isAdmin  = m.role === 'admin';
         var isMe     = currentUser && m.user_id === currentUser.id;
+        var paidAmt  = memberTotals[m.user_id] || 0;
+        var dotClass, dotTitle;
+        if (paidAmt >= required && required > 0) { dotClass = 'dot-full'; dotTitle = 'Paid'; }
+        else if (paidAmt > 0) { dotClass = 'dot-partial'; dotTitle = 'Partial — ' + kes(required - paidAmt) + ' left'; }
+        else { dotClass = 'dot-none'; dotTitle = 'Pending'; }
+        var penaltyChip = penalisedIds.has(m.user_id) ? '<span class="penalty-chip">⚠️ Fined</span>' : '';
+
         return '<div class="member-row" data-index="' + i + '">' +
           '<div class="member-avatar">' + initials + (isAdmin ? '<span class="admin-crown">👑</span>' : '') + '</div>' +
           '<div class="member-info">' +
@@ -249,16 +223,15 @@
             '<div class="member-phone">' + (m.profiles && m.profiles.phone ? m.profiles.phone : '—') + '</div>' +
           '</div>' +
           '<div class="member-right">' +
+            penaltyChip +
             '<span class="score-pill ' + scoreClass(score) + '">' + score + '</span>' +
-            '<div class="paid-dot ' + (paid ? 'paid-yes' : 'paid-no') + '"></div>' +
+            '<div class="paid-dot ' + dotClass + '" title="' + dotTitle + '"></div>' +
           '</div>' +
         '</div>';
       }).join('');
 
       el.querySelectorAll('.member-row').forEach(function(row) {
-        row.addEventListener('click', function() {
-          showMember(parseInt(this.getAttribute('data-index')));
-        });
+        row.addEventListener('click', function() { showMember(parseInt(this.getAttribute('data-index'))); });
       });
     }
 
@@ -267,16 +240,27 @@
       var name     = m.profiles && m.profiles.full_name ? m.profiles.full_name : 'Unknown';
       var initials = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
       var score    = m.profiles && m.profiles.accountability_score != null ? m.profiles.accountability_score : 100;
+      var required = Number(chamaData && chamaData.contribution_amount ? chamaData.contribution_amount : 0);
+      var paidAmt  = memberTotals[m.user_id] || 0;
+      var fined    = penalisedIds.has(m.user_id);
 
-      document.getElementById('modalAvatar').textContent   = initials;
-      document.getElementById('modalName').textContent     = name;
-      document.getElementById('modalRole').textContent     = m.role === 'admin' ? '👑 Admin' : 'Member';
-      document.getElementById('modalScore').textContent    = score;
+      document.getElementById('modalAvatar').textContent = initials;
+      document.getElementById('modalName').textContent   = name;
+      document.getElementById('modalRole').textContent   = (m.role === 'admin' ? '👑 Admin' : 'Member');
+      document.getElementById('modalScore').textContent  = score;
       document.getElementById('modalContribs').textContent = '…';
-      document.getElementById('modalStatus').textContent   = m.paid_this_month ? '✅ Paid' : '⏳ Pending';
+
+      var statusText;
+      if (paidAmt >= required && required > 0) statusText = '✅ Paid';
+      else if (paidAmt > 0) statusText = kes(paidAmt) + ' / ' + kes(required);
+      else statusText = '⏳ Pending';
+      document.getElementById('modalStatus').textContent = statusText;
+
+      var penaltyEl = document.getElementById('modalPenalty');
+      if (fined) { penaltyEl.classList.add('show'); } else { penaltyEl.classList.remove('show'); }
+
       document.getElementById('modalOverlay').classList.add('show');
 
-      // Load contribution count
       var contribs = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&user_id=eq.' + m.user_id + '&status=eq.paid&select=id');
       document.getElementById('modalContribs').textContent = contribs ? contribs.length : 0;
     }
@@ -295,19 +279,27 @@
 
         var members = await sbGet('/rest/v1/chama_members?chama_id=eq.' + chamaData.id + '&select=*,profiles(full_name,phone,accountability_score)&order=role.asc') || [];
 
-        var startOfMonth = new Date();
-        startOfMonth.setDate(1); startOfMonth.setHours(0, 0, 0, 0);
-        var contribs = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&status=eq.paid&created_at=gte.' + startOfMonth.toISOString() + '&select=user_id') || [];
-        var paidIds  = new Set(contribs.map(function(c) { return c.user_id; }));
+        var startOfMonth = new Date(); startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+        var contribs = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&status=eq.paid&created_at=gte.' + startOfMonth.toISOString() + '&select=user_id,amount') || [];
 
+        memberTotals = {};
+        contribs.forEach(function(c) { memberTotals[c.user_id] = (memberTotals[c.user_id] || 0) + Number(c.amount); });
+
+        // Load penalties this month
+        var now = new Date();
+        var monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        var penalties = await sbGet('/rest/v1/penalties?chama_id=eq.' + chamaData.id + '&month=eq.' + monthKey + '&select=user_id') || [];
+        penalisedIds = new Set(penalties.map(function(p) { return p.user_id; }));
+
+        var required = Number(chamaData.contribution_amount) || 0;
         allMembers = members.map(function(m) {
-          return Object.assign({}, m, { paid_this_month: paidIds.has(m.user_id) });
+          return Object.assign({}, m, { paid_this_month: (memberTotals[m.user_id] || 0) >= required });
         });
 
-        var paidCount = allMembers.filter(function(m) { return m.paid_this_month; }).length;
+        var fullyPaid = allMembers.filter(function(m) { return m.paid_this_month; }).length;
         document.getElementById('totalMembers').textContent = allMembers.length;
-        document.getElementById('paidCount').textContent    = paidCount;
-        document.getElementById('pendingCount').textContent = allMembers.length - paidCount;
+        document.getElementById('paidCount').textContent    = fullyPaid;
+        document.getElementById('pendingCount').textContent = allMembers.length - fullyPaid;
 
         renderMembers(allMembers);
 
@@ -324,3 +316,4 @@
 
 </body>
 </html>
+
