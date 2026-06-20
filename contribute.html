@@ -10,25 +10,42 @@
     :root {
       --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
       --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
-      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
     }
     body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
     nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
     .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; letter-spacing: -0.1px; }
     main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+
     .due-card { background: var(--green); border-radius: 16px; padding: 24px 20px; margin-bottom: 16px; text-align: center; }
+    .due-card.partial { background: var(--gold); }
+    .due-card.complete { background: var(--green); }
     .due-label { font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
-    .due-amount { font-weight: 800; font-size: 42px; color: #fff; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+    .due-amount { font-weight: 800; font-size: 38px; color: #fff; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
     .due-sub { font-size: 13px; color: rgba(255,255,255,0.75); }
+
+    .progress-track { background: rgba(255,255,255,0.25); border-radius: 100px; height: 8px; margin-top: 16px; overflow: hidden; }
+    .progress-fill { background: #fff; height: 100%; border-radius: 100px; transition: width 0.4s ease; }
+    .progress-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; color: rgba(255,255,255,0.85); }
+
     .status-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
     .status-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
     .status-row:last-child { border-bottom: none; }
     .status-key { font-size: 13.5px; color: var(--ink-soft); }
     .status-val { font-size: 13.5px; font-weight: 600; color: var(--ink); }
     .badge { font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
-    .badge-paid { background: var(--green-tint); color: var(--green-d); }
-    .badge-pending { background: #FEF3C7; color: #92400E; }
+    .badge-paid    { background: var(--green-tint); color: var(--green-d); }
+    .badge-partial { background: #FEF3C7; color: #92400E; }
+    .badge-pending { background: #FDEDED; color: var(--error); }
+
+    .history-panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+    .history-panel .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 12px; }
+    .history-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .history-row:last-child { border-bottom: none; }
+    .history-info .amt { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .history-info .meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; text-transform: capitalize; }
+
     .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
     .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 16px; }
     .form-group { margin-bottom: 14px; }
@@ -43,6 +60,12 @@
     .amount-wrap { position: relative; }
     .amount-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
     .amount-wrap input { padding-left: 52px; }
+
+    .quick-amounts { display: flex; gap: 8px; margin-top: 10px; }
+    .quick-amount-btn { flex: 1; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 6px; font-size: 12.5px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; }
+    .quick-amount-btn:hover { border-color: var(--green); color: var(--green-d); }
+    .quick-amount-btn.active { background: var(--green-tint); border-color: var(--green); color: var(--green-d); }
+
     .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
@@ -67,10 +90,15 @@
     <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
     <div id="mainContent" style="display:none">
 
-      <div class="due-card">
-        <div class="due-label">Amount due this month</div>
+      <div class="due-card" id="dueCard">
+        <div class="due-label" id="dueLabel">Remaining this month</div>
         <div class="due-amount" id="dueAmount">KES —</div>
         <div class="due-sub" id="chamaNameLabel">—</div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-labels">
+          <span id="progressPaid">Paid KES 0</span>
+          <span id="progressTotal">of KES 0</span>
+        </div>
       </div>
 
       <div class="status-card">
@@ -88,10 +116,15 @@
         </div>
       </div>
 
+      <div class="history-panel" id="historyPanel" style="display:none">
+        <div class="panel-title">Your payments this month</div>
+        <div id="historyList"></div>
+      </div>
+
       <div id="alreadyPaidBlock" class="already-paid" style="display:none">
         <div class="check">✅</div>
-        <h3>You've already paid this month</h3>
-        <p>Your contribution has been recorded. Great work!</p>
+        <h3>You're fully paid up this month</h3>
+        <p>Your contribution has been recorded in full. Great work!</p>
       </div>
 
       <div id="paymentForm">
@@ -106,7 +139,8 @@
               <span class="amount-prefix">KES</span>
               <input type="number" id="amount" min="1" placeholder="0" />
             </div>
-            <p class="hint">Required amount is pre-filled. You may pay more.</p>
+            <div class="quick-amounts" id="quickAmounts"></div>
+            <p class="hint" id="amountHint">Remaining balance is pre-filled. You can pay a partial amount or more than required.</p>
           </div>
           <div class="form-group">
             <label for="method">Payment method</label>
@@ -136,9 +170,13 @@
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    var currentUser = null;
-    var chamaData   = null;
-    var alreadyPaid = false;
+    var currentUser   = null;
+    var chamaData     = null;
+    var requiredAmt   = 0;
+    var paidSoFar     = 0;
+    var remaining     = 0;
+    var fullyPaid     = false;
+    var monthHistory  = [];
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
@@ -169,40 +207,124 @@
       return res.ok ? res.json() : null;
     }
 
+    function renderHistory() {
+      var panel = document.getElementById('historyPanel');
+      var list  = document.getElementById('historyList');
+
+      if (!monthHistory || monthHistory.length === 0) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      list.innerHTML = monthHistory.map(function(c) {
+        var date = c.paid_at ? new Date(c.paid_at) : new Date(c.created_at);
+        var dateStr = date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+        return '<div class="history-row">' +
+          '<div class="history-info">' +
+            '<div class="amt">' + kes(c.amount) + '</div>' +
+            '<div class="meta">' + dateStr + ' · ' + (c.method || 'cash') + (c.reference ? ' · ' + c.reference : '') + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function updateProgressUI() {
+      var pct = requiredAmt > 0 ? Math.min(100, Math.round((paidSoFar / requiredAmt) * 100)) : 0;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressPaid').textContent = 'Paid ' + kes(paidSoFar);
+      document.getElementById('progressTotal').textContent = 'of ' + kes(requiredAmt);
+
+      var dueCard  = document.getElementById('dueCard');
+      var dueLabel = document.getElementById('dueLabel');
+      var dueAmt   = document.getElementById('dueAmount');
+      var badge    = document.getElementById('paidBadge');
+
+      if (remaining <= 0) {
+        fullyPaid = true;
+        dueCard.className = 'due-card complete';
+        dueLabel.textContent = 'Fully paid this month';
+        dueAmt.textContent = kes(paidSoFar);
+        badge.className = 'badge badge-paid';
+        badge.textContent = 'Paid ✓';
+        document.getElementById('alreadyPaidBlock').style.display = 'block';
+        document.getElementById('paymentForm').style.display = 'none';
+      } else if (paidSoFar > 0) {
+        fullyPaid = false;
+        dueCard.className = 'due-card partial';
+        dueLabel.textContent = 'Remaining this month';
+        dueAmt.textContent = kes(remaining);
+        badge.className = 'badge badge-partial';
+        badge.textContent = 'Partial';
+        document.getElementById('alreadyPaidBlock').style.display = 'none';
+        document.getElementById('paymentForm').style.display = 'block';
+      } else {
+        fullyPaid = false;
+        dueCard.className = 'due-card';
+        dueLabel.textContent = 'Amount due this month';
+        dueAmt.textContent = kes(remaining);
+        badge.className = 'badge badge-pending';
+        badge.textContent = 'Pending';
+        document.getElementById('alreadyPaidBlock').style.display = 'none';
+        document.getElementById('paymentForm').style.display = 'block';
+      }
+    }
+
+    function setupQuickAmounts() {
+      var wrap = document.getElementById('quickAmounts');
+      var opts = [];
+      if (remaining > 0) {
+        opts.push({ label: 'Full: ' + kes(remaining), val: remaining });
+        opts.push({ label: 'Half: ' + kes(Math.round(remaining / 2)), val: Math.round(remaining / 2) });
+      }
+      if (opts.length === 0) { wrap.innerHTML = ''; return; }
+
+      wrap.innerHTML = opts.map(function(o, i) {
+        return '<button type="button" class="quick-amount-btn' + (i === 0 ? ' active' : '') + '" data-val="' + o.val + '">' + o.label + '</button>';
+      }).join('');
+
+      wrap.querySelectorAll('.quick-amount-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          wrap.querySelectorAll('.quick-amount-btn').forEach(function(b) { b.classList.remove('active'); });
+          this.classList.add('active');
+          document.getElementById('amount').value = this.getAttribute('data-val');
+        });
+      });
+    }
+
     async function loadPage() {
       try {
         currentUser = getUser();
         if (!currentUser) { doLogout(); return; }
 
-        // Profile
         var profiles = await sbGet('/rest/v1/profiles?id=eq.' + currentUser.id + '&select=accountability_score&limit=1');
         var profile  = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
 
-        // Membership
         var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
         var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
         if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
 
-        chamaData = membership.chamas;
+        chamaData   = membership.chamas;
+        requiredAmt = Number(chamaData.contribution_amount || 0);
 
-        document.getElementById('dueAmount').textContent    = kes(chamaData.contribution_amount);
         document.getElementById('chamaNameLabel').textContent = chamaData.name;
-        document.getElementById('monthLabel').textContent   = new Date().toLocaleDateString('en-KE', { month: 'long', year: 'numeric' });
-        document.getElementById('myScore').textContent      = (profile && profile.accountability_score != null ? profile.accountability_score : 100) + ' / 100';
-        document.getElementById('amount').value             = chamaData.contribution_amount;
+        document.getElementById('monthLabel').textContent     = new Date().toLocaleDateString('en-KE', { month: 'long', year: 'numeric' });
+        document.getElementById('myScore').textContent        = (profile && profile.accountability_score != null ? profile.accountability_score : 100) + ' / 100';
 
-        // Check if already paid this month
         var startOfMonth = new Date();
         startOfMonth.setDate(1); startOfMonth.setHours(0, 0, 0, 0);
 
-        var existing = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&user_id=eq.' + currentUser.id + '&status=eq.paid&created_at=gte.' + startOfMonth.toISOString() + '&select=id&limit=1');
+        var existing = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&user_id=eq.' + currentUser.id + '&status=eq.paid&created_at=gte.' + startOfMonth.toISOString() + '&select=*&order=created_at.desc');
+        monthHistory = existing || [];
 
-        if (existing && existing.length > 0) {
-          alreadyPaid = true;
-          document.getElementById('paidBadge').className   = 'badge badge-paid';
-          document.getElementById('paidBadge').textContent = 'Paid ✓';
-          document.getElementById('alreadyPaidBlock').style.display = 'block';
-          document.getElementById('paymentForm').style.display = 'none';
+        paidSoFar = monthHistory.reduce(function(sum, c) { return sum + Number(c.amount || 0); }, 0);
+        remaining = Math.max(0, requiredAmt - paidSoFar);
+
+        renderHistory();
+        updateProgressUI();
+        setupQuickAmounts();
+
+        if (remaining > 0) {
+          document.getElementById('amount').value = remaining;
         }
 
         document.getElementById('loadingState').style.display = 'none';
@@ -214,7 +336,7 @@
     }
 
     document.getElementById('submitBtn').addEventListener('click', async function() {
-      if (alreadyPaid) return;
+      if (fullyPaid) return;
 
       var amount    = parseFloat(document.getElementById('amount').value);
       var method    = document.getElementById('method').value;
@@ -229,7 +351,6 @@
       try {
         var now = new Date().toISOString();
 
-        // Insert contribution
         var res = await fetch(SUPABASE_URL + '/rest/v1/contributions', {
           method: 'POST',
           headers: authHeaders(),
@@ -251,7 +372,9 @@
           btn.disabled = false; btn.textContent = 'Record contribution →'; return;
         }
 
-        // Bump accountability score by 2 (max 100)
+        paidSoFar += amount;
+        remaining  = Math.max(0, requiredAmt - paidSoFar);
+
         var profiles = await sbGet('/rest/v1/profiles?id=eq.' + currentUser.id + '&select=accountability_score&limit=1');
         var profile  = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
         var newScore = Math.min(100, ((profile && profile.accountability_score != null) ? profile.accountability_score : 100) + 2);
@@ -262,9 +385,26 @@
           body: JSON.stringify({ accountability_score: newScore })
         });
 
-        showSuccess('Contribution recorded! ✓');
-        btn.textContent = 'Recorded ✓';
-        setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+        if (remaining <= 0) {
+          showSuccess('Contribution complete for this month! ✓');
+          btn.textContent = 'Recorded ✓';
+          setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+        } else {
+          showSuccess('Payment of ' + kes(amount) + ' recorded. ' + kes(remaining) + ' remaining.');
+          btn.disabled = false;
+          btn.textContent = 'Record contribution →';
+          document.getElementById('reference').value = '';
+          document.getElementById('note').value      = '';
+
+          var startOfMonth2 = new Date();
+          startOfMonth2.setDate(1); startOfMonth2.setHours(0, 0, 0, 0);
+          var refreshed = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&user_id=eq.' + currentUser.id + '&status=eq.paid&created_at=gte.' + startOfMonth2.toISOString() + '&select=*&order=created_at.desc');
+          monthHistory = refreshed || [];
+          renderHistory();
+          updateProgressUI();
+          setupQuickAmounts();
+          document.getElementById('amount').value = remaining;
+        }
 
       } catch(err) {
         showError('Network error. Please try again.');
