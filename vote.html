@@ -22,20 +22,34 @@
     .tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
     .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
     .tab.active { background: var(--green); color: #fff; font-weight: 600; }
+
+    /* WITHDRAWAL CARD */
     .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
-    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .w-amount { font-weight: 800; font-size: 24px; color: var(--ink); letter-spacing: -0.5px; }
-    .w-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; }
+    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .w-amount { font-weight: 800; font-size: 26px; color: var(--ink); letter-spacing: -0.5px; }
+    .w-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; flex-shrink: 0; }
     .w-pending  { background: #FEF3C7; color: #92400E; }
     .w-approved { background: var(--green-tint); color: var(--green-d); }
     .w-rejected { background: #FEE2E2; color: var(--error); }
-    .w-reason { font-size: 14px; color: var(--ink); margin-bottom: 8px; line-height: 1.5; font-weight: 500; }
-    .w-meta { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 14px; line-height: 1.6; }
-    .progress-wrap { margin-bottom: 14px; }
+
+    /* DETAIL ROWS */
+    .w-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .w-detail { background: var(--bg); border-radius: 8px; padding: 9px 12px; }
+    .w-detail .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 2px; }
+    .w-detail .dv { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .w-reason-block { background: var(--bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+    .w-reason-block .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; }
+    .w-reason-block .dv { font-size: 13.5px; color: var(--ink); line-height: 1.5; }
+
+    /* LIVE POLL */
+    .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green-d); font-weight: 600; margin-bottom: 8px; }
+    .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .progress-wrap { margin-bottom: 10px; }
     .progress-header { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
     .progress-bar { background: var(--line); border-radius: 100px; height: 7px; overflow: hidden; }
     .progress-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.4s ease; }
-    .approvers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .approvers { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
     .approver-chip { background: var(--green-tint); color: var(--green-d); font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 100px; }
     .action-btns { display: flex; gap: 10px; }
     .btn-approve { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
@@ -92,16 +106,12 @@
     var chamaData      = null;
     var allWithdrawals = [];
     var currentTab     = 'pending';
+    var pollInterval   = null;
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
-    function authHeaders() {
-      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
-    }
-    function doLogout() {
-      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
-      window.location.href = 'login.html';
-    }
+    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
+    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
     if (!getToken()) { window.location.href = 'login.html'; }
 
     function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
@@ -119,8 +129,36 @@
         document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
         this.classList.add('active');
         renderList();
+        // Only poll on pending tab
+        if (currentTab === 'pending') { startPolling(); } else { stopPolling(); }
       });
     });
+
+    // ── LIVE POLLING ──
+    function startPolling() {
+      stopPolling();
+      pollInterval = setInterval(function() {
+        if (currentTab === 'pending') { silentRefresh(); }
+      }, 10000);
+    }
+
+    function stopPolling() {
+      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+    }
+
+    async function silentRefresh() {
+      var withdrawals = await sbGet(
+        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
+        '&select=*,profiles(full_name),withdrawal_approvals(user_id,profiles(full_name))&order=created_at.desc'
+      );
+      if (!withdrawals) return;
+      allWithdrawals = withdrawals;
+      var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
+      var countEl = document.getElementById('pendingCount');
+      if (pendingCount > 0) { countEl.textContent = pendingCount; countEl.classList.add('show'); }
+      else { countEl.classList.remove('show'); }
+      renderList();
+    }
 
     // ── RENDER ──
     function renderList() {
@@ -130,7 +168,7 @@
 
       if (!filtered.length) {
         var icon = currentTab === 'pending' ? '🗳️' : currentTab === 'approved' ? '✅' : '❌';
-        var msg  = currentTab === 'pending' ? 'All withdrawal requests have been resolved.' : 'No withdrawals have been ' + currentTab + ' yet.';
+        var msg  = currentTab === 'pending' ? 'No pending withdrawal requests.' : 'No withdrawals have been ' + currentTab + ' yet.';
         el.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon + '</div><h3>No ' + currentTab + ' requests</h3><p>' + msg + '</p></div>';
         return;
       }
@@ -142,22 +180,34 @@
         var hasVoted      = approvals.some(function(a) { return a.user_id === currentUser.id; });
         var isRequester   = w.requested_by === currentUser.id;
         var requester     = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
-        var date          = new Date(w.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+        var date          = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
         var approverNames = approvals.map(function(a) {
           return a.profiles && a.profiles.full_name ? a.profiles.full_name.split(' ')[0] : 'Member';
         });
         var badgeClass = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
         var badgeText  = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
 
+        // Full detail grid
+        var detailHtml =
+          '<div class="w-detail-grid">' +
+            '<div class="w-detail"><div class="dl">Requested by</div><div class="dv">' + (isRequester ? 'You' : requester) + '</div></div>' +
+            '<div class="w-detail"><div class="dl">Date</div><div class="dv">' + date + '</div></div>' +
+            (w.destination ? '<div class="w-detail" style="grid-column:1/-1"><div class="dl">Send to</div><div class="dv">' + w.destination + '</div></div>' : '') +
+          '</div>' +
+          '<div class="w-reason-block"><div class="dl">Reason</div><div class="dv">' + (w.reason || 'No reason provided') + '</div></div>';
+
         var progressHtml = '';
         var approversHtml = '';
         var actionsHtml = '';
+        var liveHtml = '';
 
         if (w.status === 'pending') {
-          progressHtml = '<div class="progress-wrap">' +
-            '<div class="progress-header"><span>Approvals</span><span>' + approvalCount + ' of ' + approvalsRequired + '</span></div>' +
-            '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
-          '</div>';
+          liveHtml = '<div class="live-indicator"><div class="live-dot"></div>Live · updates every 10s</div>';
+          progressHtml =
+            '<div class="progress-wrap">' +
+              '<div class="progress-header"><span>Approvals needed</span><span>' + approvalCount + ' / ' + approvalsRequired + '</span></div>' +
+              '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+            '</div>';
 
           if (approverNames.length) {
             approversHtml = '<div class="approvers">' +
@@ -166,27 +216,24 @@
           }
 
           if (!hasVoted && !isRequester) {
-            actionsHtml = '<div class="action-btns">' +
-              '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
-              '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
-            '</div>';
+            actionsHtml =
+              '<div class="action-btns">' +
+                '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
+                '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
+              '</div>';
           } else {
-            actionsHtml = '<div class="already-voted">' +
-              (isRequester ? '⏳ Waiting for member approvals' : '✓ You have already voted') +
-            '</div>';
+            actionsHtml = '<div class="already-voted">' + (isRequester ? '⏳ Waiting for member approvals' : '✓ You have already voted') + '</div>';
           }
         }
 
         return '<div class="withdrawal-card">' +
           '<div class="w-header"><div class="w-amount">' + kes(w.amount) + '</div><span class="w-badge ' + badgeClass + '">' + badgeText + '</span></div>' +
-          '<div class="w-reason">' + (w.reason || 'No reason provided') + '</div>' +
-          '<div class="w-meta">Requested by ' + (isRequester ? 'you' : requester) + ' · ' + date +
-            (w.destination ? '<br>→ ' + w.destination : '') + '</div>' +
+          detailHtml +
+          liveHtml +
           progressHtml + approversHtml + actionsHtml +
         '</div>';
       }).join('');
 
-      // Attach vote listeners
       el.querySelectorAll('.btn-approve, .btn-reject').forEach(function(btn) {
         btn.addEventListener('click', function() {
           castVote(this.getAttribute('data-id'), this.getAttribute('data-vote'), this);
@@ -202,16 +249,13 @@
       try {
         if (vote === 'approve') {
           var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
-            method: 'POST',
-            headers: authHeaders(),
+            method: 'POST', headers: authHeaders(),
             body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
           });
           if (!res.ok) {
-            var err = await res.json();
-            alert(err.message || 'Failed to approve.');
+            var err = await res.json(); alert(err.message || 'Failed to approve.');
             parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; }); return;
           }
-          // Check threshold
           var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.' + withdrawalId + '&select=id');
           if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
             await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
@@ -236,15 +280,10 @@
         '&select=*,profiles(full_name),withdrawal_approvals(user_id,profiles(full_name))&order=created_at.desc'
       );
       allWithdrawals = withdrawals || [];
-
       var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
       var countEl = document.getElementById('pendingCount');
-      if (pendingCount > 0) {
-        countEl.textContent = pendingCount;
-        countEl.classList.add('show');
-      } else {
-        countEl.classList.remove('show');
-      }
+      if (pendingCount > 0) { countEl.textContent = pendingCount; countEl.classList.add('show'); }
+      else { countEl.classList.remove('show'); }
       renderList();
     }
 
@@ -259,6 +298,7 @@
 
         chamaData = membership.chamas;
         await loadWithdrawals();
+        startPolling();
 
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('mainContent').style.display  = 'block';
@@ -268,8 +308,12 @@
       }
     }
 
+    // Stop polling when user leaves page
+    window.addEventListener('beforeunload', stopPolling);
+
     loadPage();
   </script>
 
 </body>
 </html>
+
