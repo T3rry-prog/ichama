@@ -329,12 +329,61 @@
     © 2026 iChama · <strong>A product of Bytecast Prime</strong>
   </footer>
 
-  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    // Supabase REST API — no CDN library needed
+    const SUPABASE_URL     = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    async function sbFetch(path, options = {}) {
+      const res = await fetch(SUPABASE_URL + path, {
+        ...options,
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+      const data = await res.json();
+      return { data, error: res.ok ? null : data };
+    }
+
+    async function signIn(email, password) {
+      const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) return { data: null, error: data };
+      // Store session
+      localStorage.setItem('ichama_token', data.access_token);
+      localStorage.setItem('ichama_refresh', data.refresh_token);
+      localStorage.setItem('ichama_user', JSON.stringify(data.user));
+      return { data, error: null };
+    }
+
+    async function resetPassword(email) {
+      const res = await fetch(SUPABASE_URL + '/auth/v1/recover', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, redirect_to: 'https://ichamaa.netlify.app/reset.html' })
+      });
+      const data = await res.json();
+      return { error: res.ok ? null : data };
+    }
+
+    // If already logged in, go to dashboard
+    if (localStorage.getItem('ichama_token')) {
+      window.location.href = 'dashboard.html';
+    }
+</script>
+  <script>
     function togglePassword() {
       const input = document.getElementById('password');
       const btn   = document.getElementById('pwToggle');
@@ -372,14 +421,15 @@
       if (!email)    return showError('Please enter your email address.');
       if (!password) return showError('Please enter your password.');
       btn.disabled = true; btn.textContent = 'Signing in...';
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await signIn(email, password);
       if (error) {
-        if (error.message && error.message.toLowerCase().includes('email not confirmed')) {
-          showError('Please confirm your email first. Check your inbox for a confirmation link from iChama.');
-        } else if (error.message && error.message.toLowerCase().includes('invalid login')) {
+        const msg = error.error_description || error.msg || error.message || '';
+        if (msg.toLowerCase().includes('email not confirmed')) {
+          showError('Please confirm your email first. Check your inbox for a confirmation link.');
+        } else if (msg.toLowerCase().includes('invalid')) {
           showError('Incorrect email or password. Please try again.');
         } else {
-          showError(error.message || 'Sign in failed. Please try again.');
+          showError(msg || 'Sign in failed. Please try again.');
         }
         btn.disabled = false; btn.textContent = 'Sign in →'; return;
       }
@@ -394,11 +444,10 @@
       const sucEl = document.getElementById('resetSuccessMsg');
       if (!email) { errEl.textContent = 'Please enter your email address.'; errEl.classList.add('show'); return; }
       btn.disabled = true; btn.textContent = 'Sending...';
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://ichamaa.netlify.app/reset.html'
-      });
+      const { error } = await resetPassword(email);
       if (error) {
-        errEl.textContent = error.message; errEl.classList.add('show');
+        errEl.textContent = error.msg || error.message || 'Failed to send reset link.';
+        errEl.classList.add('show');
         btn.disabled = false; btn.textContent = 'Send reset link →'; return;
       }
       sucEl.textContent = 'Reset link sent! Check your email inbox.';
@@ -413,9 +462,7 @@
       }
     });
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) window.location.href = 'dashboard.html';
-    });
+    // Session check handled above via localStorage
   </script>
 
 </body>
