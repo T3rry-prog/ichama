@@ -7,129 +7,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px; height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; }
-
-    main {
-      padding: 20px 20px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--ink-soft);
-      margin: 20px 0 10px;
-    }
-
+    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin: 20px 0 10px; }
     .section-label:first-child { margin-top: 0; }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 15px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .toggle-row { display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
     .toggle-row:last-child { border-bottom: none; }
-
     .toggle-text { flex: 1; }
     .toggle-label { font-size: 14px; font-weight: 500; color: var(--ink); }
     .toggle-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-
-    .switch {
-      position: relative;
-      width: 46px; height: 26px;
-      flex-shrink: 0;
-    }
-
+    .switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: var(--line);
-      border-radius: 100px;
-      transition: 0.2s;
-    }
-
-    .slider::before {
-      position: absolute;
-      content: "";
-      height: 20px; width: 20px;
-      left: 3px; bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
-
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--line); border-radius: 100px; transition: 0.2s; }
+    .slider::before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.2s; }
     input:checked + .slider { background-color: var(--green); }
     input:checked + .slider::before { transform: translateX(20px); }
-
-    .save-note {
-      text-align: center;
-      font-size: 12px;
-      color: var(--ink-soft);
-      margin-top: 16px;
-      display: none;
-    }
+    .save-note { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 16px; display: none; }
     .save-note.show { display: block; }
   </style>
 </head>
@@ -151,20 +53,14 @@
             <div class="toggle-label">New withdrawal requests</div>
             <div class="toggle-sub">When a member requests to withdraw funds</div>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="notifWithdrawRequest" onchange="saveSettings()" checked>
-            <span class="slider"></span>
-          </label>
+          <label class="switch"><input type="checkbox" id="notifWithdrawRequest" checked><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
           <div class="toggle-text">
             <div class="toggle-label">Approval needed</div>
             <div class="toggle-sub">When your approval is needed on a withdrawal</div>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="notifApprovalNeeded" onchange="saveSettings()" checked>
-            <span class="slider"></span>
-          </label>
+          <label class="switch"><input type="checkbox" id="notifApprovalNeeded" checked><span class="slider"></span></label>
         </div>
       </div>
 
@@ -175,20 +71,14 @@
             <div class="toggle-label">Payment reminders</div>
             <div class="toggle-sub">Reminders before your contribution is due</div>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="notifPaymentReminder" onchange="saveSettings()" checked>
-            <span class="slider"></span>
-          </label>
+          <label class="switch"><input type="checkbox" id="notifPaymentReminder" checked><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
           <div class="toggle-text">
             <div class="toggle-label">Late penalty alerts</div>
             <div class="toggle-sub">When a penalty is applied to your account</div>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="notifPenaltyAlert" onchange="saveSettings()" checked>
-            <span class="slider"></span>
-          </label>
+          <label class="switch"><input type="checkbox" id="notifPenaltyAlert" checked><span class="slider"></span></label>
         </div>
       </div>
 
@@ -199,10 +89,7 @@
             <div class="toggle-label">New members</div>
             <div class="toggle-sub">When someone joins your chama</div>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="notifNewMember" onchange="saveSettings()" checked>
-            <span class="slider"></span>
-          </label>
+          <label class="switch"><input type="checkbox" id="notifNewMember" checked><span class="slider"></span></label>
         </div>
       </div>
 
@@ -210,66 +97,97 @@
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let currentUser = null;
-    const fields = ['notifWithdrawRequest', 'notifApprovalNeeded', 'notifPaymentReminder', 'notifPenaltyAlert', 'notifNewMember'];
-    const dbKeys = {
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
+    }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
+
+    var fields = ['notifWithdrawRequest', 'notifApprovalNeeded', 'notifPaymentReminder', 'notifPenaltyAlert', 'notifNewMember'];
+    var dbKeys = {
       notifWithdrawRequest: 'withdraw_request',
-      notifApprovalNeeded: 'approval_needed',
+      notifApprovalNeeded:  'approval_needed',
       notifPaymentReminder: 'payment_reminder',
-      notifPenaltyAlert: 'penalty_alert',
-      notifNewMember: 'new_member'
+      notifPenaltyAlert:    'penalty_alert',
+      notifNewMember:       'new_member'
     };
 
     async function loadPage() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
-      currentUser = session.user;
+      try {
+        var user = getUser();
+        if (!user) { doLogout(); return; }
 
-      const { data: prefs } = await supabase
-        .from('notification_preferences')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .single();
-
-      if (prefs) {
-        fields.forEach(f => {
-          const key = dbKeys[f];
-          const el = document.getElementById(f);
-          if (prefs[key] !== undefined && prefs[key] !== null) el.checked = prefs[key];
+        var res = await fetch(SUPABASE_URL + '/rest/v1/notification_preferences?user_id=eq.' + user.id + '&select=*&limit=1', {
+          headers: authHeaders()
         });
-      }
+        if (res.status === 401) { doLogout(); return; }
 
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
+        var rows = await res.json();
+        var prefs = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+
+        if (prefs) {
+          fields.forEach(function(f) {
+            var key = dbKeys[f];
+            var el  = document.getElementById(f);
+            if (prefs[key] !== undefined && prefs[key] !== null) el.checked = prefs[key];
+          });
+        }
+
+        // Attach change listeners
+        fields.forEach(function(f) {
+          document.getElementById(f).addEventListener('change', scheduleSave);
+        });
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
+
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error loading preferences.';
+      }
     }
 
-    let saveTimeout;
-    function saveSettings() {
+    var saveTimeout = null;
+    function scheduleSave() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(async () => {
-        const payload = { user_id: currentUser.id };
-        fields.forEach(f => { payload[dbKeys[f]] = document.getElementById(f).checked; });
+      saveTimeout = setTimeout(saveSettings, 400);
+    }
 
-        const { error } = await supabase
-          .from('notification_preferences')
-          .upsert(payload, { onConflict: 'user_id' });
+    async function saveSettings() {
+      try {
+        var user    = getUser();
+        var payload = { user_id: user.id };
+        fields.forEach(function(f) { payload[dbKeys[f]] = document.getElementById(f).checked; });
 
-        const note = document.getElementById('saveNote');
-        if (!error) {
-          note.textContent = 'Saved';
+        var res = await fetch(SUPABASE_URL + '/rest/v1/notification_preferences', {
+          method: 'POST',
+          headers: Object.assign({}, authHeaders(), { 'Prefer': 'resolution=merge-duplicates' }),
+          body: JSON.stringify(payload)
+        });
+
+        var note = document.getElementById('saveNote');
+        if (res.ok || res.status === 201) {
+          note.textContent = '✓ Saved';
           note.classList.add('show');
-          setTimeout(() => note.classList.remove('show'), 1500);
+          setTimeout(function() { note.classList.remove('show'); }, 1500);
         } else {
-          note.textContent = 'Could not save: ' + error.message;
+          var err = await res.json();
+          note.textContent = 'Could not save: ' + (err.message || 'unknown error');
           note.classList.add('show');
         }
-      }, 400);
+      } catch(err) {
+        var note = document.getElementById('saveNote');
+        note.textContent = 'Network error. Changes not saved.';
+        note.classList.add('show');
+      }
     }
 
     loadPage();
