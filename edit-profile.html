@@ -7,152 +7,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px; height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; }
-
-    main {
-      padding: 24px 20px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .avatar-edit {
-      width: 76px; height: 76px;
-      border-radius: 50%;
-      background: var(--green);
-      color: #fff;
-      font-weight: 800;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
+    main { padding: 24px 20px 48px; max-width: 480px; margin: 0 auto; }
+    .avatar-edit { width: 76px; height: 76px; border-radius: 50%; background: var(--green); color: #fff; font-weight: 800; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
     .form-group { margin-bottom: 16px; }
     .form-group:last-child { margin-bottom: 0; }
-
-    label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      margin-bottom: 7px;
-    }
-
+    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
     .readonly-note { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
-
-    input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
+    input { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; }
     input:focus { border-color: var(--green); background: var(--card); }
     input:disabled { color: var(--ink-soft); cursor: not-allowed; }
-
-    .phone-row { display: flex; gap: 10px; }
-    .phone-row select {
-      flex: 0 0 100px;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 12px 10px;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .phone-row input { flex: 1; }
-
-    .msg {
-      border-radius: 9px;
-      padding: 11px 14px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
+    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
     .msg.show { display: block; }
-
-    .btn-save {
-      width: 100%;
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-    }
-
+    .btn-save { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; transition: background 0.15s; font-family: 'Inter', sans-serif; }
     .btn-save:hover { background: var(--green-d); }
-    .btn-save:active { transform: scale(0.98); }
     .btn-save:disabled { opacity: 0.55; cursor: not-allowed; }
   </style>
 </head>
@@ -177,12 +56,10 @@
           <label for="fullName">Full name</label>
           <input type="text" id="fullName" placeholder="e.g. Wanjiku Kamau" />
         </div>
-
         <div class="form-group">
           <label for="phone">Phone number</label>
           <input type="tel" id="phone" placeholder="e.g. +254712345678" />
         </div>
-
         <div class="form-group">
           <label for="email">Email address</label>
           <input type="email" id="email" disabled />
@@ -190,75 +67,104 @@
         </div>
       </div>
 
-      <button class="btn-save" id="saveBtn" onclick="handleSave()">Save changes</button>
+      <button class="btn-save" id="saveBtn">Save changes</button>
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let currentUser = null;
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
+    }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
 
     function showError(msg) {
-      const el = document.getElementById('errorMsg');
+      var el = document.getElementById('errorMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('successMsg').classList.remove('show');
     }
-
     function showSuccess(msg) {
-      const el = document.getElementById('successMsg');
+      var el = document.getElementById('successMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('errorMsg').classList.remove('show');
     }
 
     async function loadPage() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
-      currentUser = session.user;
+      try {
+        var user = getUser();
+        if (!user) { doLogout(); return; }
 
-      const { data: profile } = await supabase
-        .from('profiles').select('*').eq('id', currentUser.id).single();
+        var res = await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + user.id + '&select=*&limit=1', {
+          headers: authHeaders()
+        });
+        if (res.status === 401) { doLogout(); return; }
+        var profiles = await res.json();
+        var profile  = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
 
-      const name = profile?.full_name || '';
-      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) || '?';
+        var name     = profile && profile.full_name ? profile.full_name : '';
+        var initials = name ? name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2) : '?';
 
-      document.getElementById('avatarEdit').textContent = initials;
-      document.getElementById('fullName').value = name;
-      document.getElementById('phone').value = profile?.phone || '';
-      document.getElementById('email').value = profile?.email || currentUser.email || '';
+        document.getElementById('avatarEdit').textContent = initials;
+        document.getElementById('fullName').value = name;
+        document.getElementById('phone').value    = profile && profile.phone ? profile.phone : '';
+        document.getElementById('email').value    = (profile && profile.email) ? profile.email : (user.email || '');
 
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
+
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error loading profile.';
+      }
     }
 
-    async function handleSave() {
-      const fullName = document.getElementById('fullName').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const btn = document.getElementById('saveBtn');
+    document.getElementById('saveBtn').addEventListener('click', async function() {
+      var fullName = document.getElementById('fullName').value.trim();
+      var phone    = document.getElementById('phone').value.trim();
+      var btn      = this;
 
       if (!fullName) return showError('Please enter your full name.');
-      if (!phone) return showError('Please enter your phone number.');
+      if (!phone)    return showError('Please enter your phone number.');
 
       btn.disabled = true; btn.textContent = 'Saving...';
 
-      const { error } = await supabase.from('profiles').update({
-        full_name: fullName,
-        phone
-      }).eq('id', currentUser.id);
+      try {
+        var user = getUser();
+        var res  = await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + user.id, {
+          method: 'PATCH',
+          headers: authHeaders(),
+          body: JSON.stringify({ full_name: fullName, phone: phone })
+        });
 
-      if (error) {
-        showError(error.message);
+        if (!res.ok) {
+          var err = await res.json();
+          showError(err.message || 'Failed to save changes.');
+          btn.disabled = false; btn.textContent = 'Save changes'; return;
+        }
+
+        // Update cached user name
+        var cached = getUser();
+        if (cached) {
+          cached.full_name = fullName;
+          localStorage.setItem('ichama_user', JSON.stringify(cached));
+        }
+
+        showSuccess('Profile updated successfully.');
+        btn.textContent = 'Saved ✓';
+        setTimeout(function() { window.location.href = 'profile.html'; }, 1200);
+
+      } catch(err) {
+        showError('Network error. Please try again.');
         btn.disabled = false; btn.textContent = 'Save changes';
-        return;
       }
-
-      showSuccess('Profile updated.');
-      btn.textContent = 'Saved ✓';
-      setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
-    }
+    });
 
     loadPage();
   </script>
