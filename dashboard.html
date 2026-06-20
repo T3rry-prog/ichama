@@ -118,6 +118,34 @@
     .dropdown-item:hover { background: var(--bg); }
     .dropdown-item.danger { color: var(--error); }
 
+    /* LOADING OVERLAY */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .loading-overlay.hidden { display: none; }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--line);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay p { font-size: 13px; color: var(--ink-soft); }
+
     /* CONTENT */
     .content {
       padding: 18px 20px;
@@ -375,7 +403,8 @@
 
     .activity-amount { font-weight: 700; font-size: 13.5px; }
 
-    .amount-in { color: var(--green); }
+    .amount-in  { color: var(--green); }
+    .amount-out { color: var(--error); }
 
     /* NO CHAMA STATE */
     .no-chama {
@@ -460,11 +489,17 @@
 </head>
 <body>
 
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>Loading your dashboard…</p>
+  </div>
+
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="logo">i<span>Chama</span></div>
     <div class="topbar-right">
-      <button class="notif-btn">🔔</button>
+      <button class="notif-btn" onclick="window.location.href='notifications.html'">🔔</button>
       <div class="avatar" id="avatarBtn" onclick="toggleDropdown()">?</div>
       <div class="dropdown" id="dropdown">
         <a href="profile.html" class="dropdown-item">👤 Profile</a>
@@ -547,7 +582,7 @@
         </a>
       </div>
 
-      <!-- MEMBERS -->
+      <!-- MEMBERS PREVIEW -->
       <div class="members-list">
         <div class="members-header">
           <span>Members</span>
@@ -605,12 +640,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_URL     = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
 
+    /* ── HELPERS ── */
     function getGreeting() {
       const h = new Date().getHours();
       if (h < 12) return 'Good morning';
@@ -626,10 +662,10 @@
     }
 
     function animateScore(score) {
-      const circ = 175.9;
+      const circ   = 175.9;
       const offset = circ - (score / 100) * circ;
       document.getElementById('scoreRing').style.strokeDashoffset = offset;
-      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('scoreNum').textContent  = score;
       document.getElementById('scoreLabel').textContent = scoreLabel(score);
     }
 
@@ -647,11 +683,15 @@
       }
     });
 
+    /* ── LOGOUT — clears both Supabase session and any legacy localStorage keys ── */
     async function handleLogout() {
       await supabase.auth.signOut();
+      localStorage.removeItem('ichama_token');
+      localStorage.removeItem('ichama_user');
       window.location.href = 'index.html';
     }
 
+    /* ── RENDER HELPERS ── */
     function renderMembers(members) {
       const el = document.getElementById('membersList');
       if (!members || members.length === 0) {
@@ -659,11 +699,11 @@
         return;
       }
       el.innerHTML = members.slice(0, 4).map(m => {
-        const name     = m.profiles?.full_name || 'Unknown';
-        const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-        const score    = m.profiles?.accountability_score ?? 100;
+        const name      = m.profiles?.full_name || 'Unknown';
+        const initials  = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        const score     = m.profiles?.accountability_score ?? 100;
         const scoreClass = score >= 75 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
-        const paid     = m.paid_this_month;
+        const paid      = m.paid_this_month;
         return `
           <div class="member-row">
             <div class="member-avatar">${initials}</div>
@@ -677,52 +717,73 @@
       }).join('');
     }
 
-    function renderActivity(contributions) {
+    function renderActivity(rows) {
       const el = document.getElementById('activityList');
-      if (!contributions || contributions.length === 0) {
+      if (!rows || rows.length === 0) {
         el.innerHTML = '<div style="padding:18px;text-align:center;color:#5C6760;font-size:13px;">No activity yet</div>';
         return;
       }
-      el.innerHTML = contributions.slice(0, 5).map(c => {
-        const name = c.profiles?.full_name || 'Unknown';
-        const date = new Date(c.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
-        const isMe = c.user_id === currentUser.id;
+      el.innerHTML = rows.map(r => {
+        const isContrib  = !!r.contribution_amount;
+        const name       = r.actor_name || 'Unknown';
+        const isMe       = r.actor_id === currentUser.id;
+        const date       = new Date(r.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+        const icon       = isContrib ? '💰' : '🏦';
+        const label      = isContrib
+          ? `${isMe ? 'You' : name} contributed`
+          : `${isMe ? 'You' : name} withdrew`;
+        const amountCls  = isContrib ? 'amount-in' : 'amount-out';
+        const sign       = isContrib ? '+' : '-';
+        const amount     = isContrib ? r.contribution_amount : r.withdrawal_amount;
+        const status     = r.status || '';
         return `
           <div class="activity-row">
-            <div class="activity-icon">💰</div>
+            <div class="activity-icon">${icon}</div>
             <div class="activity-info">
-              <div class="activity-title">${isMe ? 'You' : name} contributed</div>
-              <div class="activity-time">${date} · ${c.status}</div>
+              <div class="activity-title">${label}</div>
+              <div class="activity-time">${date}${status ? ' · ' + status : ''}</div>
             </div>
-            <div class="activity-amount amount-in">+${kes(c.amount)}</div>
+            <div class="activity-amount ${amountCls}">${sign}${kes(amount)}</div>
           </div>`;
       }).join('');
     }
 
+    /* ── MAIN LOAD ── */
     async function loadDashboard() {
+      // Auth check via Supabase JS (handles token refresh automatically)
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
       currentUser = session.user;
 
+      // Greeting
       document.getElementById('greetingText').textContent = getGreeting() + ' 👋';
 
+      // Profile
       const { data: profile } = await supabase
         .from('profiles').select('*').eq('id', currentUser.id).single();
 
       const firstName = (profile?.full_name || 'there').split(' ')[0];
       document.getElementById('greetingName').textContent = firstName;
 
-      const initials = (profile?.full_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      const initials = (profile?.full_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
       document.getElementById('avatarBtn').textContent = initials;
 
       animateScore(profile?.accountability_score ?? 100);
 
+      // Membership (first chama only — extend later for multi-chama)
       const { data: membership } = await supabase
-        .from('chama_members').select('*, chamas(*)')
-        .eq('user_id', currentUser.id).limit(1).single();
+        .from('chama_members')
+        .select('*, chamas(*)')
+        .eq('user_id', currentUser.id)
+        .limit(1)
+        .single();
 
       if (!membership) {
         document.getElementById('noChamaSection').style.display = 'block';
+        document.getElementById('loadingOverlay').classList.add('hidden');
         return;
       }
 
@@ -732,17 +793,23 @@
       document.getElementById('nextContrib').textContent =
         'Contribution: ' + kes(chama.contribution_amount) + ' / ' + (chama.contribution_frequency || 'month');
 
+      // Members + monthly paid status
       const { data: members } = await supabase
-        .from('chama_members').select('*, profiles(full_name, accountability_score)')
+        .from('chama_members')
+        .select('*, profiles(full_name, accountability_score)')
         .eq('chama_id', chama.id);
 
       const startOfMonth = new Date();
-      startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
 
+      // Use created_at as fallback — paid_at may not be set on all rows
       const { data: contribsThisMonth } = await supabase
-        .from('contributions').select('user_id')
-        .eq('chama_id', chama.id).eq('status', 'paid')
-        .gte('paid_at', startOfMonth.toISOString());
+        .from('contributions')
+        .select('user_id')
+        .eq('chama_id', chama.id)
+        .eq('status', 'paid')
+        .gte('created_at', startOfMonth.toISOString());
 
       const paidIds = new Set((contribsThisMonth || []).map(c => c.user_id));
 
@@ -751,24 +818,65 @@
       }));
 
       document.getElementById('statMembers').textContent = members?.length ?? 0;
-      document.getElementById('statPaid').textContent = paidIds.size;
+      document.getElementById('statPaid').textContent    = paidIds.size;
       document.getElementById('statPending').textContent = (members?.length ?? 0) - paidIds.size;
 
       renderMembers(membersWithPaid);
 
-      const { data: allContribs } = await supabase
-        .from('contributions').select('amount')
-        .eq('chama_id', chama.id).eq('status', 'paid');
+      // TRUE balance = total paid contributions − total approved withdrawals
+      const [{ data: allContribs }, { data: allWithdrawals }] = await Promise.all([
+        supabase
+          .from('contributions')
+          .select('amount')
+          .eq('chama_id', chama.id)
+          .eq('status', 'paid'),
+        supabase
+          .from('withdrawals')
+          .select('amount')
+          .eq('chama_id', chama.id)
+          .eq('status', 'approved')
+      ]);
 
-      const total = (allContribs || []).reduce((s, c) => s + Number(c.amount), 0);
-      document.getElementById('chamaBalance').textContent = kes(total);
+      const totalIn  = (allContribs   || []).reduce((s, c) => s + Number(c.amount), 0);
+      const totalOut = (allWithdrawals || []).reduce((s, w) => s + Number(w.amount), 0);
+      document.getElementById('chamaBalance').textContent = kes(totalIn - totalOut);
 
-      const { data: recentContribs } = await supabase
-        .from('contributions').select('*, profiles(full_name)')
-        .eq('chama_id', chama.id)
-        .order('created_at', { ascending: false }).limit(5);
+      // Recent activity — merge contributions + withdrawals, sort by date
+      const [{ data: recentContribs }, { data: recentWithdrawals }] = await Promise.all([
+        supabase
+          .from('contributions')
+          .select('id, amount, status, created_at, user_id, profiles(full_name)')
+          .eq('chama_id', chama.id)
+          .order('created_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('withdrawals')
+          .select('id, amount, status, created_at, requested_by, profiles(full_name)')
+          .eq('chama_id', chama.id)
+          .order('created_at', { ascending: false })
+          .limit(5)
+      ]);
 
-      renderActivity(recentContribs);
+      const activity = [
+        ...(recentContribs || []).map(c => ({
+          created_at: c.created_at,
+          actor_id:   c.user_id,
+          actor_name: c.profiles?.full_name,
+          status:     c.status,
+          contribution_amount: c.amount
+        })),
+        ...(recentWithdrawals || []).map(w => ({
+          created_at: w.created_at,
+          actor_id:   w.requested_by,
+          actor_name: w.profiles?.full_name,
+          status:     w.status,
+          withdrawal_amount: w.amount
+        }))
+      ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6);
+
+      renderActivity(activity);
+
+      document.getElementById('loadingOverlay').classList.add('hidden');
     }
 
     loadDashboard();
