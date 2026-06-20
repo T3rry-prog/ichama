@@ -374,7 +374,13 @@
       btn.disabled = true; btn.textContent = 'Signing in...';
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        showError('Incorrect email or password. Please try again.');
+        if (error.message && error.message.toLowerCase().includes('email not confirmed')) {
+          showError('Please confirm your email first. Check your inbox for a confirmation link from iChama.');
+        } else if (error.message && error.message.toLowerCase().includes('invalid login')) {
+          showError('Incorrect email or password. Please try again.');
+        } else {
+          showError(error.message || 'Sign in failed. Please try again.');
+        }
         btn.disabled = false; btn.textContent = 'Sign in →'; return;
       }
       showSuccess('Signed in! Redirecting...');
@@ -414,4 +420,5 @@
 
 </body>
 </html>
+
 
