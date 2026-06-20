@@ -7,256 +7,48 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px; height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; }
-
-    main {
-      padding: 32px 20px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
+    main { padding: 32px 20px 48px; max-width: 480px; margin: 0 auto; }
+    .hero { text-align: center; margin-bottom: 32px; }
     .hero-icon { font-size: 52px; margin-bottom: 16px; }
-
-    .hero h2 {
-      font-weight: 800;
-      font-size: 22px;
-      letter-spacing: -0.3px;
-      margin-bottom: 8px;
-    }
-
-    .hero p {
-      font-size: 14px;
-      color: var(--ink-soft);
-      line-height: 1.6;
-      max-width: 300px;
-      margin: 0 auto;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 24px 20px;
-      margin-bottom: 16px;
-    }
-
-    .panel-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--ink-soft);
-      margin-bottom: 20px;
-    }
-
-    .code-inputs {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .code-input {
-      width: 44px;
-      height: 52px;
-      background: var(--bg);
-      border: 1.5px solid var(--line);
-      border-radius: 10px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      text-align: center;
-      text-transform: uppercase;
-      outline: none;
-      transition: border-color 0.15s;
-      caret-color: var(--green);
-    }
-
+    .hero h2 { font-weight: 800; font-size: 22px; letter-spacing: -0.3px; margin-bottom: 8px; }
+    .hero p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; max-width: 300px; margin: 0 auto; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px 20px; margin-bottom: 16px; }
+    .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 20px; }
+    .code-inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .code-input { width: 44px; height: 52px; background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; text-align: center; text-transform: uppercase; outline: none; transition: border-color 0.15s; caret-color: var(--green); }
     .code-input:focus { border-color: var(--green); background: var(--card); }
-
-    .or-divider {
-      text-align: center;
-      font-size: 13px;
-      color: var(--ink-soft);
-      margin: 16px 0;
-      position: relative;
-    }
-
-    .or-divider::before, .or-divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 44%;
-      height: 1px;
-      background: var(--line);
-    }
-
+    .or-divider { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 16px 0; position: relative; }
+    .or-divider::before, .or-divider::after { content: ''; position: absolute; top: 50%; width: 44%; height: 1px; background: var(--line); }
     .or-divider::before { left: 0; }
     .or-divider::after { right: 0; }
-
-    .full-input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 13px 14px;
-      outline: none;
-      transition: border-color 0.15s;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-    }
-
-    .full-input::placeholder {
-      color: #A7AFA9;
-      letter-spacing: 1px;
-      font-weight: 400;
-    }
-
+    .full-input { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; padding: 13px 14px; outline: none; transition: border-color 0.15s; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+    .full-input::placeholder { color: #A7AFA9; letter-spacing: 1px; font-weight: 400; }
     .full-input:focus { border-color: var(--green); background: var(--card); }
-
-    /* PREVIEW CARD */
-    .preview-card {
-      background: var(--green-tint);
-      border: 1px solid rgba(48,181,74,0.25);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
+    .preview-card { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.25); border-radius: 14px; padding: 20px; margin-bottom: 16px; display: none; }
     .preview-card.show { display: block; }
-
-    .preview-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--green-d);
-      margin-bottom: 10px;
-    }
-
-    .preview-name {
-      font-weight: 800;
-      font-size: 20px;
-      color: var(--ink);
-      margin-bottom: 6px;
-    }
-
-    .preview-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13.5px;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(48,181,74,0.15);
-    }
-
+    .preview-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green-d); margin-bottom: 10px; }
+    .preview-name { font-weight: 800; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+    .preview-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; border-bottom: 1px solid rgba(48,181,74,0.15); }
     .preview-row:last-child { border-bottom: none; }
-
     .preview-row .k { color: var(--ink-soft); }
     .preview-row .v { font-weight: 600; color: var(--ink); }
-
-    .msg {
-      border-radius: 9px;
-      padding: 11px 14px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
+    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
     .msg.show { display: block; }
-
-    .btn-lookup {
-      width: 100%;
-      background: var(--bg);
-      border: 1.5px solid var(--line);
-      color: var(--ink);
-      font-weight: 600;
-      font-size: 14px;
-      padding: 12px;
-      border-radius: 9px;
-      cursor: pointer;
-      margin-top: 12px;
-      font-family: 'Inter', sans-serif;
-      transition: border-color 0.15s;
-    }
-
+    .btn-lookup { width: 100%; background: var(--bg); border: 1.5px solid var(--line); color: var(--ink); font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; cursor: pointer; margin-top: 12px; font-family: 'Inter', sans-serif; transition: border-color 0.15s; }
     .btn-lookup:hover { border-color: var(--green); color: var(--green); }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      font-family: 'Inter', sans-serif;
-    }
-
+    .btn-submit { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
     .btn-submit:hover { background: var(--green-d); }
-    .btn-submit:active { transform: scale(0.98); }
     .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
   </style>
 </head>
@@ -268,7 +60,6 @@
   </nav>
 
   <main>
-
     <div class="hero">
       <div class="hero-icon">🤝</div>
       <h2>Enter your invite code</h2>
@@ -280,7 +71,6 @@
 
     <div class="panel">
       <div class="panel-title">Invite code</div>
-
       <div class="code-inputs" id="codeInputs">
         <input class="code-input" maxlength="1" type="text" />
         <input class="code-input" maxlength="1" type="text" />
@@ -289,178 +79,170 @@
         <input class="code-input" maxlength="1" type="text" />
         <input class="code-input" maxlength="1" type="text" />
       </div>
-
       <div class="or-divider">or type it in full</div>
-
-      <input type="text" class="full-input" id="fullCode" maxlength="6" placeholder="e.g. ABC123" oninput="onFullInput()" />
-
-      <button class="btn-lookup" onclick="lookupCode()">Look up chama →</button>
+      <input type="text" class="full-input" id="fullCode" maxlength="6" placeholder="e.g. ABC123" />
+      <button class="btn-lookup" id="lookupBtn">Look up chama →</button>
     </div>
 
-    <!-- CHAMA PREVIEW -->
     <div class="preview-card" id="previewCard">
       <div class="preview-label">✓ Chama found</div>
       <div class="preview-name" id="previewName">—</div>
-      <div class="preview-row">
-        <span class="k">Contribution</span>
-        <span class="v" id="previewAmount">—</span>
-      </div>
-      <div class="preview-row">
-        <span class="k">Frequency</span>
-        <span class="v" id="previewFreq">—</span>
-      </div>
-      <div class="preview-row">
-        <span class="k">Members</span>
-        <span class="v" id="previewMembers">—</span>
-      </div>
-      <div class="preview-row">
-        <span class="k">Approvals required</span>
-        <span class="v" id="previewApprovals">—</span>
-      </div>
+      <div class="preview-row"><span class="k">Contribution</span><span class="v" id="previewAmount">—</span></div>
+      <div class="preview-row"><span class="k">Frequency</span><span class="v" id="previewFreq">—</span></div>
+      <div class="preview-row"><span class="k">Members</span><span class="v" id="previewMembers">—</span></div>
+      <div class="preview-row"><span class="k">Approvals required</span><span class="v" id="previewApprovals">—</span></div>
     </div>
 
-    <button class="btn-submit" id="joinBtn" style="display:none" onclick="handleJoin()">
-      Join this chama →
-    </button>
-
+    <button class="btn-submit" id="joinBtn" style="display:none">Join this chama →</button>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let currentUser = null;
-    let foundChama  = null;
+    var currentUser = null;
+    var foundChama  = null;
+    var boxes       = document.querySelectorAll('.code-input');
 
-    // Init auth
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) { window.location.href = 'login.html'; return; }
-      currentUser = data.session.user;
-    });
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
+    }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
+    currentUser = getUser();
 
-    // Handle individual box inputs
-    const boxes = document.querySelectorAll('.code-input');
-    boxes.forEach((box, i) => {
-      box.addEventListener('input', () => {
+    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+    function showError(msg) {
+      var el = document.getElementById('errorMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('successMsg').classList.remove('show');
+    }
+    function showSuccess(msg) {
+      var el = document.getElementById('successMsg');
+      el.textContent = msg; el.classList.add('show');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+    function getCode() {
+      return document.getElementById('fullCode').value.trim().toUpperCase();
+    }
+
+    // ── BOX INPUTS ──
+    boxes.forEach(function(box, i) {
+      box.addEventListener('input', function() {
         box.value = box.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
         if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
         syncToFull();
       });
-      box.addEventListener('keydown', (e) => {
+      box.addEventListener('keydown', function(e) {
         if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
       });
-      box.addEventListener('paste', (e) => {
+      box.addEventListener('paste', function(e) {
         e.preventDefault();
-        const pasted = (e.clipboardData.getData('text') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-        pasted.split('').forEach((ch, j) => { if (boxes[j]) boxes[j].value = ch; });
+        var pasted = (e.clipboardData.getData('text') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+        pasted.split('').forEach(function(ch, j) { if (boxes[j]) boxes[j].value = ch; });
         syncToFull();
         if (pasted.length === 6) lookupCode();
       });
     });
 
     function syncToFull() {
-      const code = Array.from(boxes).map(b => b.value).join('');
+      var code = Array.from(boxes).map(function(b) { return b.value; }).join('');
       document.getElementById('fullCode').value = code;
       if (code.length === 6) lookupCode();
     }
 
-    function onFullInput() {
-      const val = document.getElementById('fullCode').value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-      document.getElementById('fullCode').value = val;
-      val.split('').forEach((ch, i) => { if (boxes[i]) boxes[i].value = ch; });
+    document.getElementById('fullCode').addEventListener('input', function() {
+      var val = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+      this.value = val;
+      val.split('').forEach(function(ch, i) { if (boxes[i]) boxes[i].value = ch; });
       if (val.length === 6) lookupCode();
-    }
+    });
 
-    function getCode() {
-      return document.getElementById('fullCode').value.trim().toUpperCase();
-    }
-
-    function showError(msg) {
-      const el = document.getElementById('errorMsg');
-      el.textContent = msg; el.classList.add('show');
-      document.getElementById('successMsg').classList.remove('show');
-    }
-
-    function showSuccess(msg) {
-      const el = document.getElementById('successMsg');
-      el.textContent = msg; el.classList.add('show');
-      document.getElementById('errorMsg').classList.remove('show');
-    }
-
-    function kes(n) {
-      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
-    }
+    // ── LOOKUP ──
+    document.getElementById('lookupBtn').addEventListener('click', lookupCode);
 
     async function lookupCode() {
-      const code = getCode();
+      var code = getCode();
       if (code.length < 6) return;
 
-      const { data: chama } = await supabase
-        .from('chamas')
-        .select('*, chama_members(count)')
-        .eq('invite_code', code)
-        .single();
+      try {
+        var res = await fetch(
+          SUPABASE_URL + '/rest/v1/chamas?invite_code=eq.' + code + '&select=*,chama_members(count)&limit=1',
+          { headers: authHeaders() }
+        );
+        if (res.status === 401) { doLogout(); return; }
+        var list = await res.json();
+        var chama = Array.isArray(list) && list.length > 0 ? list[0] : null;
 
-      if (!chama) {
-        foundChama = null;
-        document.getElementById('previewCard').classList.remove('show');
-        document.getElementById('joinBtn').style.display = 'none';
-        showError('No chama found with that code. Please check and try again.');
-        return;
+        if (!chama) {
+          foundChama = null;
+          document.getElementById('previewCard').classList.remove('show');
+          document.getElementById('joinBtn').style.display = 'none';
+          showError('No chama found with that code. Please check and try again.');
+          return;
+        }
+
+        foundChama = chama;
+        document.getElementById('errorMsg').classList.remove('show');
+
+        var memberCount = chama.chama_members && chama.chama_members[0] ? chama.chama_members[0].count : '—';
+        document.getElementById('previewName').textContent     = chama.name;
+        document.getElementById('previewAmount').textContent   = kes(chama.contribution_amount);
+        document.getElementById('previewFreq').textContent     = chama.contribution_frequency || 'monthly';
+        document.getElementById('previewMembers').textContent  = memberCount + ' members';
+        document.getElementById('previewApprovals').textContent = (chama.approvals_required || 2) + ' approvals';
+
+        document.getElementById('previewCard').classList.add('show');
+        document.getElementById('joinBtn').style.display = 'block';
+
+      } catch(err) {
+        showError('Network error. Please try again.');
       }
-
-      foundChama = chama;
-      document.getElementById('errorMsg').classList.remove('show');
-
-      const memberCount = chama.chama_members?.[0]?.count ?? '—';
-
-      document.getElementById('previewName').textContent = chama.name;
-      document.getElementById('previewAmount').textContent = kes(chama.contribution_amount);
-      document.getElementById('previewFreq').textContent = chama.contribution_frequency || 'monthly';
-      document.getElementById('previewMembers').textContent = memberCount + ' members';
-      document.getElementById('previewApprovals').textContent = (chama.approvals_required || 2) + ' approvals';
-
-      document.getElementById('previewCard').classList.add('show');
-      document.getElementById('joinBtn').style.display = 'block';
     }
 
-    async function handleJoin() {
+    // ── JOIN ──
+    document.getElementById('joinBtn').addEventListener('click', async function() {
       if (!foundChama) return showError('Please look up a valid invite code first.');
-
-      const btn = document.getElementById('joinBtn');
+      var btn = this;
       btn.disabled = true; btn.textContent = 'Joining...';
 
-      // Check not already a member
-      const { data: existing } = await supabase
-        .from('chama_members')
-        .select('id')
-        .eq('chama_id', foundChama.id)
-        .eq('user_id', currentUser.id)
-        .single();
+      try {
+        // Check not already a member
+        var existingRes = await fetch(
+          SUPABASE_URL + '/rest/v1/chama_members?chama_id=eq.' + foundChama.id + '&user_id=eq.' + currentUser.id + '&select=id&limit=1',
+          { headers: authHeaders() }
+        );
+        var existing = await existingRes.json();
+        if (existing && existing.length > 0) {
+          showError('You are already a member of this chama.');
+          btn.disabled = false; btn.textContent = 'Join this chama →'; return;
+        }
 
-      if (existing) {
-        showError('You are already a member of this chama.');
+        var res = await fetch(SUPABASE_URL + '/rest/v1/chama_members', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ chama_id: foundChama.id, user_id: currentUser.id, role: 'member' })
+        });
+
+        if (!res.ok) {
+          var err = await res.json();
+          showError(err.message || 'Failed to join chama.');
+          btn.disabled = false; btn.textContent = 'Join this chama →'; return;
+        }
+
+        showSuccess('You have joined ' + foundChama.name + '! Redirecting...');
+        setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+
+      } catch(err) {
+        showError('Network error. Please try again.');
         btn.disabled = false; btn.textContent = 'Join this chama →';
-        return;
       }
-
-      const { error } = await supabase.from('chama_members').insert({
-        chama_id: foundChama.id,
-        user_id:  currentUser.id,
-        role:     'member'
-      });
-
-      if (error) {
-        showError(error.message);
-        btn.disabled = false; btn.textContent = 'Join this chama →';
-        return;
-      }
-
-      showSuccess('You have joined ' + foundChama.name + '! Redirecting...');
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
-    }
+    });
   </script>
 
 </body>
