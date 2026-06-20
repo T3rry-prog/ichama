@@ -264,6 +264,40 @@
 
     .terms a { color: var(--green); text-decoration: none; }
 
+    /* INTENT SELECTOR */
+    .intent-label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .intent-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .intent-opt {
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: var(--bg);
+    }
+
+    .intent-opt.selected {
+      border-color: var(--green);
+      background: var(--green-tint);
+    }
+
+    .intent-opt .opt-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+    .intent-opt .opt-title { font-size: 13.5px; font-weight: 600; color: var(--ink); display: block; }
+    .intent-opt .opt-sub { font-size: 11.5px; color: var(--ink-soft); display: block; margin-top: 3px; line-height: 1.4; }
+
     footer {
       border-top: 1px solid var(--line);
       padding: 20px;
@@ -385,6 +419,22 @@
         <div class="match-text" id="matchText"></div>
       </div>
 
+      <div class="form-group">
+        <span class="intent-label">What are you here to do?</span>
+        <div class="intent-options">
+          <div class="intent-opt selected" id="intentCreate" onclick="selectIntent('create')">
+            <span class="opt-icon">👑</span>
+            <span class="opt-title">I'm setting up a chama</span>
+            <span class="opt-sub">Create or register a group</span>
+          </div>
+          <div class="intent-opt" id="intentJoin" onclick="selectIntent('join')">
+            <span class="opt-icon">🤝</span>
+            <span class="opt-title">I was invited</span>
+            <span class="opt-sub">Join with an invite code</span>
+          </div>
+        </div>
+      </div>
+
       <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
 
       <div class="divider">or</div>
@@ -460,6 +510,14 @@
         el.textContent = '✗ Passwords do not match';
         el.className = 'match-text match-no';
       }
+    }
+
+    var userIntent = 'create'; // default
+
+    function selectIntent(intent) {
+      userIntent = intent;
+      document.getElementById('intentCreate').classList.toggle('selected', intent === 'create');
+      document.getElementById('intentJoin').classList.toggle('selected', intent === 'join');
     }
 
     window.handleSignup = async function() {
@@ -542,7 +600,8 @@
         }).catch(function(e) { console.log('Email error:', e); });
 
         showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
-        setTimeout(function() { window.location.href = 'dashboard.html'; }, 2000);
+        var dest = userIntent === 'join' ? 'join-chama.html' : 'create-chama.html';
+        setTimeout(function() { window.location.href = dest; }, 2000);
 
       } catch(e) {
         showError('Network error: ' + e.message);
@@ -557,4 +616,5 @@
 
 </body>
 </html>
+
 
