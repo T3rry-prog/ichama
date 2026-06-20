@@ -7,296 +7,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green:      #30B54A;
-      --green-d:    #259A3D;
-      --green-tint: #EAF8ED;
-      --ink:        #1A1F1C;
-      --ink-soft:   #5C6760;
-      --bg:         #F7F8F7;
-      --card:       #FFFFFF;
-      --line:       #E5E9E6;
-      --error:      #D14343;
-      --warning:    #D97706;
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      min-height: 100vh;
-      padding-bottom: 40px;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--card);
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .back-btn {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      width: 34px; height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 16px;
-    }
-
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 40px; }
+    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; }
-
-    main {
-      padding: 20px 20px 48px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* BALANCE CARD */
-    .balance-card {
-      background: var(--green);
-      border-radius: 16px;
-      padding: 22px 20px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
+    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+    .balance-card { background: var(--green); border-radius: 16px; padding: 22px 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
     .balance-left .lbl { font-size: 12.5px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
     .balance-left .amt { font-weight: 800; font-size: 32px; color: #fff; letter-spacing: -0.5px; line-height: 1; }
     .balance-left .sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px; }
-
     .lock-icon { font-size: 36px; opacity: 0.9; }
-
-    /* INFO BANNER */
-    .info-banner {
-      background: #FEF3C7;
-      border: 1px solid #FDE68A;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
+    .info-banner { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
     .info-banner .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-
     .info-banner p { font-size: 13px; color: #78350F; line-height: 1.5; }
-
     .info-banner strong { font-weight: 600; }
-
-    /* PANEL */
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .panel-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--ink-soft);
-      margin-bottom: 16px;
-    }
-
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 16px; }
     .form-group { margin-bottom: 14px; }
     .form-group:last-child { margin-bottom: 0; }
-
-    label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      margin-bottom: 7px;
-    }
-
+    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
     .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
-
-    input, select, textarea {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color 0.15s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
+    input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
     textarea { resize: vertical; min-height: 80px; }
     input::placeholder, textarea::placeholder { color: #A7AFA9; }
     input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
-
-    select {
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C6760' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
-      padding-right: 36px;
-    }
-
     .amount-wrap { position: relative; }
-    .amount-prefix {
-      position: absolute; left: 14px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--ink-soft); font-size: 14px; font-weight: 500;
-      pointer-events: none;
-    }
+    .amount-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
     .amount-wrap input { padding-left: 52px; }
-
-    /* APPROVAL TRACKER */
-    .approval-info {
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .approval-info { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
     .approval-icon { font-size: 24px; }
-
     .approval-text .title { font-size: 14px; font-weight: 600; color: var(--ink); }
     .approval-text .sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
-
-    /* PENDING WITHDRAWALS */
-    .withdrawal-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 10px;
-    }
-
-    .withdrawal-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-
+    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+    .withdrawal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
     .withdrawal-amount { font-weight: 800; font-size: 20px; color: var(--ink); }
     .withdrawal-reason { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
-
-    .w-badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 100px;
-    }
-
+    .w-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
     .w-pending { background: #FEF3C7; color: #92400E; }
     .w-approved { background: var(--green-tint); color: var(--green-d); }
-
-    .withdrawal-meta {
-      font-size: 12px;
-      color: var(--ink-soft);
-      margin-bottom: 12px;
-    }
-
-    .approval-bar {
-      background: var(--line);
-      border-radius: 100px;
-      height: 6px;
-      margin-bottom: 6px;
-      overflow: hidden;
-    }
-
-    .approval-fill {
-      background: var(--green);
-      height: 100%;
-      border-radius: 100px;
-      transition: width 0.3s;
-    }
-
+    .withdrawal-meta { font-size: 12px; color: var(--ink-soft); margin-bottom: 12px; }
+    .approval-bar { background: var(--line); border-radius: 100px; height: 6px; margin-bottom: 6px; overflow: hidden; }
+    .approval-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.3s; }
     .approval-count { font-size: 12px; color: var(--ink-soft); }
-
-    .btn-approve {
-      width: 100%;
-      background: var(--green);
-      color: #fff;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 11px;
-      border-radius: 9px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.15s;
-    }
-
+    .btn-approve { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 11px; border-radius: 9px; border: none; cursor: pointer; margin-top: 10px; transition: background 0.15s; font-family: 'Inter', sans-serif; }
     .btn-approve:hover { background: var(--green-d); }
     .btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .msg {
-      border-radius: 9px;
-      padding: 11px 14px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
+    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
     .msg.show { display: block; }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--ink);
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-
+    .btn-submit { width: 100%; background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; transition: opacity 0.15s; font-family: 'Inter', sans-serif; }
     .btn-submit:hover { opacity: 0.85; }
-    .btn-submit:active { transform: scale(0.98); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .section-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--ink-soft);
-      margin: 20px 0 12px;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 28px;
-      color: var(--ink-soft);
-      font-size: 13.5px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-    }
+    .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin: 20px 0 12px; }
+    .empty-state { text-align: center; padding: 28px; color: var(--ink-soft); font-size: 13.5px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
   </style>
 </head>
 <body>
@@ -310,29 +79,25 @@
     <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
     <div id="mainContent" style="display:none">
 
-      <!-- BALANCE -->
       <div class="balance-card">
         <div class="balance-left">
           <div class="lbl">Group balance</div>
           <div class="amt" id="groupBalance">KES —</div>
-          <div class="sub" id="chamaName">—</div>
+          <div class="sub" id="chamaNameLabel">—</div>
         </div>
         <div class="lock-icon">🔐</div>
       </div>
 
-      <!-- WARNING BANNER -->
       <div class="info-banner">
         <div class="icon">⚠️</div>
         <p>Withdrawals require approval from <strong id="approvalsNeeded">—</strong> members before any funds move. No single person can approve alone.</p>
       </div>
 
-      <!-- REQUEST FORM -->
       <div class="msg error" id="errorMsg"></div>
       <div class="msg success" id="successMsg"></div>
 
       <div class="panel">
         <div class="panel-title">New withdrawal request</div>
-
         <div class="form-group">
           <label for="amount">Amount (KES)</label>
           <div class="amount-wrap">
@@ -340,18 +105,15 @@
             <input type="number" id="amount" min="1" placeholder="0" />
           </div>
         </div>
-
         <div class="form-group">
           <label for="reason">Reason for withdrawal</label>
           <textarea id="reason" placeholder="e.g. Emergency medical expense for a member, investment in land..."></textarea>
           <p class="hint">Be specific. Members will vote based on this reason.</p>
         </div>
-
         <div class="form-group">
           <label for="destination">Destination account</label>
           <input type="text" id="destination" placeholder="e.g. M-Pesa 0712345678 / Equity Bank AC No." />
         </div>
-
         <div class="form-group">
           <label>Approvals required</label>
           <div class="approval-info">
@@ -364,191 +126,214 @@
         </div>
       </div>
 
-      <button class="btn-submit" id="submitBtn" onclick="handleWithdrawRequest()">Submit withdrawal request →</button>
+      <button class="btn-submit" id="submitBtn">Submit withdrawal request →</button>
 
-      <!-- PENDING WITHDRAWALS -->
       <div class="section-title">Pending approvals</div>
       <div id="pendingList"></div>
 
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    let currentUser = null;
-    let chamaData   = null;
-    let myMembership = null;
+    var currentUser  = null;
+    var chamaData    = null;
 
-    function kes(n) {
-      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() {
+      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
     }
+    function doLogout() {
+      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
+      window.location.href = 'login.html';
+    }
+    if (!getToken()) { window.location.href = 'login.html'; }
 
+    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
     function showError(msg) {
-      const el = document.getElementById('errorMsg');
+      var el = document.getElementById('errorMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('successMsg').classList.remove('show');
     }
-
     function showSuccess(msg) {
-      const el = document.getElementById('successMsg');
+      var el = document.getElementById('successMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('errorMsg').classList.remove('show');
     }
 
+    async function sbGet(path) {
+      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
+      if (res.status === 401) { doLogout(); return null; }
+      return res.ok ? res.json() : null;
+    }
+
     async function loadPage() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
-      currentUser = session.user;
+      try {
+        currentUser = getUser();
+        if (!currentUser) { doLogout(); return; }
 
-      const { data: membership } = await supabase
-        .from('chama_members').select('*, chamas(*)')
-        .eq('user_id', currentUser.id).limit(1).single();
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
+        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
+        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
 
-      if (!membership) { window.location.href = 'dashboard.html'; return; }
+        chamaData = membership.chamas;
 
-      myMembership = membership;
-      chamaData = membership.chamas;
+        // Balance
+        var contribs    = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&status=eq.paid&select=amount') || [];
+        var withdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.' + chamaData.id + '&status=eq.approved&select=amount') || [];
+        var totalIn     = contribs.reduce(function(s, c) { return s + Number(c.amount); }, 0);
+        var totalOut    = withdrawals.reduce(function(s, w) { return s + Number(w.amount); }, 0);
 
-      // Set balance
-      const { data: contribs } = await supabase
-        .from('contributions').select('amount')
-        .eq('chama_id', chamaData.id).eq('status', 'paid');
+        document.getElementById('groupBalance').textContent  = kes(totalIn - totalOut);
+        document.getElementById('chamaNameLabel').textContent = chamaData.name;
 
-      const total = (contribs || []).reduce((s, c) => s + Number(c.amount), 0);
-      document.getElementById('groupBalance').textContent = kes(total);
-      document.getElementById('chamaName').textContent = chamaData.name;
+        var approvals = chamaData.approvals_required || 2;
+        document.getElementById('approvalsNeeded').textContent    = approvals;
+        document.getElementById('approvalsRequired').textContent  = approvals;
 
-      const approvals = chamaData.approvals_required || 2;
-      document.getElementById('approvalsNeeded').textContent = approvals;
-      document.getElementById('approvalsRequired').textContent = approvals;
+        await loadPendingWithdrawals();
 
-      await loadPendingWithdrawals();
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
 
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error loading page.';
+      }
     }
 
     async function loadPendingWithdrawals() {
-      const { data: withdrawals } = await supabase
-        .from('withdrawals')
-        .select('*, profiles(full_name), withdrawal_approvals(user_id)')
-        .eq('chama_id', chamaData.id)
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false });
+      var withdrawals = await sbGet(
+        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
+        '&status=eq.pending&select=*,profiles(full_name),withdrawal_approvals(user_id)&order=created_at.desc'
+      );
+      withdrawals = withdrawals || [];
 
-      const el = document.getElementById('pendingList');
-
-      if (!withdrawals || withdrawals.length === 0) {
+      var el = document.getElementById('pendingList');
+      if (withdrawals.length === 0) {
         el.innerHTML = '<div class="empty-state">No pending withdrawal requests</div>';
         return;
       }
 
-      const approvals_required = chamaData.approvals_required || 2;
+      var approvalsRequired = chamaData.approvals_required || 2;
 
-      el.innerHTML = withdrawals.map(w => {
-        const approvalCount = w.withdrawal_approvals?.length || 0;
-        const pct = Math.min(100, (approvalCount / approvals_required) * 100);
-        const hasApproved = w.withdrawal_approvals?.some(a => a.user_id === currentUser.id);
-        const requesterName = w.profiles?.full_name || 'Unknown';
-        const date = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
+      el.innerHTML = withdrawals.map(function(w) {
+        var approvalCount  = w.withdrawal_approvals ? w.withdrawal_approvals.length : 0;
+        var pct            = Math.min(100, (approvalCount / approvalsRequired) * 100);
+        var hasApproved    = w.withdrawal_approvals && w.withdrawal_approvals.some(function(a) { return a.user_id === currentUser.id; });
+        var requesterName  = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
+        var date           = new Date(w.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+        var isRequester    = w.requested_by === currentUser.id;
+        var canApprove     = !hasApproved && !isRequester;
 
-        return `
-          <div class="withdrawal-card">
-            <div class="withdrawal-top">
-              <div>
-                <div class="withdrawal-amount">${kes(w.amount)}</div>
-                <div class="withdrawal-reason">${w.reason || 'No reason given'}</div>
-              </div>
-              <span class="w-badge w-pending">Pending</span>
-            </div>
-            <div class="withdrawal-meta">
-              Requested by ${requesterName} · ${date}
-              ${w.destination ? '<br>To: ' + w.destination : ''}
-            </div>
-            <div class="approval-bar">
-              <div class="approval-fill" style="width:${pct}%"></div>
-            </div>
-            <div class="approval-count">${approvalCount} of ${approvals_required} approvals</div>
-            ${!hasApproved && w.requested_by !== currentUser.id ? `
-              <button class="btn-approve" onclick="approveWithdrawal('${w.id}', this)">
-                ✓ Approve this withdrawal
-              </button>` : `
-              <button class="btn-approve" disabled>
-                ${hasApproved ? '✓ You approved' : '⏳ Awaiting approvals'}
-              </button>`
-            }
-          </div>`;
+        return '<div class="withdrawal-card">' +
+          '<div class="withdrawal-top">' +
+            '<div>' +
+              '<div class="withdrawal-amount">' + kes(w.amount) + '</div>' +
+              '<div class="withdrawal-reason">' + (w.reason || 'No reason given') + '</div>' +
+            '</div>' +
+            '<span class="w-badge w-pending">Pending</span>' +
+          '</div>' +
+          '<div class="withdrawal-meta">Requested by ' + requesterName + ' · ' + date +
+            (w.destination ? '<br>To: ' + w.destination : '') +
+          '</div>' +
+          '<div class="approval-bar"><div class="approval-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="approval-count">' + approvalCount + ' of ' + approvalsRequired + ' approvals</div>' +
+          (canApprove
+            ? '<button class="btn-approve" data-id="' + w.id + '">✓ Approve this withdrawal</button>'
+            : '<button class="btn-approve" disabled>' + (hasApproved ? '✓ You approved' : '⏳ Awaiting approvals') + '</button>'
+          ) +
+        '</div>';
       }).join('');
+
+      // Attach approve listeners
+      el.querySelectorAll('.btn-approve[data-id]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          approveWithdrawal(this.getAttribute('data-id'), this);
+        });
+      });
     }
 
     async function approveWithdrawal(withdrawalId, btn) {
       btn.disabled = true; btn.textContent = 'Approving...';
 
-      const { error } = await supabase.from('withdrawal_approvals').insert({
-        withdrawal_id: withdrawalId,
-        user_id: currentUser.id,
-        chama_id: chamaData.id
-      });
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
+        });
 
-      if (error) {
+        if (!res.ok) {
+          var err = await res.json();
+          alert(err.message || 'Failed to approve.');
+          btn.disabled = false; btn.textContent = '✓ Approve this withdrawal'; return;
+        }
+
+        // Check if enough approvals
+        var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.' + withdrawalId + '&select=id');
+        if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
+          await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ status: 'approved' })
+          });
+        }
+
+        await loadPendingWithdrawals();
+
+      } catch(err) {
+        alert('Network error. Please try again.');
         btn.disabled = false; btn.textContent = '✓ Approve this withdrawal';
-        alert('Error: ' + error.message); return;
       }
-
-      // Check if enough approvals now
-      const { data: approvals } = await supabase
-        .from('withdrawal_approvals')
-        .select('id').eq('withdrawal_id', withdrawalId);
-
-      if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
-        await supabase.from('withdrawals')
-          .update({ status: 'approved' })
-          .eq('id', withdrawalId);
-      }
-
-      await loadPendingWithdrawals();
     }
 
-    async function handleWithdrawRequest() {
-      const amount      = parseFloat(document.getElementById('amount').value);
-      const reason      = document.getElementById('reason').value.trim();
-      const destination = document.getElementById('destination').value.trim();
-      const btn         = document.getElementById('submitBtn');
+    document.getElementById('submitBtn').addEventListener('click', async function() {
+      var amount      = parseFloat(document.getElementById('amount').value);
+      var reason      = document.getElementById('reason').value.trim();
+      var destination = document.getElementById('destination').value.trim();
+      var btn         = this;
 
       if (!amount || amount <= 0) return showError('Please enter a valid amount.');
-      if (!reason) return showError('Please provide a reason for the withdrawal.');
+      if (!reason)      return showError('Please provide a reason for the withdrawal.');
       if (!destination) return showError('Please enter the destination account.');
 
       btn.disabled = true; btn.textContent = 'Submitting...';
 
-      const { error } = await supabase.from('withdrawals').insert({
-        chama_id:     chamaData.id,
-        requested_by: currentUser.id,
-        amount,
-        reason,
-        destination,
-        status:       'pending'
-      });
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawals', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            chama_id:     chamaData.id,
+            requested_by: currentUser.id,
+            amount:       amount,
+            reason:       reason,
+            destination:  destination,
+            status:       'pending'
+          })
+        });
 
-      if (error) {
-        showError(error.message);
+        if (!res.ok) {
+          var err = await res.json();
+          showError(err.message || 'Failed to submit request.');
+          btn.disabled = false; btn.textContent = 'Submit withdrawal request →'; return;
+        }
+
+        showSuccess('Withdrawal request submitted. Members will now vote.');
+        document.getElementById('amount').value      = '';
+        document.getElementById('reason').value      = '';
+        document.getElementById('destination').value = '';
         btn.disabled = false; btn.textContent = 'Submit withdrawal request →';
-        return;
+        await loadPendingWithdrawals();
+
+      } catch(err) {
+        showError('Network error. Please try again.');
+        btn.disabled = false; btn.textContent = 'Submit withdrawal request →';
       }
-
-      showSuccess('Withdrawal request submitted. Members will now vote.');
-      document.getElementById('amount').value = '';
-      document.getElementById('reason').value = '';
-      document.getElementById('destination').value = '';
-      btn.textContent = 'Submit withdrawal request →';
-      btn.disabled = false;
-
-      await loadPendingWithdrawals();
-    }
+    });
 
     loadPage();
   </script>
