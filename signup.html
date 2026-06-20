@@ -305,7 +305,7 @@
           <div class="code-wrap">
             <select id="countryCode">
               <option value="+234">🇳🇬 +234</option>
-              <option value="+254">🇰🇪 +254</option>
+              <option value="+254" selected>🇰🇪 +254</option>
               <option value="+255">🇹🇿 +255</option>
               <option value="+256">🇺🇬 +256</option>
               <option value="+250">🇷🇼 +250</option>
@@ -462,7 +462,7 @@
       }
     }
 
-    async function handleSignup() {
+    window.handleSignup = async function() {
       var fullname    = document.getElementById('fullname').value.trim();
       var countryCode = document.getElementById('countryCode').value;
       var phoneRaw    = document.getElementById('phone').value.trim();
@@ -525,8 +525,24 @@
         localStorage.setItem('ichama_token', accessToken);
         localStorage.setItem('ichama_user', JSON.stringify({ id: userId, email: email, full_name: fullname }));
 
-        showSuccess('Account created! Redirecting...');
-        setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+        // Send welcome email
+        var firstName = fullname.split(' ')[0];
+        fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer re_Ggunjeay_NcxX95pa9ysCuP8GoZDZfWf3',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: 'iChama <noreply@spotontickets.com>',
+            to: [email],
+            subject: 'Welcome to iChama 🎉',
+            html: '<div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 20px;background:#F7F8F7;"><div style="background:#fff;border-radius:16px;padding:28px 24px;border:1px solid #E5E9E6;"><h1 style="font-size:22px;color:#1A1F1C;margin:0 0 8px;">Welcome to i<span style="color:#30B54A;">Chama</span> 👋</h1><p style="color:#5C6760;font-size:14px;margin:0 0 20px;">Hi ' + firstName + ', your account is ready. Here\'s what you can do:</p><div style="background:#EAF8ED;border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid rgba(48,181,74,0.2);"><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Create your chama and invite members</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Join an existing chama with an invite code</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Track contributions and accountability scores</p><p style="color:#5C6760;font-size:13px;margin:0;">✅ Multi-signature protection on all withdrawals</p></div><a href="https://ichama.netlify.app/dashboard.html" style="display:block;background:#30B54A;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:13px;border-radius:9px;text-align:center;">Go to my dashboard →</a><p style="color:#A7AFA9;font-size:11px;margin:16px 0 0;text-align:center;">iChama · Bytecast Prime · Kenya</p></div></div>'
+          })
+        }).catch(function(e) { console.log('Email error:', e); });
+
+        showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
+        setTimeout(function() { window.location.href = 'dashboard.html'; }, 2000);
 
       } catch(e) {
         showError('Network error: ' + e.message);
