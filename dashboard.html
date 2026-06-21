@@ -694,16 +694,15 @@
     }
 
     // ── DROPDOWN ──
-    document.getElementById('avatarBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
+    window.toggleDropdown = function() {
       document.getElementById('dropdown').classList.toggle('show');
-    });
-    document.addEventListener('click', function() {
-      document.getElementById('dropdown').classList.remove('show');
-    });
-    document.getElementById('logoutBtn').addEventListener('click', doLogout);
-    document.getElementById('notifBtn').addEventListener('click', function() {
-      window.location.href = 'notifications.html';
+    };
+    window.doLogoutClick = doLogout;
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#avatarBtn') && !e.target.closest('#dropdown')) {
+        var d = document.getElementById('dropdown');
+        if (d) d.classList.remove('show');
+      }
     });
 
     // ── RENDER MEMBERS ──
