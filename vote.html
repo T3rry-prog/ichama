@@ -16,67 +16,86 @@
     .topbar { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
     .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     .topbar h1 { font-weight: 600; font-size: 16px; flex: 1; }
-    .badge-count { background: var(--error); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: none; }
-    .badge-count.show { display: block; }
+    .new-poll-btn { background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
     main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+
+    /* TABS */
     .tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
-    .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13.5px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
+    .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; border: none; background: none; font-family: 'Inter', sans-serif; }
     .tab.active { background: var(--green); color: #fff; font-weight: 600; }
 
-    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
-    .w-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .w-amount { font-weight: 800; font-size: 26px; color: var(--ink); letter-spacing: -0.5px; }
-    .w-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; flex-shrink: 0; }
-    .w-pending  { background: #FEF3C7; color: #92400E; }
-    .w-approved { background: var(--green-tint); color: var(--green-d); }
-    .w-rejected { background: #FEE2E2; color: var(--error); }
-
-    .w-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .w-detail { background: var(--bg); border-radius: 8px; padding: 9px 12px; }
-    .w-detail .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 2px; }
-    .w-detail .dv { font-size: 13px; font-weight: 600; color: var(--ink); }
-    .w-reason-block { background: var(--bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
-    .w-reason-block .dl { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; }
-    .w-reason-block .dv { font-size: 13.5px; color: var(--ink); line-height: 1.5; }
+    /* POLL CARD */
+    .poll-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .poll-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .poll-title { font-weight: 700; font-size: 16px; color: var(--ink); flex: 1; line-height: 1.4; }
+    .poll-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px; flex-shrink: 0; margin-left: 10px; }
+    .badge-open   { background: var(--green-tint); color: var(--green-d); }
+    .badge-closed { background: var(--line); color: var(--ink-soft); }
+    .poll-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 12px; }
+    .poll-meta { font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
 
     /* LIVE */
     .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green-d); font-weight: 600; margin-bottom: 10px; }
     .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-    /* PROGRESS */
-    .progress-wrap { margin-bottom: 12px; }
-    .progress-header { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
-    .progress-bar { background: var(--line); border-radius: 100px; height: 7px; overflow: hidden; }
-    .progress-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.4s ease; }
+    /* OPTIONS */
+    .options-list { margin-bottom: 12px; }
+    .option-row { margin-bottom: 8px; }
+    .option-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 3px; }
+    .option-label { font-size: 13.5px; font-weight: 500; color: var(--ink); min-width: 40px; }
+    .option-bar-bg { flex: 1; background: var(--line); border-radius: 100px; height: 8px; overflow: hidden; }
+    .option-bar-fill { height: 100%; border-radius: 100px; background: var(--green); transition: width 0.4s; }
+    .option-bar-fill.mine { background: var(--green-d); }
+    .option-count { font-size: 12px; color: var(--ink-soft); min-width: 30px; text-align: right; }
+    .option-btn { width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 9px; padding: 11px 14px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; text-align: left; transition: border-color 0.15s, background 0.15s; margin-bottom: 6px; }
+    .option-btn:hover { border-color: var(--green); background: var(--green-tint); }
+    .option-btn.selected { border-color: var(--green); background: var(--green-tint); color: var(--green-d); font-weight: 600; }
+
+    /* COMMENT */
+    .comment-field { margin-bottom: 10px; }
+    .comment-field label { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+    .comment-field textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; padding: 10px 12px; outline: none; resize: none; height: 64px; transition: border-color 0.15s; }
+    .comment-field textarea:focus { border-color: var(--green); background: var(--card); }
+    .comment-field textarea::placeholder { color: #A7AFA9; }
+    .btn-submit-vote { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-submit-vote:disabled { opacity: 0.5; cursor: not-allowed; }
+    .already-voted-msg { background: var(--green-tint); border-radius: 9px; padding: 10px 14px; font-size: 13px; color: var(--green-d); font-weight: 500; margin-bottom: 10px; }
 
     /* VOTE FEED */
-    .votes-feed { margin-bottom: 12px; }
-    .vote-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .votes-section { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+    .votes-title { font-size: 12px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .vote-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
     .vote-item:last-child { border-bottom: none; }
-    .vote-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--green-tint); color: var(--green-d); font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .vote-avatar.reject { background: #FEE2E2; color: var(--error); }
+    .vote-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green-tint); color: var(--green-d); font-weight: 700; font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
     .vote-body { flex: 1; }
-    .vote-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+    .vote-top { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap; }
     .vote-name { font-size: 13px; font-weight: 600; color: var(--ink); }
-    .vote-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
-    .vt-approve { background: var(--green-tint); color: var(--green-d); }
-    .vt-reject  { background: #FEE2E2; color: var(--error); }
-    .vote-reason { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
-    .vote-time { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+    .vote-choice { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; background: var(--green-tint); color: var(--green-d); }
+    .vote-comment { font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; margin-top: 2px; }
+    .vote-time { font-size: 11px; color: var(--ink-soft); }
 
-    /* VOTE FORM */
-    .vote-form { border-top: 1px solid var(--line); padding-top: 12px; }
-    .vote-form label { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
-    .vote-form textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; padding: 10px 12px; outline: none; resize: none; height: 72px; transition: border-color 0.15s; }
-    .vote-form textarea:focus { border-color: var(--green); background: var(--card); }
-    .vote-form textarea::placeholder { color: #A7AFA9; }
-    .action-btns { display: flex; gap: 10px; margin-top: 10px; }
-    .btn-approve { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
-    .btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-reject { flex: 1; background: var(--bg); color: var(--error); font-weight: 600; font-size: 14px; padding: 12px; border-radius: 9px; border: 1.5px solid #FECACA; cursor: pointer; font-family: 'Inter', sans-serif; }
-    .btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
-    .already-voted { text-align: center; padding: 10px; font-size: 13px; color: var(--ink-soft); background: var(--bg); border-radius: 8px; margin-top: 10px; }
+    /* CREATE POLL MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--line); border-radius: 100px; margin: 0 auto 20px; }
+    .modal-title { font-weight: 700; font-size: 17px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; }
+    .form-group textarea { resize: vertical; min-height: 72px; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--green); background: var(--card); }
+    .options-editor { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+    .option-input-row { display: flex; gap: 8px; align-items: center; }
+    .option-input-row input { flex: 1; }
+    .remove-opt { background: none; border: none; color: var(--error); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .add-opt-btn { background: none; border: 1px dashed var(--line); border-radius: 8px; color: var(--green-d); font-size: 13px; font-weight: 600; padding: 9px; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; }
+    .btn-create { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; }
+    .btn-create:disabled { opacity: 0.55; cursor: not-allowed; }
+    .create-error { font-size: 13px; color: var(--error); margin-bottom: 10px; display: none; }
+    .create-error.show { display: block; }
 
     .empty-state { text-align: center; padding: 48px 20px; }
     .empty-icon { font-size: 48px; margin-bottom: 14px; }
@@ -94,21 +113,50 @@
 
   <div class="topbar">
     <a href="dashboard.html" class="back-btn">←</a>
-    <h1>Withdrawal votes</h1>
-    <span class="badge-count" id="pendingCount"></span>
+    <h1>Polls & Votes</h1>
+    <button class="new-poll-btn" id="newPollBtn">+ New poll</button>
   </div>
 
   <main>
     <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
     <div id="mainContent" style="display:none">
       <div class="tabs">
-        <button class="tab active" data-tab="pending">Pending</button>
-        <button class="tab" data-tab="approved">Approved</button>
-        <button class="tab" data-tab="rejected">Rejected</button>
+        <button class="tab active" data-tab="open">Open</button>
+        <button class="tab" data-tab="closed">Closed</button>
       </div>
-      <div id="withdrawalList"></div>
+      <div id="pollList"></div>
     </div>
   </main>
+
+  <!-- CREATE POLL MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Create a poll</div>
+      <div class="create-error" id="createError"></div>
+      <div class="form-group">
+        <label for="pollTitle">Question / Title</label>
+        <input type="text" id="pollTitle" placeholder="e.g. Should we invest in land?" />
+      </div>
+      <div class="form-group">
+        <label for="pollDesc">Description <span style="color:var(--ink-soft);font-weight:400;font-size:12px;">(optional)</span></label>
+        <textarea id="pollDesc" placeholder="Add more context for members..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Options</label>
+        <div class="options-editor" id="optionsEditor">
+          <div class="option-input-row"><input type="text" placeholder="Option 1" value="Yes" /><button class="remove-opt" type="button">×</button></div>
+          <div class="option-input-row"><input type="text" placeholder="Option 2" value="No" /><button class="remove-opt" type="button">×</button></div>
+        </div>
+        <button class="add-opt-btn" id="addOptBtn">+ Add option</button>
+      </div>
+      <div class="form-group">
+        <label for="pollDeadline">Deadline <span style="color:var(--ink-soft);font-weight:400;font-size:12px;">(optional)</span></label>
+        <input type="datetime-local" id="pollDeadline" />
+      </div>
+      <button class="btn-create" id="createPollBtn">Create poll</button>
+    </div>
+  </div>
 
   <nav class="bottom-nav">
     <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
@@ -122,11 +170,12 @@
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    var currentUser    = null;
-    var chamaData      = null;
-    var allWithdrawals = [];
-    var currentTab     = 'pending';
-    var pollInterval   = null;
+    var currentUser = null;
+    var chamaData   = null;
+    var allPolls    = [];
+    var currentTab  = 'open';
+    var pollInterval = null;
+    var selectedOptions = {};
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
@@ -134,13 +183,12 @@
     function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
     if (!getToken()) { window.location.href = 'login.html'; }
 
-    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
-    function timeAgo(dateStr) {
-      var diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+    function timeAgo(d) {
+      var diff = Math.floor((Date.now() - new Date(d)) / 1000);
       if (diff < 60) return 'just now';
       if (diff < 3600) return Math.floor(diff/60) + 'm ago';
       if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
-      return new Date(dateStr).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
+      return new Date(d).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
     }
 
     async function sbGet(path) {
@@ -149,198 +197,243 @@
       return res.ok ? res.json() : null;
     }
 
+    // ── TABS ──
     document.querySelectorAll('.tab').forEach(function(btn) {
       btn.addEventListener('click', function() {
         currentTab = this.getAttribute('data-tab');
         document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
         this.classList.add('active');
-        renderList();
-        if (currentTab === 'pending') startPolling(); else stopPolling();
+        renderPolls();
+        if (currentTab === 'open') startPolling(); else stopPolling();
       });
     });
 
-    function startPolling() {
-      stopPolling();
-      pollInterval = setInterval(silentRefresh, 10000);
-    }
-    function stopPolling() {
-      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-    }
-    async function silentRefresh() {
-      await loadWithdrawals();
-    }
+    function startPolling() { stopPolling(); pollInterval = setInterval(loadPolls, 10000); }
+    function stopPolling() { if (pollInterval) { clearInterval(pollInterval); pollInterval = null; } }
     window.addEventListener('beforeunload', stopPolling);
 
-    function renderList() {
-      var filtered = allWithdrawals.filter(function(w) { return w.status === currentTab; });
-      var el = document.getElementById('withdrawalList');
-      var approvalsRequired = chamaData.approvals_required || 2;
+    // ── MODAL ──
+    document.getElementById('newPollBtn').addEventListener('click', function() {
+      document.getElementById('modalOverlay').classList.add('show');
+    });
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('show');
+    });
 
-      if (!filtered.length) {
-        var icon = currentTab === 'pending' ? '🗳️' : currentTab === 'approved' ? '✅' : '❌';
-        el.innerHTML = '<div class="empty-state"><div class="empty-icon">' + icon + '</div><h3>No ' + currentTab + ' requests</h3><p>' + (currentTab === 'pending' ? 'No pending withdrawal requests.' : 'No withdrawals ' + currentTab + ' yet.') + '</p></div>';
-        return;
-      }
+    // ── OPTIONS EDITOR ──
+    document.getElementById('addOptBtn').addEventListener('click', function() {
+      var editor = document.getElementById('optionsEditor');
+      var count  = editor.children.length + 1;
+      var row    = document.createElement('div');
+      row.className = 'option-input-row';
+      row.innerHTML = '<input type="text" placeholder="Option ' + count + '" /><button class="remove-opt" type="button">×</button>';
+      row.querySelector('.remove-opt').addEventListener('click', function() { row.remove(); });
+      editor.appendChild(row);
+    });
 
-      el.innerHTML = filtered.map(function(w) {
-        var votes        = w.withdrawal_votes || [];
-        var approveVotes = votes.filter(function(v) { return v.vote === 'approve'; });
-        var rejectVotes  = votes.filter(function(v) { return v.vote === 'reject'; });
-        var approvalCount = approveVotes.length;
-        var pct          = Math.min(100, (approvalCount / approvalsRequired) * 100);
-        var myVote       = votes.find(function(v) { return v.user_id === currentUser.id; });
-        var isRequester  = w.requested_by === currentUser.id;
-        var requester    = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
-        var date         = new Date(w.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
-        var badgeClass   = w.status === 'pending' ? 'w-pending' : w.status === 'approved' ? 'w-approved' : 'w-rejected';
-        var badgeText    = w.status === 'pending' ? '⏳ Pending' : w.status === 'approved' ? '✅ Approved' : '❌ Rejected';
+    document.querySelectorAll('.remove-opt').forEach(function(btn) {
+      btn.addEventListener('click', function() { this.closest('.option-input-row').remove(); });
+    });
 
-        // Detail grid
-        var detailHtml =
-          '<div class="w-detail-grid">' +
-            '<div class="w-detail"><div class="dl">Requested by</div><div class="dv">' + (isRequester ? 'You' : requester) + '</div></div>' +
-            '<div class="w-detail"><div class="dl">Date</div><div class="dv">' + date + '</div></div>' +
-            (w.destination ? '<div class="w-detail" style="grid-column:1/-1"><div class="dl">Send to</div><div class="dv">' + w.destination + '</div></div>' : '') +
-          '</div>' +
-          '<div class="w-reason-block"><div class="dl">Reason for withdrawal</div><div class="dv">' + (w.reason || 'No reason provided') + '</div></div>';
+    // ── CREATE POLL ──
+    document.getElementById('createPollBtn').addEventListener('click', async function() {
+      var title    = document.getElementById('pollTitle').value.trim();
+      var desc     = document.getElementById('pollDesc').value.trim();
+      var deadline = document.getElementById('pollDeadline').value;
+      var errEl    = document.getElementById('createError');
+      var btn      = this;
 
-        // Progress
-        var progressHtml = '';
-        var voteFeedHtml = '';
-        var voteFormHtml = '';
+      var optInputs = document.querySelectorAll('#optionsEditor input');
+      var options = Array.from(optInputs).map(function(i) { return i.value.trim(); }).filter(Boolean);
 
-        if (w.status === 'pending') {
-          progressHtml =
-            '<div class="live-indicator"><div class="live-dot"></div>Live · updates every 10s</div>' +
-            '<div class="progress-wrap">' +
-              '<div class="progress-header"><span>Approvals</span><span>' + approvalCount + ' of ' + approvalsRequired + ' needed</span></div>' +
-              '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
-            '</div>';
+      if (!title) { errEl.textContent = 'Please enter a question.'; errEl.classList.add('show'); return; }
+      if (options.length < 2) { errEl.textContent = 'Add at least 2 options.'; errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
 
-          // Vote feed — show all votes with reasons
-          if (votes.length > 0) {
-            voteFeedHtml = '<div class="votes-feed">' +
-              votes.map(function(v) {
-                var vname = v.profiles && v.profiles.full_name ? v.profiles.full_name : 'Member';
-                var initials = vname.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
-                var isApprove = v.vote === 'approve';
-                return '<div class="vote-item">' +
-                  '<div class="vote-avatar' + (isApprove ? '' : ' reject') + '">' + initials + '</div>' +
-                  '<div class="vote-body">' +
-                    '<div class="vote-header">' +
-                      '<span class="vote-name">' + vname + '</span>' +
-                      '<span class="vote-type ' + (isApprove ? 'vt-approve' : 'vt-reject') + '">' + (isApprove ? '✓ Approved' : '✗ Rejected') + '</span>' +
-                    '</div>' +
-                    (v.reason ? '<div class="vote-reason">"' + v.reason + '"</div>' : '') +
-                    '<div class="vote-time">' + timeAgo(v.created_at) + '</div>' +
-                  '</div>' +
-                '</div>';
-              }).join('') +
-            '</div>';
-          }
-
-          // Vote form
-          if (!myVote && !isRequester) {
-            voteFormHtml =
-              '<div class="vote-form">' +
-                '<label>Your reason for voting (optional)</label>' +
-                '<textarea id="voteReason_' + w.id + '" placeholder="Explain your decision to the group..."></textarea>' +
-                '<div class="action-btns">' +
-                  '<button class="btn-approve" data-id="' + w.id + '" data-vote="approve">✓ Approve</button>' +
-                  '<button class="btn-reject" data-id="' + w.id + '" data-vote="reject">✗ Reject</button>' +
-                '</div>' +
-              '</div>';
-          } else if (isRequester) {
-            voteFormHtml = '<div class="already-voted">⏳ You submitted this request — waiting for member votes</div>';
-          } else {
-            voteFormHtml = '<div class="already-voted">✓ You voted ' + myVote.vote + (myVote.reason ? ' · "' + myVote.reason + '"' : '') + '</div>';
-          }
-        }
-
-        return '<div class="withdrawal-card">' +
-          '<div class="w-header"><div class="w-amount">' + kes(w.amount) + '</div><span class="w-badge ' + badgeClass + '">' + badgeText + '</span></div>' +
-          detailHtml + progressHtml + voteFeedHtml + voteFormHtml +
-        '</div>';
-      }).join('');
-
-      // Attach vote listeners
-      el.querySelectorAll('.btn-approve, .btn-reject').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var wid   = this.getAttribute('data-id');
-          var vote  = this.getAttribute('data-vote');
-          var reason = document.getElementById('voteReason_' + wid) ? document.getElementById('voteReason_' + wid).value.trim() : '';
-          castVote(wid, vote, reason, this);
-        });
-      });
-    }
-
-    async function castVote(withdrawalId, vote, reason, btn) {
-      var parent = btn.closest('.action-btns');
-      parent.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
-      btn.textContent = vote === 'approve' ? 'Approving...' : 'Rejecting...';
+      btn.disabled = true; btn.textContent = 'Creating...';
 
       try {
-        // Insert into withdrawal_votes (new table with reasons)
-        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_votes', {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/polls', {
           method: 'POST',
-          headers: authHeaders(),
+          headers: Object.assign({}, authHeaders(), { 'Prefer': 'return=representation' }),
           body: JSON.stringify({
-            withdrawal_id: withdrawalId,
-            user_id:       currentUser.id,
-            chama_id:      chamaData.id,
-            vote:          vote,
-            reason:        reason || null
+            chama_id:   chamaData.id,
+            created_by: currentUser.id,
+            title:      title,
+            description: desc || null,
+            options:    JSON.stringify(options),
+            deadline:   deadline ? new Date(deadline).toISOString() : null,
+            status:     'open'
           })
         });
 
         if (!res.ok) {
           var err = await res.json();
-          alert(err.message || 'Failed to vote.');
-          parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; }); return;
+          errEl.textContent = err.message || 'Failed to create poll.';
+          errEl.classList.add('show');
+          btn.disabled = false; btn.textContent = 'Create poll'; return;
         }
 
-        // Also insert into withdrawal_approvals for backward compatibility
-        if (vote === 'approve') {
-          await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
-            method: 'POST', headers: authHeaders(),
-            body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
-          });
+        document.getElementById('modalOverlay').classList.remove('show');
+        document.getElementById('pollTitle').value  = '';
+        document.getElementById('pollDesc').value   = '';
+        document.getElementById('pollDeadline').value = '';
+        btn.disabled = false; btn.textContent = 'Create poll';
+        await loadPolls();
 
-          // Check if threshold reached
-          var approvals = await sbGet('/rest/v1/withdrawal_votes?withdrawal_id=eq.' + withdrawalId + '&vote=eq.approve&select=id');
-          if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
-            await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
-              method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'approved' })
-            });
+      } catch(err) {
+        errEl.textContent = 'Network error.';
+        errEl.classList.add('show');
+        btn.disabled = false; btn.textContent = 'Create poll';
+      }
+    });
+
+    // ── RENDER ──
+    function renderPolls() {
+      var filtered = allPolls.filter(function(p) { return p.status === currentTab; });
+      var el = document.getElementById('pollList');
+
+      if (!filtered.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">🗳️</div><h3>No ' + currentTab + ' polls</h3><p>' + (currentTab === 'open' ? 'Create a poll to get the group\'s opinion on anything.' : 'Closed polls will appear here.') + '</p></div>';
+        return;
+      }
+
+      el.innerHTML = filtered.map(function(poll) {
+        var options  = Array.isArray(poll.options) ? poll.options : JSON.parse(poll.options || '["Yes","No"]');
+        var votes    = poll.poll_votes || [];
+        var myVote   = votes.find(function(v) { return v.user_id === currentUser.id; });
+        var creator  = poll.profiles && poll.profiles.full_name ? poll.profiles.full_name : 'Unknown';
+        var isCreator = poll.created_by === currentUser.id;
+        var deadline  = poll.deadline ? new Date(poll.deadline).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' }) : null;
+        var isOpen    = poll.status === 'open';
+
+        // Tally votes
+        var tally = options.map(function() { return 0; });
+        votes.forEach(function(v) { if (tally[v.option_index] !== undefined) tally[v.option_index]++; });
+        var totalVotes = votes.length;
+
+        // Options display
+        var optionsHtml = '';
+        if (myVote || !isOpen) {
+          // Show results
+          optionsHtml = '<div class="options-list">' +
+            options.map(function(opt, i) {
+              var count = tally[i];
+              var pct   = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+              var isMine = myVote && myVote.option_index === i;
+              return '<div class="option-row">' +
+                '<div class="option-bar-wrap">' +
+                  '<span class="option-label">' + opt + '</span>' +
+                  '<div class="option-bar-bg"><div class="option-bar-fill' + (isMine ? ' mine' : '') + '" style="width:' + pct + '%"></div></div>' +
+                  '<span class="option-count">' + count + ' · ' + pct + '%</span>' +
+                '</div>' +
+              '</div>';
+            }).join('') +
+          '</div>';
+          if (myVote) {
+            optionsHtml = '<div class="already-voted-msg">✓ You voted: ' + options[myVote.option_index] + (myVote.comment ? ' · "' + myVote.comment + '"' : '') + '</div>' + optionsHtml;
           }
         } else {
-          // Reject — update withdrawal status
-          await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
-            method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status: 'rejected' })
-          });
+          // Show vote buttons
+          optionsHtml = '<div class="options-list" id="opts_' + poll.id + '">' +
+            options.map(function(opt, i) {
+              return '<button class="option-btn" data-poll="' + poll.id + '" data-idx="' + i + '">' + opt + '</button>';
+            }).join('') +
+          '</div>' +
+          '<div class="comment-field">' +
+            '<label>Add a comment (optional)</label>' +
+            '<textarea id="comment_' + poll.id + '" placeholder="Share why you\'re voting this way..."></textarea>' +
+          '</div>' +
+          '<button class="btn-submit-vote" id="submitVote_' + poll.id + '" data-poll="' + poll.id + '" disabled>Submit vote</button>';
         }
 
-        await loadWithdrawals();
+        // Vote feed
+        var feedHtml = '';
+        if (votes.length > 0) {
+          feedHtml = '<div class="votes-section"><div class="votes-title">' + totalVotes + ' vote' + (totalVotes !== 1 ? 's' : '') + '</div>' +
+            votes.map(function(v) {
+              var vname    = v.profiles && v.profiles.full_name ? v.profiles.full_name : 'Member';
+              var initials = vname.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+              var choice   = options[v.option_index] || '?';
+              return '<div class="vote-item">' +
+                '<div class="vote-avatar">' + initials + '</div>' +
+                '<div class="vote-body">' +
+                  '<div class="vote-top"><span class="vote-name">' + vname + '</span><span class="vote-choice">' + choice + '</span></div>' +
+                  (v.comment ? '<div class="vote-comment">"' + v.comment + '"</div>' : '') +
+                  '<div class="vote-time">' + timeAgo(v.created_at) + '</div>' +
+                '</div>' +
+              '</div>';
+            }).join('') +
+          '</div>';
+        }
+
+        return '<div class="poll-card">' +
+          '<div class="poll-header"><div class="poll-title">' + poll.title + '</div><span class="poll-badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '">' + (isOpen ? 'Open' : 'Closed') + '</span></div>' +
+          (poll.description ? '<div class="poll-desc">' + poll.description + '</div>' : '') +
+          '<div class="poll-meta">By ' + (isCreator ? 'you' : creator) + (deadline ? ' · Closes ' + deadline : '') + '</div>' +
+          (isOpen ? '<div class="live-indicator"><div class="live-dot"></div>Live</div>' : '') +
+          optionsHtml + feedHtml +
+        '</div>';
+      }).join('');
+
+      // Attach option button listeners
+      document.querySelectorAll('.option-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var pollId = this.getAttribute('data-poll');
+          var idx    = parseInt(this.getAttribute('data-idx'));
+          selectedOptions[pollId] = idx;
+          document.querySelectorAll('[data-poll="' + pollId + '"].option-btn').forEach(function(b) { b.classList.remove('selected'); });
+          this.classList.add('selected');
+          var submitBtn = document.getElementById('submitVote_' + pollId);
+          if (submitBtn) submitBtn.disabled = false;
+        });
+      });
+
+      // Attach submit listeners
+      document.querySelectorAll('[id^="submitVote_"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var pollId = this.getAttribute('data-poll');
+          var idx    = selectedOptions[pollId];
+          var comment = document.getElementById('comment_' + pollId) ? document.getElementById('comment_' + pollId).value.trim() : '';
+          if (idx === undefined) return;
+          submitVote(pollId, idx, comment, this);
+        });
+      });
+    }
+
+    async function submitVote(pollId, optionIndex, comment, btn) {
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/poll_votes', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            poll_id:      pollId,
+            user_id:      currentUser.id,
+            chama_id:     chamaData.id,
+            option_index: optionIndex,
+            comment:      comment || null
+          })
+        });
+        if (!res.ok) {
+          var err = await res.json();
+          alert(err.message || 'Failed to submit vote.');
+          btn.disabled = false; btn.textContent = 'Submit vote'; return;
+        }
+        await loadPolls();
       } catch(err) {
-        alert('Network error. Please try again.');
-        parent.querySelectorAll('button').forEach(function(b) { b.disabled = false; });
+        alert('Network error.'); btn.disabled = false; btn.textContent = 'Submit vote';
       }
     }
 
-    async function loadWithdrawals() {
-      // Fetch withdrawals with votes (using new withdrawal_votes table)
-      var withdrawals = await sbGet(
-        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
-        '&select=*,profiles(full_name),withdrawal_votes(id,user_id,vote,reason,created_at,profiles(full_name))' +
+    async function loadPolls() {
+      var polls = await sbGet(
+        '/rest/v1/polls?chama_id=eq.' + chamaData.id +
+        '&select=*,profiles(full_name),poll_votes(id,user_id,option_index,comment,created_at,profiles(full_name))' +
         '&order=created_at.desc'
       );
-      allWithdrawals = withdrawals || [];
-
-      var pendingCount = allWithdrawals.filter(function(w) { return w.status === 'pending'; }).length;
-      var countEl = document.getElementById('pendingCount');
-      if (pendingCount > 0) { countEl.textContent = pendingCount; countEl.classList.add('show'); }
-      else { countEl.classList.remove('show'); }
-      renderList();
+      allPolls = polls || [];
+      renderPolls();
     }
 
     async function loadPage() {
@@ -353,7 +446,7 @@
         if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
 
         chamaData = membership.chamas;
-        await loadWithdrawals();
+        await loadPolls();
         startPolling();
 
         document.getElementById('loadingState').style.display = 'none';
