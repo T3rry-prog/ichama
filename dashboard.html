@@ -27,6 +27,42 @@
       --error:      #D14343;
       --gold:       #D97706;
     }
+    /* DARK MODE */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #30B54A;
+        --green-d: #38C45A;
+        --green-tint: #0D2E14;
+        --ink: #F0F2F0;
+        --ink-soft: #8A9E8D;
+        --bg: #0F1210;
+        --card: #1A1F1C;
+        --line: #2A332C;
+      }
+      body { background: var(--bg); color: var(--ink); }
+    }
+
+    /* MANUAL DARK MODE (via data-theme attribute) */
+    [data-theme="dark"] {
+      --green: #30B54A;
+      --green-d: #38C45A;
+      --green-tint: #0D2E14;
+      --ink: #F0F2F0;
+      --ink-soft: #8A9E8D;
+      --bg: #0F1210;
+      --card: #1A1F1C;
+      --line: #2A332C;
+    }
+    [data-theme="light"] {
+      --green: #30B54A;
+      --green-d: #259A3D;
+      --green-tint: #EAF8ED;
+      --ink: #1A1F1C;
+      --ink-soft: #5C6760;
+      --bg: #F7F8F7;
+      --card: #FFFFFF;
+      --line: #E5E9E6;
+    }
 
     body {
       background: var(--bg);
@@ -493,26 +529,13 @@
 
     .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
 
-    /* PWA SPLASH */
-    .pwa-splash { position: fixed; inset: 0; background: #30B54A; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s ease; }
-    .pwa-splash.hide { opacity: 0; pointer-events: none; }
-    .splash-icon { width: 90px; height: 90px; border-radius: 20px; margin-bottom: 16px; }
-    .splash-name { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
-    .splash-name span { color: rgba(255,255,255,0.7); }
-    .splash-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
   </style>
 </head>
 <body>
 
 
   <!-- LOADING OVERLAY -->
-  <!-- PWA Splash Screen -->
-  <div class="pwa-splash" id="pwaSplash">
-    <img src="/icon-192.png" class="splash-icon" alt="iChama" />
-    <div class="splash-name">i<span>Chama</span></div>
-    <div class="splash-sub">Chama management without the theft</div>
-  </div>
-
   <div class="loading-overlay" id="loadingOverlay">
     <div class="spinner"></div>
     <p>Loading your dashboard…</p>
@@ -699,16 +722,8 @@
       document.getElementById('scoreLabel').textContent = scoreLabel(score);
     }
 
-    function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
-    function showLoadingError(msg) {
-      document.getElementById('loadingOverlay').innerHTML =
-        '<div style="padding:30px;text-align:center;font-family:Inter,sans-serif;">' +
-        '<div style="font-size:32px;margin-bottom:12px;">⚠️</div>' +
-        '<div style="font-weight:600;color:#1A1F1C;margin-bottom:8px;">Something went wrong</div>' +
-        '<div style="font-size:12px;color:#5C6760;word-break:break-all;max-width:300px;margin:0 auto;">' + msg + '</div>' +
-        '<button onclick="doLogout()" style="margin-top:16px;background:#30B54A;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;">Sign in again</button>' +
-        '</div>';
-    }
+    function hideLoading() {}
+    function showLoadingError(msg) { console.error(msg); }
 
     // ── DROPDOWN ──
     window.toggleDropdown = function() {
@@ -846,15 +861,6 @@
         showLoadingError(err && err.message ? err.message : String(err));
       }
     }
-
-    // Hide splash screen after 1.2 seconds
-    setTimeout(function() {
-      var splash = document.getElementById('pwaSplash');
-      if (splash) {
-        splash.classList.add('hide');
-        setTimeout(function() { splash.style.display='none'; }, 400);
-      }
-    }, 1200);
 
     // Safety timeout — never show loading more than 8 seconds
     setTimeout(function() {
