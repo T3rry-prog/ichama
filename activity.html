@@ -10,22 +10,29 @@
     :root {
       --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
       --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
-      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
     }
     body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 80px; }
     .topbar { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
     .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
-    .topbar h1 { font-weight: 600; font-size: 16px; }
+    .topbar h1 { font-weight: 600; font-size: 16px; flex: 1; }
+    .new-meeting-btn { background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: none; }
     main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+
+    /* TABS */
     .tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 16px; gap: 4px; }
-    .tab { flex: 1; text-align: center; padding: 9px 6px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
+    .tab { flex: 1; text-align: center; padding: 8px 4px; border-radius: 7px; font-size: 12px; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; }
     .tab.active { background: var(--green); color: #fff; font-weight: 600; }
+
+    /* SUMMARY */
     .summary-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 16px; display: flex; }
     .summary-stat { flex: 1; text-align: center; }
     .summary-stat:not(:last-child) { border-right: 1px solid var(--line); }
     .summary-stat .val { font-weight: 800; font-size: 18px; color: var(--ink); line-height: 1; margin-bottom: 4px; }
     .summary-stat .val.green { color: var(--green); }
     .summary-stat .lbl { font-size: 11px; color: var(--ink-soft); }
+
+    /* ACTIVITY */
     .date-group { margin-bottom: 16px; }
     .date-label { font-size: 12px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; padding: 0 2px; }
     .activity-list { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -40,10 +47,53 @@
     .activity-amount { font-weight: 700; font-size: 14px; flex-shrink: 0; }
     .amount-in  { color: var(--green); }
     .amount-out { color: var(--error); }
+
+    /* MEETING CARDS */
+    .meeting-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+    .meeting-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .meeting-date-badge { display: flex; flex-direction: column; align-items: center; background: var(--green-tint); border: 1px solid rgba(48,181,74,0.2); border-radius: 10px; padding: 7px 12px; flex-shrink: 0; }
+    .meeting-date-badge .day { font-weight: 800; font-size: 20px; color: var(--green-d); line-height: 1; }
+    .meeting-date-badge .mon { font-size: 10px; font-weight: 600; color: var(--green-d); text-transform: uppercase; margin-top: 2px; }
+    .meeting-info { flex: 1; }
+    .meeting-status { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; margin-bottom: 4px; }
+    .ms-upcoming { background: var(--green-tint); color: var(--green-d); }
+    .ms-today    { background: #FEF3C7; color: #92400E; }
+    .ms-past     { background: var(--line); color: var(--ink-soft); }
+    .meeting-title { font-weight: 700; font-size: 15px; color: var(--ink); margin-bottom: 2px; }
+    .meeting-time { font-size: 12px; color: var(--ink-soft); }
+    .meeting-agenda { background: var(--bg); border-radius: 8px; padding: 9px 12px; margin-bottom: 10px; }
+    .meeting-agenda .al { font-size: 10px; color: var(--ink-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .meeting-agenda .av { font-size: 13px; color: var(--ink); line-height: 1.5; white-space: pre-wrap; }
+    .meeting-minutes { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 9px 12px; margin-bottom: 10px; }
+    .meeting-minutes .al { font-size: 10px; color: #92400E; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .meeting-minutes .av { font-size: 13px; color: #78350F; line-height: 1.5; white-space: pre-wrap; }
+    .meeting-btns { display: flex; gap: 8px; }
+    .btn-join { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 13px; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; text-align: center; display: block; }
+    .btn-min  { flex: 1; background: var(--bg); color: var(--ink); font-weight: 600; font-size: 13px; padding: 10px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; font-family: 'Inter', sans-serif; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--line); border-radius: 100px; margin: 0 auto 20px; }
+    .modal-title { font-weight: 700; font-size: 17px; margin-bottom: 18px; }
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+    .fg input, .fg textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; }
+    .fg textarea { resize: vertical; min-height: 80px; }
+    .fg input:focus, .fg textarea:focus { border-color: var(--green); background: var(--card); }
+    .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+    .btn-modal { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; }
+    .btn-modal:disabled { opacity: 0.55; cursor: not-allowed; }
+    .modal-err { font-size: 13px; color: var(--error); margin-bottom: 10px; display: none; }
+    .modal-err.show { display: block; }
+
     .empty-state { text-align: center; padding: 48px 20px; }
     .empty-icon { font-size: 48px; margin-bottom: 14px; }
     .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
     .empty-state p { font-size: 13.5px; color: var(--ink-soft); }
+
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; }
     .nav-icon { font-size: 19px; }
@@ -55,7 +105,8 @@
 
   <div class="topbar">
     <a href="dashboard.html" class="back-btn">←</a>
-    <h1>Activity</h1>
+    <h1 id="pageTitle">Activity</h1>
+    <button class="new-meeting-btn" id="newMeetingBtn">+ Schedule</button>
   </div>
 
   <main>
@@ -66,17 +117,52 @@
         <button class="tab active" data-tab="all">All</button>
         <button class="tab" data-tab="contributions">Contributions</button>
         <button class="tab" data-tab="withdrawals">Withdrawals</button>
+        <button class="tab" data-tab="meetings">Meetings</button>
       </div>
 
-      <div class="summary-card">
+      <!-- ACTIVITY SUMMARY (hidden on meetings tab) -->
+      <div class="summary-card" id="summaryCard">
         <div class="summary-stat"><div class="val green" id="sumTotal">—</div><div class="lbl">Total in</div></div>
         <div class="summary-stat"><div class="val" id="sumWithdrawals">—</div><div class="lbl">Withdrawn</div></div>
         <div class="summary-stat"><div class="val" id="sumTransactions">—</div><div class="lbl">Transactions</div></div>
       </div>
 
       <div id="activityFeed"></div>
+      <div id="meetingFeed" style="display:none"></div>
     </div>
   </main>
+
+  <!-- CREATE MEETING MODAL -->
+  <div class="modal-overlay" id="createModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Schedule a meeting</div>
+      <div class="modal-err" id="createErr"></div>
+      <div class="fg"><label>Meeting title</label><input type="text" id="mTitle" placeholder="e.g. June Monthly Meeting" /></div>
+      <div class="fg"><label>Date & time</label><input type="datetime-local" id="mDate" /></div>
+      <div class="fg"><label>Agenda</label><textarea id="mAgenda" placeholder="What will be discussed?"></textarea></div>
+      <div class="fg">
+        <label>Meeting link <span style="color:var(--ink-soft);font-weight:400;font-size:12px;">(optional)</span></label>
+        <input type="url" id="mLink" placeholder="WhatsApp, Zoom, Google Meet link..." />
+        <p class="hint">Any link that opens the meeting directly.</p>
+      </div>
+      <button class="btn-modal" id="createMeetingBtn">Schedule meeting</button>
+    </div>
+  </div>
+
+  <!-- MINUTES MODAL -->
+  <div class="modal-overlay" id="minutesModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Meeting minutes</div>
+      <div class="modal-err" id="minutesErr"></div>
+      <div class="fg">
+        <label>What was discussed and decided?</label>
+        <textarea id="minutesText" placeholder="Record decisions, action items, agreements..." style="min-height:160px;"></textarea>
+      </div>
+      <button class="btn-modal" id="saveMinutesBtn">Save minutes</button>
+    </div>
+  </div>
 
   <nav class="bottom-nav">
     <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
@@ -90,22 +176,30 @@
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
 
-    var allItems    = [];
-    var currentTab  = 'all';
-    var chamaData   = null;
+    var allItems     = [];
+    var allMeetings  = [];
+    var currentTab   = 'all';
+    var chamaData    = null;
+    var isAdmin      = false;
+    var editingMinId = null;
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
-    function authHeaders() {
-      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
-    }
-    function doLogout() {
-      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
-      window.location.href = 'login.html';
-    }
+    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
+    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
     if (!getToken()) { window.location.href = 'login.html'; }
 
     function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
+    function getDay(d) { return new Date(d).getDate(); }
+    function getMon(d) { return new Date(d).toLocaleDateString('en-KE', { month:'short' }); }
+    function formatDT(d) {
+      var dt = new Date(d);
+      return dt.toLocaleDateString('en-KE', { weekday:'long', day:'numeric', month:'long' }) + ' at ' + dt.toLocaleTimeString('en-KE', { hour:'2-digit', minute:'2-digit' });
+    }
+    function isToday(d) {
+      var now = new Date(); var dt = new Date(d);
+      return now.getDate()===dt.getDate() && now.getMonth()===dt.getMonth() && now.getFullYear()===dt.getFullYear();
+    }
 
     async function sbGet(path) {
       var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
@@ -119,62 +213,143 @@
         currentTab = this.getAttribute('data-tab');
         document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
         this.classList.add('active');
-        renderFeed();
+        var isMeetings = currentTab === 'meetings';
+        document.getElementById('summaryCard').style.display   = isMeetings ? 'none' : 'flex';
+        document.getElementById('activityFeed').style.display  = isMeetings ? 'none' : 'block';
+        document.getElementById('meetingFeed').style.display   = isMeetings ? 'block' : 'none';
+        document.getElementById('newMeetingBtn').style.display = (isMeetings && isAdmin) ? 'inline-block' : 'none';
+        document.getElementById('pageTitle').textContent       = isMeetings ? 'Meetings' : 'Activity';
+        if (isMeetings) renderMeetings(); else renderFeed();
       });
     });
 
-    // ── GROUP BY DATE ──
+    // ── MODALS ──
+    document.getElementById('newMeetingBtn').addEventListener('click', function() { document.getElementById('createModal').classList.add('show'); });
+    document.getElementById('createModal').addEventListener('click', function(e) { if (e.target===this) this.classList.remove('show'); });
+    document.getElementById('minutesModal').addEventListener('click', function(e) { if (e.target===this) this.classList.remove('show'); });
+
+    // ── CREATE MEETING ──
+    document.getElementById('createMeetingBtn').addEventListener('click', async function() {
+      var title  = document.getElementById('mTitle').value.trim();
+      var date   = document.getElementById('mDate').value;
+      var agenda = document.getElementById('mAgenda').value.trim();
+      var link   = document.getElementById('mLink').value.trim();
+      var errEl  = document.getElementById('createErr');
+      var btn    = this;
+      if (!title) { errEl.textContent='Please enter a title.'; errEl.classList.add('show'); return; }
+      if (!date)  { errEl.textContent='Please set a date and time.'; errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
+      btn.disabled=true; btn.textContent='Scheduling...';
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/meetings', {
+          method: 'POST', headers: authHeaders(),
+          body: JSON.stringify({ chama_id: chamaData.id, created_by: getUser().id, title: title, agenda: agenda||null, meeting_link: link||null, scheduled_at: new Date(date).toISOString(), status: 'upcoming' })
+        });
+        if (!res.ok) { var e=await res.json(); errEl.textContent=e.message||'Failed.'; errEl.classList.add('show'); btn.disabled=false; btn.textContent='Schedule meeting'; return; }
+        document.getElementById('createModal').classList.remove('show');
+        document.getElementById('mTitle').value=''; document.getElementById('mDate').value='';
+        document.getElementById('mAgenda').value=''; document.getElementById('mLink').value='';
+        btn.disabled=false; btn.textContent='Schedule meeting';
+        allMeetings = await sbGet('/rest/v1/meetings?chama_id=eq.'+chamaData.id+'&order=scheduled_at.asc') || [];
+        renderMeetings();
+      } catch(e) { errEl.textContent='Network error.'; errEl.classList.add('show'); btn.disabled=false; btn.textContent='Schedule meeting'; }
+    });
+
+    // ── SAVE MINUTES ──
+    document.getElementById('saveMinutesBtn').addEventListener('click', async function() {
+      var minutes = document.getElementById('minutesText').value.trim();
+      var errEl   = document.getElementById('minutesErr');
+      var btn     = this;
+      if (!minutes) { errEl.textContent='Please enter the minutes.'; errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
+      btn.disabled=true; btn.textContent='Saving...';
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/meetings?id=eq.'+editingMinId, {
+          method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ minutes: minutes, status: 'past' })
+        });
+        if (!res.ok) { var e=await res.json(); errEl.textContent=e.message||'Failed.'; errEl.classList.add('show'); btn.disabled=false; btn.textContent='Save minutes'; return; }
+        document.getElementById('minutesModal').classList.remove('show');
+        document.getElementById('minutesText').value='';
+        editingMinId=null; btn.disabled=false; btn.textContent='Save minutes';
+        allMeetings = await sbGet('/rest/v1/meetings?chama_id=eq.'+chamaData.id+'&order=scheduled_at.asc') || [];
+        renderMeetings();
+      } catch(e) { errEl.textContent='Network error.'; errEl.classList.add('show'); btn.disabled=false; btn.textContent='Save minutes'; }
+    });
+
+    // ── RENDER MEETINGS ──
+    function renderMeetings() {
+      var el  = document.getElementById('meetingFeed');
+      var now = new Date();
+      if (!allMeetings.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><h3>No meetings yet</h3><p>' + (isAdmin ? 'Tap "+ Schedule" to plan your first meeting.' : 'No meetings have been scheduled yet.') + '</p></div>';
+        return;
+      }
+      el.innerHTML = allMeetings.map(function(m) {
+        var isPast  = new Date(m.scheduled_at) < now || m.status === 'past';
+        var today   = isToday(m.scheduled_at);
+        var sc      = today ? 'ms-today' : isPast ? 'ms-past' : 'ms-upcoming';
+        var st      = today ? '📍 Today' : isPast ? 'Past' : '🗓 Upcoming';
+        var agHtml  = m.agenda ? '<div class="meeting-agenda"><div class="al">Agenda</div><div class="av">'+m.agenda+'</div></div>' : '';
+        var minHtml = m.minutes ? '<div class="meeting-minutes"><div class="al">📋 Minutes</div><div class="av">'+m.minutes+'</div></div>' : '';
+        var btnHtml = '';
+        if (!isPast && m.meeting_link) btnHtml += '<a href="'+m.meeting_link+'" target="_blank" class="btn-join">Join meeting →</a>';
+        if (isAdmin) btnHtml += '<button class="btn-min" data-id="'+m.id+'" data-min="'+(m.minutes||'').replace(/"/g,'&quot;')+'">'+(m.minutes?'Edit':'Add')+' minutes</button>';
+        return '<div class="meeting-card">' +
+          '<div class="meeting-top">' +
+            '<div class="meeting-date-badge"><div class="day">'+getDay(m.scheduled_at)+'</div><div class="mon">'+getMon(m.scheduled_at)+'</div></div>' +
+            '<div class="meeting-info"><span class="meeting-status '+sc+'">'+st+'</span><div class="meeting-title">'+m.title+'</div><div class="meeting-time">🕐 '+formatDT(m.scheduled_at)+'</div></div>' +
+          '</div>' +
+          agHtml + minHtml +
+          (btnHtml ? '<div class="meeting-btns">'+btnHtml+'</div>' : '') +
+        '</div>';
+      }).join('');
+
+      el.querySelectorAll('.btn-min').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          editingMinId = this.getAttribute('data-id');
+          document.getElementById('minutesText').value = this.getAttribute('data-min') || '';
+          document.getElementById('minutesModal').classList.add('show');
+        });
+      });
+    }
+
+    // ── RENDER ACTIVITY ──
     function groupByDate(items) {
       var groups = {};
       items.forEach(function(item) {
-        var d   = new Date(item.date);
-        var key = d.toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        var key = new Date(item.date).toLocaleDateString('en-KE', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
         if (!groups[key]) groups[key] = [];
         groups[key].push(item);
       });
       return groups;
     }
 
-    // ── RENDER ──
     function renderFeed() {
       var el = document.getElementById('activityFeed');
       var filtered = allItems;
-      if (currentTab === 'contributions') filtered = allItems.filter(function(i) { return i.type === 'contribution'; });
-      if (currentTab === 'withdrawals')   filtered = allItems.filter(function(i) { return i.type === 'withdrawal'; });
-
+      if (currentTab === 'contributions') filtered = allItems.filter(function(i) { return i.type==='contribution'; });
+      if (currentTab === 'withdrawals')   filtered = allItems.filter(function(i) { return i.type==='withdrawal'; });
       if (!filtered.length) {
         el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><h3>No activity yet</h3><p>Contributions and withdrawals will appear here.</p></div>';
         return;
       }
-
       var groups = groupByDate(filtered);
       el.innerHTML = Object.keys(groups).map(function(date) {
-        var items = groups[date];
-        return '<div class="date-group">' +
-          '<div class="date-label">' + date + '</div>' +
-          '<div class="activity-list">' +
-          items.map(function(item) {
+        return '<div class="date-group"><div class="date-label">'+date+'</div><div class="activity-list">' +
+          groups[date].map(function(item) {
             if (item.type === 'contribution') {
-              return '<div class="activity-row">' +
-                '<div class="activity-icon icon-contrib">💰</div>' +
-                '<div class="activity-info">' +
-                  '<div class="activity-title">' + item.name + ' contributed</div>' +
-                  '<div class="activity-sub">' + (item.method || 'M-Pesa') + (item.reference ? ' · ' + item.reference : '') + '</div>' +
-                '</div>' +
-                '<div class="activity-amount amount-in">+' + kes(item.amount) + '</div>' +
-              '</div>';
+              return '<div class="activity-row"><div class="activity-icon icon-contrib">💰</div>' +
+                '<div class="activity-info"><div class="activity-title">'+item.name+' contributed</div>' +
+                '<div class="activity-sub">'+(item.method||'M-Pesa')+(item.reference?' · '+item.reference:'')+'</div></div>' +
+                '<div class="activity-amount amount-in">+'+kes(item.amount)+'</div></div>';
             } else {
-              return '<div class="activity-row">' +
-                '<div class="activity-icon icon-withdraw">🏦</div>' +
-                '<div class="activity-info">' +
-                  '<div class="activity-title">Withdrawal — ' + item.status + '</div>' +
-                  '<div class="activity-sub">' + (item.reason || 'No reason') + '</div>' +
-                '</div>' +
-                '<div class="activity-amount amount-out">-' + kes(item.amount) + '</div>' +
-              '</div>';
+              return '<div class="activity-row"><div class="activity-icon icon-withdraw">🏦</div>' +
+                '<div class="activity-info"><div class="activity-title">Withdrawal — '+item.status+'</div>' +
+                '<div class="activity-sub">'+(item.reason||'No reason')+'</div></div>' +
+                '<div class="activity-amount amount-out">-'+kes(item.amount)+'</div></div>';
             }
           }).join('') +
-          '</div></div>';
+        '</div></div>';
       }).join('');
     }
 
@@ -183,49 +358,30 @@
         var user = getUser();
         if (!user) { doLogout(); return; }
 
-        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + user.id + '&select=*,chamas(*)&limit=1');
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.'+user.id+'&select=*,chamas(*)&limit=1');
         var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
         if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
 
         chamaData = membership.chamas;
+        isAdmin   = membership.role === 'admin';
 
-        var contribs = await sbGet(
-          '/rest/v1/contributions?chama_id=eq.' + chamaData.id +
-          '&status=eq.paid&select=*,profiles(full_name)&order=created_at.desc'
-        ) || [];
+        var contribs = await sbGet('/rest/v1/contributions?chama_id=eq.'+chamaData.id+'&status=eq.paid&select=*,profiles(full_name)&order=created_at.desc') || [];
+        var withdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chamaData.id+'&select=*&order=created_at.desc') || [];
+        withdrawals = withdrawals.filter(function(w) { return w.status==='approved'||w.status==='rejected'; });
 
-        var withdrawals = await sbGet(
-          '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
-          '&select=*&order=created_at.desc'
-        ) || [];
-        withdrawals = withdrawals.filter(function(w) { return w.status === 'approved' || w.status === 'rejected'; });
+        allItems = contribs.map(function(c) {
+          return { type:'contribution', date: c.paid_at||c.created_at, amount: c.amount, name: c.profiles&&c.profiles.full_name?c.profiles.full_name:'Member', method: c.method, reference: c.reference };
+        }).concat(withdrawals.map(function(w) {
+          return { type:'withdrawal', date: w.created_at, amount: w.amount, reason: w.reason, status: w.status };
+        })).sort(function(a,b){ return new Date(b.date)-new Date(a.date); });
 
-        var contribItems = contribs.map(function(c) {
-          return {
-            type:      'contribution',
-            date:      c.paid_at || c.created_at,
-            amount:    c.amount,
-            name:      c.profiles && c.profiles.full_name ? c.profiles.full_name : 'Member',
-            method:    c.method,
-            reference: c.reference
-          };
-        });
-
-        var withdrawItems = withdrawals.map(function(w) {
-          return { type: 'withdrawal', date: w.created_at, amount: w.amount, reason: w.reason, status: w.status };
-        });
-
-        allItems = contribItems.concat(withdrawItems).sort(function(a, b) {
-          return new Date(b.date) - new Date(a.date);
-        });
-
-        var totalIn  = contribItems.reduce(function(s, c) { return s + Number(c.amount); }, 0);
-        var totalOut = withdrawItems.filter(function(w) { return w.status === 'approved'; })
-                                    .reduce(function(s, w) { return s + Number(w.amount); }, 0);
-
-        document.getElementById('sumTotal').textContent        = kes(totalIn);
-        document.getElementById('sumWithdrawals').textContent  = kes(totalOut);
+        var totalIn  = contribs.reduce(function(s,c){ return s+Number(c.amount); }, 0);
+        var totalOut = withdrawals.filter(function(w){ return w.status==='approved'; }).reduce(function(s,w){ return s+Number(w.amount); }, 0);
+        document.getElementById('sumTotal').textContent       = kes(totalIn);
+        document.getElementById('sumWithdrawals').textContent = kes(totalOut);
         document.getElementById('sumTransactions').textContent = allItems.length;
+
+        allMeetings = await sbGet('/rest/v1/meetings?chama_id=eq.'+chamaData.id+'&order=scheduled_at.asc') || [];
 
         renderFeed();
 
