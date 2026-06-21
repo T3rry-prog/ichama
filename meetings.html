@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meetings — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
+    }
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 80px; }
+    .topbar { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
+    .topbar h1 { font-weight: 600; font-size: 16px; flex: 1; }
+    .new-btn { background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: none; }
+    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
+
+    /* TABS */
+    .tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
+    .tab { flex: 1; text-align: center; padding: 9px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--ink-soft); cursor: pointer; border: none; background: none; font-family: 'Inter', sans-serif; }
+    .tab.active { background: var(--green); color: #fff; font-weight: 600; }
+
+    /* MEETING CARD */
+    .meeting-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .meeting-date-badge { display: inline-flex; flex-direction: column; align-items: center; background: var(--green-tint); border: 1px solid rgba(48,181,74,0.2); border-radius: 10px; padding: 8px 14px; margin-bottom: 12px; }
+    .meeting-date-badge .day { font-weight: 800; font-size: 22px; color: var(--green-d); line-height: 1; }
+    .meeting-date-badge .month { font-size: 11px; font-weight: 600; color: var(--green-d); text-transform: uppercase; margin-top: 2px; }
+    .meeting-title { font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+    .meeting-time { font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; }
+    .meeting-agenda { background: var(--bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+    .meeting-agenda .al { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .meeting-agenda .av { font-size: 13.5px; color: var(--ink); line-height: 1.55; white-space: pre-wrap; }
+    .meeting-minutes { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+    .meeting-minutes .al { font-size: 11px; color: #92400E; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .meeting-minutes .av { font-size: 13.5px; color: #78350F; line-height: 1.55; white-space: pre-wrap; }
+    .meeting-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-join { flex: 1; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 11px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; text-align: center; display: block; }
+    .btn-minutes { flex: 1; background: var(--bg); color: var(--ink); font-weight: 600; font-size: 14px; padding: 11px; border-radius: 9px; border: 1px solid var(--line); cursor: pointer; font-family: 'Inter', sans-serif; }
+    .status-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px; margin-bottom: 10px; }
+    .status-upcoming { background: var(--green-tint); color: var(--green-d); }
+    .status-past     { background: var(--line); color: var(--ink-soft); }
+    .status-today    { background: #FEF3C7; color: #92400E; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 36px; height: 4px; background: var(--line); border-radius: 100px; margin: 0 auto 20px; }
+    .modal-title { font-weight: 700; font-size: 17px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--green); background: var(--card); }
+    .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+    .btn-create { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; }
+    .btn-create:disabled { opacity: 0.55; cursor: not-allowed; }
+    .modal-error { font-size: 13px; color: var(--error); margin-bottom: 10px; display: none; }
+    .modal-error.show { display: block; }
+
+    .empty-state { text-align: center; padding: 48px 20px; }
+    .empty-icon { font-size: 48px; margin-bottom: 14px; }
+    .empty-state h3 { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+    .empty-state p { font-size: 13.5px; color: var(--ink-soft); }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; padding: 5px 14px; }
+    .nav-icon { font-size: 19px; }
+    .nav-label { font-size: 10px; color: var(--ink-soft); }
+    .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Meetings</h1>
+    <button class="new-btn" id="newMeetingBtn">+ Schedule</button>
+  </div>
+
+  <main>
+    <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
+    <div id="mainContent" style="display:none">
+      <div class="tabs">
+        <button class="tab active" data-tab="upcoming">Upcoming</button>
+        <button class="tab" data-tab="past">Past</button>
+      </div>
+      <div id="meetingList"></div>
+    </div>
+  </main>
+
+  <!-- CREATE MEETING MODAL -->
+  <div class="modal-overlay" id="createModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Schedule a meeting</div>
+      <div class="modal-error" id="createError"></div>
+      <div class="form-group">
+        <label for="meetingTitle">Meeting title</label>
+        <input type="text" id="meetingTitle" placeholder="e.g. June Monthly Meeting" />
+      </div>
+      <div class="form-group">
+        <label for="meetingDate">Date & time</label>
+        <input type="datetime-local" id="meetingDate" />
+      </div>
+      <div class="form-group">
+        <label for="meetingAgenda">Agenda</label>
+        <textarea id="meetingAgenda" placeholder="What will be discussed? List the agenda items..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="meetingLink">Meeting link <span style="color:var(--ink-soft);font-weight:400;font-size:12px;">(optional)</span></label>
+        <input type="url" id="meetingLink" placeholder="e.g. https://wa.me/group/... or https://zoom.us/j/..." />
+        <p class="hint">WhatsApp group link, Zoom, Google Meet — any link that opens the meeting.</p>
+      </div>
+      <button class="btn-create" id="createMeetingBtn">Schedule meeting</button>
+    </div>
+  </div>
+
+  <!-- ADD MINUTES MODAL -->
+  <div class="modal-overlay" id="minutesModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Meeting minutes</div>
+      <div class="modal-error" id="minutesError"></div>
+      <div class="form-group">
+        <label for="minutesText">What was discussed and decided?</label>
+        <textarea id="minutesText" placeholder="Record key decisions, action items, and anything the group agreed on..." style="min-height:160px;"></textarea>
+      </div>
+      <button class="btn-create" id="saveMinutesBtn">Save minutes</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a href="chama.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">Chama</span></a>
+    <a href="vote.html" class="nav-item"><span class="nav-icon">🗳️</span><span class="nav-label">Vote</span></a>
+    <a href="meetings.html" class="nav-item active"><span class="nav-icon">📅</span><span class="nav-label">Meetings</span></a>
+    <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
+  </nav>
+
+  <script>
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
+
+    var currentUser  = null;
+    var chamaData    = null;
+    var isAdmin      = false;
+    var allMeetings  = [];
+    var currentTab   = 'upcoming';
+    var editingMinutesId = null;
+
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
+    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
+    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
+    if (!getToken()) { window.location.href = 'login.html'; }
+
+    async function sbGet(path) {
+      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
+      if (res.status === 401) { doLogout(); return null; }
+      return res.ok ? res.json() : null;
+    }
+
+    function formatDate(d) {
+      var date = new Date(d);
+      return date.toLocaleDateString('en-KE', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) +
+             ' at ' + date.toLocaleTimeString('en-KE', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    function getDay(d) { return new Date(d).getDate(); }
+    function getMonth(d) { return new Date(d).toLocaleDateString('en-KE', { month:'short' }); }
+
+    function isToday(d) {
+      var now = new Date(); var date = new Date(d);
+      return now.getDate() === date.getDate() && now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear();
+    }
+
+    // ── TABS ──
+    document.querySelectorAll('.tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currentTab = this.getAttribute('data-tab');
+        document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        renderMeetings();
+      });
+    });
+
+    // ── MODALS ──
+    document.getElementById('newMeetingBtn').addEventListener('click', function() {
+      document.getElementById('createModal').classList.add('show');
+    });
+    document.getElementById('createModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+    document.getElementById('minutesModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+
+    // ── CREATE MEETING ──
+    document.getElementById('createMeetingBtn').addEventListener('click', async function() {
+      var title    = document.getElementById('meetingTitle').value.trim();
+      var date     = document.getElementById('meetingDate').value;
+      var agenda   = document.getElementById('meetingAgenda').value.trim();
+      var link     = document.getElementById('meetingLink').value.trim();
+      var errEl    = document.getElementById('createError');
+      var btn      = this;
+
+      if (!title) { errEl.textContent = 'Please enter a meeting title.'; errEl.classList.add('show'); return; }
+      if (!date)  { errEl.textContent = 'Please set a date and time.'; errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
+      btn.disabled = true; btn.textContent = 'Scheduling...';
+
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/meetings', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            chama_id:     chamaData.id,
+            created_by:   currentUser.id,
+            title:        title,
+            agenda:       agenda || null,
+            meeting_link: link || null,
+            scheduled_at: new Date(date).toISOString(),
+            status:       'upcoming'
+          })
+        });
+
+        if (!res.ok) {
+          var err = await res.json();
+          errEl.textContent = err.message || 'Failed to schedule meeting.';
+          errEl.classList.add('show');
+          btn.disabled = false; btn.textContent = 'Schedule meeting'; return;
+        }
+
+        document.getElementById('createModal').classList.remove('show');
+        document.getElementById('meetingTitle').value  = '';
+        document.getElementById('meetingDate').value   = '';
+        document.getElementById('meetingAgenda').value = '';
+        document.getElementById('meetingLink').value   = '';
+        btn.disabled = false; btn.textContent = 'Schedule meeting';
+        await loadMeetings();
+
+      } catch(err) {
+        errEl.textContent = 'Network error.';
+        errEl.classList.add('show');
+        btn.disabled = false; btn.textContent = 'Schedule meeting';
+      }
+    });
+
+    // ── SAVE MINUTES ──
+    document.getElementById('saveMinutesBtn').addEventListener('click', async function() {
+      var minutes = document.getElementById('minutesText').value.trim();
+      var errEl   = document.getElementById('minutesError');
+      var btn     = this;
+
+      if (!minutes) { errEl.textContent = 'Please enter the meeting minutes.'; errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
+      btn.disabled = true; btn.textContent = 'Saving...';
+
+      try {
+        var res = await fetch(SUPABASE_URL + '/rest/v1/meetings?id=eq.' + editingMinutesId, {
+          method: 'PATCH',
+          headers: authHeaders(),
+          body: JSON.stringify({ minutes: minutes, status: 'past' })
+        });
+
+        if (!res.ok) {
+          var err = await res.json();
+          errEl.textContent = err.message || 'Failed to save minutes.';
+          errEl.classList.add('show');
+          btn.disabled = false; btn.textContent = 'Save minutes'; return;
+        }
+
+        document.getElementById('minutesModal').classList.remove('show');
+        document.getElementById('minutesText').value = '';
+        editingMinutesId = null;
+        btn.disabled = false; btn.textContent = 'Save minutes';
+        await loadMeetings();
+
+      } catch(err) {
+        errEl.textContent = 'Network error.';
+        errEl.classList.add('show');
+        btn.disabled = false; btn.textContent = 'Save minutes';
+      }
+    });
+
+    // ── RENDER ──
+    function renderMeetings() {
+      var now      = new Date();
+      var filtered = allMeetings.filter(function(m) {
+        var isPast = new Date(m.scheduled_at) < now || m.status === 'past';
+        return currentTab === 'upcoming' ? !isPast : isPast;
+      });
+
+      var el = document.getElementById('meetingList');
+
+      if (!filtered.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div>' +
+          '<h3>No ' + currentTab + ' meetings</h3>' +
+          '<p>' + (currentTab === 'upcoming' ? (isAdmin ? 'Schedule your first meeting using the button above.' : 'No meetings scheduled yet. Check back soon.') : 'Past meetings will appear here.') + '</p></div>';
+        return;
+      }
+
+      el.innerHTML = filtered.map(function(m) {
+        var isPast   = new Date(m.scheduled_at) < now || m.status === 'past';
+        var today    = isToday(m.scheduled_at);
+        var statusClass = today ? 'status-today' : isPast ? 'status-past' : 'status-upcoming';
+        var statusText  = today ? '📍 Today' : isPast ? 'Past' : '🗓 Upcoming';
+
+        var agendaHtml = m.agenda
+          ? '<div class="meeting-agenda"><div class="al">Agenda</div><div class="av">' + m.agenda + '</div></div>'
+          : '';
+
+        var minutesHtml = m.minutes
+          ? '<div class="meeting-minutes"><div class="al">📋 Meeting minutes</div><div class="av">' + m.minutes + '</div></div>'
+          : '';
+
+        var actionsHtml = '';
+        if (!isPast) {
+          actionsHtml = '<div class="meeting-actions">';
+          if (m.meeting_link) {
+            actionsHtml += '<a href="' + m.meeting_link + '" target="_blank" class="btn-join">Join meeting →</a>';
+          }
+          if (isAdmin) {
+            actionsHtml += '<button class="btn-minutes" data-id="' + m.id + '" data-minutes="' + (m.minutes || '').replace(/"/g, '&quot;') + '">Add minutes</button>';
+          }
+          actionsHtml += '</div>';
+        } else if (isAdmin && !m.minutes) {
+          actionsHtml = '<div class="meeting-actions"><button class="btn-minutes" data-id="' + m.id + '" data-minutes="">Add minutes</button></div>';
+        } else if (isAdmin && m.minutes) {
+          actionsHtml = '<div class="meeting-actions"><button class="btn-minutes" data-id="' + m.id + '" data-minutes="' + m.minutes.replace(/"/g, '&quot;') + '">Edit minutes</button></div>';
+        }
+
+        return '<div class="meeting-card">' +
+          '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;">' +
+            '<div class="meeting-date-badge"><div class="day">' + getDay(m.scheduled_at) + '</div><div class="month">' + getMonth(m.scheduled_at) + '</div></div>' +
+            '<div style="flex:1;">' +
+              '<span class="status-badge ' + statusClass + '">' + statusText + '</span>' +
+              '<div class="meeting-title">' + m.title + '</div>' +
+              '<div class="meeting-time">🕐 ' + formatDate(m.scheduled_at) + '</div>' +
+            '</div>' +
+          '</div>' +
+          agendaHtml + minutesHtml + actionsHtml +
+        '</div>';
+      }).join('');
+
+      // Attach minutes button listeners
+      el.querySelectorAll('.btn-minutes').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          editingMinutesId = this.getAttribute('data-id');
+          document.getElementById('minutesText').value = this.getAttribute('data-minutes') || '';
+          document.getElementById('minutesModal').classList.add('show');
+        });
+      });
+    }
+
+    async function loadMeetings() {
+      var meetings = await sbGet(
+        '/rest/v1/meetings?chama_id=eq.' + chamaData.id + '&order=scheduled_at.asc'
+      );
+      allMeetings = meetings || [];
+      renderMeetings();
+    }
+
+    async function loadPage() {
+      try {
+        currentUser = getUser();
+        if (!currentUser) { doLogout(); return; }
+
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
+        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
+        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
+
+        chamaData = membership.chamas;
+        isAdmin   = membership.role === 'admin';
+
+        if (isAdmin) document.getElementById('newMeetingBtn').style.display = 'inline-block';
+
+        await loadMeetings();
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display  = 'block';
+
+      } catch(err) {
+        document.getElementById('loadingState').textContent = 'Error: ' + (err.message || err);
+      }
+    }
+
+    loadPage();
+  </script>
+</body>
+</html>
