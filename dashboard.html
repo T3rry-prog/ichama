@@ -488,12 +488,7 @@
   </style>
 </head>
 <body>
-  <div id="dbg" style="position:fixed;top:0;left:0;right:0;background:#111;color:#0f0;font-size:11px;padding:8px;z-index:9999;font-family:monospace;word-break:break-all;"></div>
-  <script>
-    function dbg(m){var e=document.getElementById('dbg');if(e)e.innerHTML+=m+'<br>';}
-    window.onerror=function(m,s,l){dbg('ERR: '+m+' line '+l);};
-    dbg('JS OK · token='+(localStorage.getItem('ichama_token')?'YES':'NO'));
-  </script>
+
 
   <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -754,18 +749,14 @@
     // ── MAIN LOAD ──
     async function loadDashboard() {
       try {
-        dbg('loadDashboard started');
         var token = getToken();
-        if (!token) { dbg('No token — redirecting'); doLogout(); return; }
+        if (!token) { doLogout(); return; }
         currentUser = getUser();
-        dbg('User: '+(currentUser?currentUser.id:'null'));
 
         document.getElementById('greetingText').textContent = getGreeting() + ' 👋';
 
         // Profile
-        dbg('Fetching profile...');
         var profiles = await sbGet('/rest/v1/profiles?id=eq.' + currentUser.id + '&select=*&limit=1');
-        dbg('Profile result: '+(profiles?JSON.stringify(profiles).slice(0,80):'null'));
         var profile  = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
         var firstName = profile && profile.full_name ? profile.full_name.split(' ')[0] : 'there';
         document.getElementById('greetingName').textContent = firstName;
