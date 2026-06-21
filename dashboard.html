@@ -488,6 +488,12 @@
   </style>
 </head>
 <body>
+  <div id="dbg" style="position:fixed;top:0;left:0;right:0;background:#111;color:#0f0;font-size:11px;padding:8px;z-index:9999;font-family:monospace;word-break:break-all;"></div>
+  <script>
+    function dbg(m){var e=document.getElementById('dbg');if(e)e.innerHTML+=m+'<br>';}
+    window.onerror=function(m,s,l){dbg('ERR: '+m+' line '+l);};
+    dbg('JS OK · token='+(localStorage.getItem('ichama_token')?'YES':'NO'));
+  </script>
 
   <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay">
