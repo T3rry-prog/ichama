@@ -593,17 +593,31 @@
           return;
         }
 
-        // Save profile
-        await fetch(SUPABASE_URL + '/rest/v1/profiles', {
+        // Save profile — upsert to handle cases where profile already exists
+        var profileRes = await fetch(SUPABASE_URL + '/rest/v1/profiles', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'apikey': SUPABASE_KEY,
             'Authorization': 'Bearer ' + accessToken,
-            'Prefer': 'return=minimal'
+            'Prefer': 'return=minimal,resolution=merge-duplicates'
           },
-          body: JSON.stringify({ id: userId, full_name: fullname, phone: phone, email: email })
+          body: JSON.stringify({ id: userId, full_name: fullname, phone: phone, email: email, accountability_score: 100 })
         });
+        if (!profileRes.ok) {
+          var profileErr = await profileRes.json().catch(function(){return{};});
+          console.warn('Profile save issue:', profileErr);
+          // Try PATCH as fallback
+          await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + userId, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify({ full_name: fullname, phone: phone, email: email, accountability_score: 100 })
+          });
+        }
 
         // Store session for dashboard
         localStorage.setItem('ichama_token', accessToken);
