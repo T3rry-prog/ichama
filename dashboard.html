@@ -2,16 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#30B54A" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="iChama" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — iChama</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,42 +19,6 @@
       --line:       #E5E9E6;
       --error:      #D14343;
       --gold:       #D97706;
-    }
-    /* DARK MODE */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --green: #30B54A;
-        --green-d: #38C45A;
-        --green-tint: #0D2E14;
-        --ink: #F0F2F0;
-        --ink-soft: #8A9E8D;
-        --bg: #0F1210;
-        --card: #1A1F1C;
-        --line: #2A332C;
-      }
-      body { background: var(--bg); color: var(--ink); }
-    }
-
-    /* MANUAL DARK MODE (via data-theme attribute) */
-    [data-theme="dark"] {
-      --green: #30B54A;
-      --green-d: #38C45A;
-      --green-tint: #0D2E14;
-      --ink: #F0F2F0;
-      --ink-soft: #8A9E8D;
-      --bg: #0F1210;
-      --card: #1A1F1C;
-      --line: #2A332C;
-    }
-    [data-theme="light"] {
-      --green: #30B54A;
-      --green-d: #259A3D;
-      --green-tint: #EAF8ED;
-      --ink: #1A1F1C;
-      --ink-soft: #5C6760;
-      --bg: #F7F8F7;
-      --card: #FFFFFF;
-      --line: #E5E9E6;
     }
 
     body {
@@ -528,12 +485,9 @@
     .nav-label { font-size: 10px; color: var(--ink-soft); }
 
     .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
-
-
   </style>
 </head>
 <body>
-
 
   <!-- LOADING OVERLAY -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -684,25 +638,15 @@
     </a>
   </nav>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
-    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    var currentUser = null;
 
-    function getToken() { return localStorage.getItem('ichama_token'); }
-    function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
-    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
-    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
-    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
 
-    async function sbGet(path) {
-      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
-      if (res.status === 401) { doLogout(); return null; }
-      return res.ok ? res.json() : null;
-    }
+    let currentUser = null;
 
+    /* ── HELPERS ── */
     function getGreeting() {
-      var h = new Date().getHours();
+      const h = new Date().getHours();
       if (h < 12) return 'Good morning';
       if (h < 17) return 'Good afternoon';
       return 'Good evening';
@@ -716,168 +660,239 @@
     }
 
     function animateScore(score) {
-      var circ = 175.9;
-      document.getElementById('scoreRing').style.strokeDashoffset = circ - (score / 100) * circ;
+      const circ   = 175.9;
+      const offset = circ - (score / 100) * circ;
+      document.getElementById('scoreRing').style.strokeDashoffset = offset;
       document.getElementById('scoreNum').textContent  = score;
       document.getElementById('scoreLabel').textContent = scoreLabel(score);
     }
 
-    function hideLoading() {}
-    function showLoadingError(msg) { console.error(msg); }
+    function kes(n) {
+      return 'KES ' + Number(n || 0).toLocaleString('en-KE');
+    }
 
-    // ── DROPDOWN ──
-    window.toggleDropdown = function() {
+    function toggleDropdown() {
       document.getElementById('dropdown').classList.toggle('show');
-    };
-    window.doLogoutClick = doLogout;
-    document.addEventListener('click', function(e) {
+    }
+
+    document.addEventListener('click', (e) => {
       if (!e.target.closest('#avatarBtn') && !e.target.closest('#dropdown')) {
-        var d = document.getElementById('dropdown');
-        if (d) d.classList.remove('show');
+        document.getElementById('dropdown').classList.remove('show');
       }
     });
 
-    // ── RENDER MEMBERS ──
-    function renderMembers(members, memberTotals, required) {
-      var el = document.getElementById('membersList');
+    /* ── LOGOUT — clears both Supabase session and any legacy localStorage keys ── */
+    async function handleLogout() {
+      await supabase.auth.signOut();
+      localStorage.removeItem('ichama_token');
+      localStorage.removeItem('ichama_user');
+      window.location.href = 'index.html';
+    }
+
+    /* ── RENDER HELPERS ── */
+    function renderMembers(members) {
+      const el = document.getElementById('membersList');
       if (!members || members.length === 0) {
         el.innerHTML = '<div style="padding:18px;text-align:center;color:#5C6760;font-size:13px;">No members yet</div>';
         return;
       }
-      el.innerHTML = members.slice(0, 4).map(function(m) {
-        var name      = m.full_name || 'Unknown';
-        var initials  = name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
-        var score     = m.accountability_score != null ? m.accountability_score : 100;
-        var scoreClass = score >= 75 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
-        var paid      = (memberTotals[m.user_id] || 0) >= required;
-        return '<div class="member-row">' +
-          '<div class="member-avatar">' + initials + '</div>' +
-          '<div class="member-info"><div class="member-name">' + name + '</div>' +
-          '<div class="member-status">' + (m.role === 'admin' ? '👑 Admin' : 'Member') + '</div></div>' +
-          '<span class="paid-badge ' + (paid ? 'paid-yes' : 'paid-no') + '">' + (paid ? 'Paid' : 'Pending') + '</span>' +
-          '<div class="member-score ' + scoreClass + '">' + score + '</div>' +
-        '</div>';
+      el.innerHTML = members.slice(0, 4).map(m => {
+        const name      = m.profiles?.full_name || 'Unknown';
+        const initials  = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        const score     = m.profiles?.accountability_score ?? 100;
+        const scoreClass = score >= 75 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
+        const paid      = m.paid_this_month;
+        return `
+          <div class="member-row">
+            <div class="member-avatar">${initials}</div>
+            <div class="member-info">
+              <div class="member-name">${name}</div>
+              <div class="member-status">${m.role === 'admin' ? '👑 Admin' : 'Member'}</div>
+            </div>
+            <span class="paid-badge ${paid ? 'paid-yes' : 'paid-no'}">${paid ? 'Paid' : 'Pending'}</span>
+            <div class="member-score ${scoreClass}">${score}</div>
+          </div>`;
       }).join('');
     }
 
-    // ── RENDER ACTIVITY ──
     function renderActivity(rows) {
-      var el = document.getElementById('activityList');
+      const el = document.getElementById('activityList');
       if (!rows || rows.length === 0) {
         el.innerHTML = '<div style="padding:18px;text-align:center;color:#5C6760;font-size:13px;">No activity yet</div>';
         return;
       }
-      el.innerHTML = rows.map(function(r) {
-        var isContrib = !!r.contribution_amount;
-        var name      = r.actor_name || 'Unknown';
-        var isMe      = currentUser && r.actor_id === currentUser.id;
-        var date      = new Date(r.created_at).toLocaleDateString('en-KE', { day:'numeric', month:'short' });
-        var label     = isContrib ? (isMe?'You':name)+' contributed' : (isMe?'You':name)+' withdrew';
-        var amount    = isContrib ? r.contribution_amount : r.withdrawal_amount;
-        return '<div class="activity-row">' +
-          '<div class="activity-icon">' + (isContrib ? '💰' : '🏦') + '</div>' +
-          '<div class="activity-info"><div class="activity-title">' + label + '</div>' +
-          '<div class="activity-time">' + date + (r.status?' · '+r.status:'') + '</div></div>' +
-          '<div class="activity-amount ' + (isContrib?'amount-in':'amount-out') + '">' + (isContrib?'+':'-') + kes(amount) + '</div>' +
-        '</div>';
+      el.innerHTML = rows.map(r => {
+        const isContrib  = !!r.contribution_amount;
+        const name       = r.actor_name || 'Unknown';
+        const isMe       = r.actor_id === currentUser.id;
+        const date       = new Date(r.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+        const icon       = isContrib ? '💰' : '🏦';
+        const label      = isContrib
+          ? `${isMe ? 'You' : name} contributed`
+          : `${isMe ? 'You' : name} withdrew`;
+        const amountCls  = isContrib ? 'amount-in' : 'amount-out';
+        const sign       = isContrib ? '+' : '-';
+        const amount     = isContrib ? r.contribution_amount : r.withdrawal_amount;
+        const status     = r.status || '';
+        return `
+          <div class="activity-row">
+            <div class="activity-icon">${icon}</div>
+            <div class="activity-info">
+              <div class="activity-title">${label}</div>
+              <div class="activity-time">${date}${status ? ' · ' + status : ''}</div>
+            </div>
+            <div class="activity-amount ${amountCls}">${sign}${kes(amount)}</div>
+          </div>`;
       }).join('');
     }
 
-    // ── MAIN LOAD ──
+    /* ── MAIN LOAD ── */
     async function loadDashboard() {
       try {
-        var token = getToken();
-        if (!token) { doLogout(); return; }
-        currentUser = getUser();
+      // Auth check via Supabase JS (handles token refresh automatically)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      currentUser = session.user;
 
-        document.getElementById('greetingText').textContent = getGreeting() + ' 👋';
+      // Greeting
+      document.getElementById('greetingText').textContent = getGreeting() + ' 👋';
 
-        // Profile
-        var profiles = await sbGet('/rest/v1/profiles?id=eq.' + currentUser.id + '&select=*&limit=1');
-        var profile  = Array.isArray(profiles) && profiles.length > 0 ? profiles[0] : null;
-        var firstName = profile && profile.full_name ? profile.full_name.split(' ')[0] : 'there';
-        document.getElementById('greetingName').textContent = firstName;
-        var initials = profile && profile.full_name ? profile.full_name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : '?';
-        document.getElementById('avatarBtn').textContent = initials;
-        animateScore(profile && profile.accountability_score != null ? profile.accountability_score : 100);
+      // Profile
+      const { data: profile } = await supabase
+        .from('profiles').select('*').eq('id', currentUser.id).single();
 
-        // Membership
-        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
-        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
+      const firstName = (profile?.full_name || 'there').split(' ')[0];
+      document.getElementById('greetingName').textContent = firstName;
 
-        if (!membership || !membership.chamas) {
-          document.getElementById('noChamaSection').style.display = 'block';
-          hideLoading(); return;
-        }
+      const initials = (profile?.full_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarBtn').textContent = initials;
 
-        var chama = membership.chamas;
-        document.getElementById('chamaSection').style.display = 'block';
-        document.getElementById('chamaNameBadge').textContent = chama.name;
-        document.getElementById('nextContrib').textContent = 'Contribution: ' + kes(chama.contribution_amount) + ' / ' + (chama.contribution_frequency || 'month');
+      animateScore(profile?.accountability_score ?? 100);
 
-        // Members — two separate queries
-        var members = await sbGet('/rest/v1/chama_members?chama_id=eq.' + chama.id + '&select=user_id,role') || [];
-        var uids = members.map(function(m){return m.user_id;});
-        var memberProfiles = uids.length > 0 ? await sbGet('/rest/v1/profiles?id=in.('+uids.join(',')+')'+'&select=id,full_name,accountability_score') || [] : [];
-        var profileMap = {};
-        memberProfiles.forEach(function(p){ profileMap[p.id]=p; });
-        var combined = members.map(function(m){ var p=profileMap[m.user_id]||{}; return {user_id:m.user_id,role:m.role,full_name:p.full_name||null,accountability_score:p.accountability_score!=null?p.accountability_score:100}; });
+      // Membership (first chama only — extend later for multi-chama)
+      // maybeSingle() returns null instead of error when no rows found
+      const { data: membership } = await supabase
+        .from('chama_members')
+        .select('*, chamas(*)')
+        .eq('user_id', currentUser.id)
+        .limit(1)
+        .maybeSingle();
 
-        // Paid this month
-        var startOfMonth = new Date(); startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
-        var contribsThisMonth = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&created_at=gte.'+startOfMonth.toISOString()+'&select=user_id,amount') || [];
-        var memberTotals = {};
-        contribsThisMonth.forEach(function(c){ memberTotals[c.user_id]=(memberTotals[c.user_id]||0)+Number(c.amount); });
-        var required = Number(chama.contribution_amount) || 0;
-        var fullyPaid = Object.keys(memberTotals).filter(function(uid){ return memberTotals[uid]>=required; }).length;
+      if (!membership) {
+        document.getElementById('noChamaSection').style.display = 'block';
+        document.getElementById('loadingOverlay').classList.add('hidden');
+        return;
+      }
 
-        document.getElementById('statMembers').textContent = members.length;
-        document.getElementById('statPaid').textContent    = fullyPaid;
-        document.getElementById('statPending').textContent = members.length - fullyPaid;
-        renderMembers(combined, memberTotals, required);
+      const chama = membership.chamas;
+      document.getElementById('chamaSection').style.display = 'block';
+      document.getElementById('chamaNameBadge').textContent = chama.name;
+      document.getElementById('nextContrib').textContent =
+        'Contribution: ' + kes(chama.contribution_amount) + ' / ' + (chama.contribution_frequency || 'month');
 
-        // Balance
-        var allContribs    = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&select=amount') || [];
-        var allWithdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=eq.approved&select=amount') || [];
-        var totalIn  = allContribs.reduce(function(s,c){return s+Number(c.amount);},0);
-        var totalOut = allWithdrawals.reduce(function(s,w){return s+Number(w.amount);},0);
-        document.getElementById('chamaBalance').textContent = kes(totalIn - totalOut);
+      // Members + monthly paid status
+      const { data: members } = await supabase
+        .from('chama_members')
+        .select('*, profiles(full_name, accountability_score)')
+        .eq('chama_id', chama.id);
 
-        // Activity — no nested joins
-        var recentContribs    = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&select=id,amount,status,created_at,user_id&order=created_at.desc&limit=5') || [];
-        var recentWithdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=in.(approved,rejected)&select=id,amount,status,created_at,requested_by&order=created_at.desc&limit=5') || [];
-        var actorIds = recentContribs.map(function(c){return c.user_id;}).concat(recentWithdrawals.map(function(w){return w.requested_by;})).filter(Boolean);
-        var uniqueIds = actorIds.filter(function(id,i){return actorIds.indexOf(id)===i;});
-        var actorProfs = uniqueIds.length>0 ? await sbGet('/rest/v1/profiles?id=in.('+uniqueIds.join(',')+')'+'&select=id,full_name') || [] : [];
-        var actorMap = {};
-        actorProfs.forEach(function(p){actorMap[p.id]=p.full_name;});
-        var activity = recentContribs.map(function(c){return{created_at:c.created_at,actor_id:c.user_id,actor_name:actorMap[c.user_id]||null,status:c.status,contribution_amount:c.amount};})
-          .concat(recentWithdrawals.map(function(w){return{created_at:w.created_at,actor_id:w.requested_by,actor_name:actorMap[w.requested_by]||null,status:w.status,withdrawal_amount:w.amount};}))
-          .sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,6);
-        renderActivity(activity);
-        hideLoading();
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
 
-      } catch(err) {
-        showLoadingError(err && err.message ? err.message : String(err));
+      // Use created_at as fallback — paid_at may not be set on all rows
+      const { data: contribsThisMonth } = await supabase
+        .from('contributions')
+        .select('user_id')
+        .eq('chama_id', chama.id)
+        .eq('status', 'paid')
+        .gte('created_at', startOfMonth.toISOString());
+
+      const paidIds = new Set((contribsThisMonth || []).map(c => c.user_id));
+
+      const membersWithPaid = (members || []).map(m => ({
+        ...m, paid_this_month: paidIds.has(m.user_id)
+      }));
+
+      document.getElementById('statMembers').textContent = members?.length ?? 0;
+      document.getElementById('statPaid').textContent    = paidIds.size;
+      document.getElementById('statPending').textContent = (members?.length ?? 0) - paidIds.size;
+
+      renderMembers(membersWithPaid);
+
+      // TRUE balance = total paid contributions − total approved withdrawals
+      const [{ data: allContribs }, { data: allWithdrawals }] = await Promise.all([
+        supabase
+          .from('contributions')
+          .select('amount')
+          .eq('chama_id', chama.id)
+          .eq('status', 'paid'),
+        supabase
+          .from('withdrawals')
+          .select('amount')
+          .eq('chama_id', chama.id)
+          .eq('status', 'approved')
+      ]);
+
+      const totalIn  = (allContribs   || []).reduce((s, c) => s + Number(c.amount), 0);
+      const totalOut = (allWithdrawals || []).reduce((s, w) => s + Number(w.amount), 0);
+      document.getElementById('chamaBalance').textContent = kes(totalIn - totalOut);
+
+      // Recent activity — merge contributions + withdrawals, sort by date
+      const [{ data: recentContribs }, { data: recentWithdrawals }] = await Promise.all([
+        supabase
+          .from('contributions')
+          .select('id, amount, status, created_at, user_id, profiles(full_name)')
+          .eq('chama_id', chama.id)
+          .order('created_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('withdrawals')
+          .select('id, amount, status, created_at, requested_by, profiles(full_name)')
+          .eq('chama_id', chama.id)
+          .order('created_at', { ascending: false })
+          .limit(5)
+      ]);
+
+      const activity = [
+        ...(recentContribs || []).map(c => ({
+          created_at: c.created_at,
+          actor_id:   c.user_id,
+          actor_name: c.profiles?.full_name,
+          status:     c.status,
+          contribution_amount: c.amount
+        })),
+        ...(recentWithdrawals || []).map(w => ({
+          created_at: w.created_at,
+          actor_id:   w.requested_by,
+          actor_name: w.profiles?.full_name,
+          status:     w.status,
+          withdrawal_amount: w.amount
+        }))
+      ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 6);
+
+      renderActivity(activity);
+
+      document.getElementById('loadingOverlay').classList.add('hidden');
+
+      } catch (err) {
+        document.getElementById('loadingOverlay').innerHTML =
+          '<div style="padding:30px;text-align:center;font-family:Inter,sans-serif;">' +
+          '<div style="font-size:32px;margin-bottom:12px;">⚠️</div>' +
+          '<div style="font-weight:600;color:#1A1F1C;margin-bottom:8px;">Error — send this to Terry</div>' +
+          '<div style="font-size:12px;color:#5C6760;word-break:break-all;max-width:320px;margin:0 auto;">' +
+          (err && err.message ? err.message : JSON.stringify(err)) +
+          '</div></div>';
       }
     }
 
-    // Safety timeout — never show loading more than 8 seconds
-    setTimeout(function() {
-      var overlay = document.getElementById('loadingOverlay');
-      if (overlay && !overlay.classList.contains('hidden')) {
-        hideLoading();
-        document.getElementById('noChamaSection').style.display = 'block';
-      }
-    }, 8000);
     loadDashboard();
   </script>
 
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(function(e){console.log('SW error:',e);});
-    }
-  </script>
 </body>
 </html>
+
+
