@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform Admin — iChama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
+      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
+      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
+    }
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+
+    /* LOGIN SCREEN */
+    .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .login-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 360px; }
+    .login-logo { font-weight: 800; font-size: 22px; color: var(--ink); margin-bottom: 6px; }
+    .login-logo span { color: var(--green); }
+    .login-sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+    .login-card label { display: block; font-size: 13.5px; font-weight: 500; margin-bottom: 7px; }
+    .login-card input { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; }
+    .login-card input:focus { border-color: var(--green); background: var(--card); }
+    .btn-login { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 13px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 12px; }
+    .login-err { font-size: 13px; color: var(--error); margin-top: 10px; display: none; text-align: center; }
+    .login-err.show { display: block; }
+
+    /* ADMIN SCREEN */
+    .admin-screen { display: none; padding-bottom: 48px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .topbar-left { font-weight: 700; font-size: 16px; }
+    .topbar-left span { color: var(--green); }
+    .btn-logout-admin { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 13px; font-size: 12px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: 'Inter', sans-serif; }
+
+    main { padding: 20px 20px 48px; max-width: 540px; margin: 0 auto; }
+
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin: 0 0 10px; }
+
+    /* STAT GRID */
+    .stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 24px; }
+    .stat-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .stat-card .val { font-weight: 800; font-size: 28px; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .stat-card .val.green { color: var(--green); }
+    .stat-card .val.gold  { color: var(--gold); }
+    .stat-card .lbl { font-size: 12px; color: var(--ink-soft); }
+
+    /* PANEL */
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+    .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .panel-header-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+    .count-badge { background: var(--bg); border: 1px solid var(--line); border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--ink-soft); padding: 2px 9px; }
+    .data-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .data-row:last-child { border-bottom: none; }
+    .avatar-sm { width: 34px; height: 34px; border-radius: 50%; background: var(--green-tint); color: var(--green-d); font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .data-info { flex: 1; min-width: 0; }
+    .data-title { font-size: 13.5px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .data-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+    .btn-del { background: none; border: 1px solid #FECACA; border-radius: 7px; color: var(--error); font-size: 12px; font-weight: 600; padding: 5px 10px; cursor: pointer; font-family: 'Inter', sans-serif; flex-shrink: 0; }
+    .empty { text-align: center; padding: 20px; color: var(--ink-soft); font-size: 13px; }
+
+    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
+    .msg.error   { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
+    .msg.show { display: block; }
+
+    .chama-badge { font-size: 11px; font-weight: 600; background: var(--green-tint); color: var(--green-d); padding: 2px 8px; border-radius: 100px; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">i<span>Chama</span></div>
+      <div class="login-sub">Platform administrator access</div>
+      <label for="adminPass">Admin password</label>
+      <input type="password" id="adminPass" placeholder="Enter password" />
+      <button class="btn-login" onclick="checkPassword()">Enter →</button>
+      <div class="login-err" id="loginErr">Incorrect password.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-screen" id="adminScreen">
+    <div class="topbar">
+      <div class="topbar-left">i<span>Chama</span> Admin</div>
+      <button class="btn-logout-admin" onclick="adminLogout()">Lock</button>
+    </div>
+
+    <main>
+      <div class="msg success" id="successMsg"></div>
+      <div class="msg error"   id="errorMsg"></div>
+
+      <!-- PLATFORM STATS -->
+      <div class="section-label" style="margin-bottom:10px;">Platform overview</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="val green" id="statUsers">—</div><div class="lbl">Total users</div></div>
+        <div class="stat-card"><div class="val green" id="statChamas">—</div><div class="lbl">Total chamas</div></div>
+        <div class="stat-card"><div class="val" id="statTotalContribs">—</div><div class="lbl">Contributions</div></div>
+        <div class="stat-card"><div class="val gold" id="statTotalBalance">—</div><div class="lbl">Platform balance</div></div>
+      </div>
+
+      <!-- ALL USERS -->
+      <div class="section-label">All users</div>
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-header"><span class="panel-header-title">Registered users</span><span class="count-badge" id="userCount">0</span></div>
+        <div id="usersList"></div>
+      </div>
+
+      <!-- ALL CHAMAS -->
+      <div class="section-label">All chamas</div>
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-header"><span class="panel-header-title">Registered chamas</span><span class="count-badge" id="chamaCount">0</span></div>
+        <div id="chamasList"></div>
+      </div>
+
+      <!-- ALL CONTRIBUTIONS -->
+      <div class="section-label">All contributions</div>
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-header"><span class="panel-header-title">Platform contributions</span><span class="count-badge" id="contribCount">0</span></div>
+        <div id="contribsList"></div>
+      </div>
+
+      <!-- ALL WITHDRAWALS -->
+      <div class="section-label">All withdrawals</div>
+      <div class="panel">
+        <div class="panel-header"><span class="panel-header-title">Platform withdrawals</span><span class="count-badge" id="withdrawalCount">0</span></div>
+        <div id="withdrawalsList"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
+    var ADMIN_PASS = 'Masiwa';
+
+    var profileMap = {};
+    var chamaMap   = {};
+
+    function getToken() { return localStorage.getItem('ichama_token'); }
+    function authHeaders() { return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' }; }
+
+    function kes(n) { return 'KES ' + Number(n||0).toLocaleString('en-KE'); }
+    function fmtDate(d) { return new Date(d).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' }); }
+    function getInitials(name) { return (name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2); }
+
+    async function sbGet(path) {
+      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
+      return res.ok ? res.json() : null;
+    }
+    async function sbDelete(path) {
+      return fetch(SUPABASE_URL + path, { method:'DELETE', headers: authHeaders() });
+    }
+
+    function showSuccess(msg) { var el=document.getElementById('successMsg'); el.textContent=msg; el.classList.add('show'); document.getElementById('errorMsg').classList.remove('show'); setTimeout(function(){el.classList.remove('show');},3000); }
+    function showError(msg)   { var el=document.getElementById('errorMsg');   el.textContent=msg; el.classList.add('show'); }
+
+    // ── PASSWORD ──
+    window.checkPassword = function() {
+      var val = document.getElementById('adminPass').value;
+      if (val === ADMIN_PASS) {
+        sessionStorage.setItem('ichama_superadmin', '1');
+        document.getElementById('loginScreen').style.display  = 'none';
+        document.getElementById('adminScreen').style.display  = 'block';
+        loadData();
+      } else {
+        document.getElementById('loginErr').classList.add('show');
+        document.getElementById('adminPass').value = '';
+      }
+    };
+
+    document.getElementById('adminPass').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') window.checkPassword();
+    });
+
+    window.adminLogout = function() {
+      sessionStorage.removeItem('ichama_superadmin');
+      document.getElementById('adminScreen').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminPass').value = '';
+    };
+
+    // Auto-unlock if session still active
+    if (sessionStorage.getItem('ichama_superadmin') === '1') {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminScreen').style.display = 'block';
+    }
+
+    // ── DELETE ACTIONS ──
+    window.deleteUser = async function(uid, name) {
+      if (!confirm('Delete profile for '+name+'? This removes their profile data but NOT their auth account.')) return;
+      await sbDelete('/rest/v1/profiles?id=eq.'+uid);
+      showSuccess('Profile deleted.'); await loadData();
+    };
+    window.deleteChama = async function(id, name) {
+      if (!confirm('Delete chama "'+name+'" and ALL its data? This cannot be undone.')) return;
+      await sbDelete('/rest/v1/chamas?id=eq.'+id);
+      showSuccess('Chama deleted.'); await loadData();
+    };
+    window.deleteContrib = async function(id) {
+      if (!confirm('Delete this contribution?')) return;
+      await sbDelete('/rest/v1/contributions?id=eq.'+id);
+      showSuccess('Contribution deleted.'); await loadData();
+    };
+    window.deleteWithdrawal = async function(id) {
+      if (!confirm('Delete this withdrawal?')) return;
+      await sbDelete('/rest/v1/withdrawals?id=eq.'+id);
+      showSuccess('Withdrawal deleted.'); await loadData();
+    };
+
+    // ── LOAD ──
+    async function loadData() {
+      if (!getToken()) { return; }
+
+      var profiles     = await sbGet('/rest/v1/profiles?select=*&order=created_at.desc') || [];
+      var chamas       = await sbGet('/rest/v1/chamas?select=*&order=created_at.desc') || [];
+      var contribs     = await sbGet('/rest/v1/contributions?select=*&order=created_at.desc&limit=50') || [];
+      var withdrawals  = await sbGet('/rest/v1/withdrawals?select=*&order=created_at.desc&limit=50') || [];
+
+      profileMap = {};
+      profiles.forEach(function(p){profileMap[p.id]=p;});
+      chamaMap = {};
+      chamas.forEach(function(c){chamaMap[c.id]=c;});
+
+      var totalIn  = contribs.reduce(function(s,c){return s+Number(c.amount);},0);
+      var totalOut = withdrawals.filter(function(w){return w.status==='approved';}).reduce(function(s,w){return s+Number(w.amount);},0);
+
+      document.getElementById('statUsers').textContent        = profiles.length;
+      document.getElementById('statChamas').textContent       = chamas.length;
+      document.getElementById('statTotalContribs').textContent = contribs.length;
+      document.getElementById('statTotalBalance').textContent  = kes(totalIn - totalOut);
+      document.getElementById('userCount').textContent        = profiles.length;
+      document.getElementById('chamaCount').textContent       = chamas.length;
+      document.getElementById('contribCount').textContent     = contribs.length;
+      document.getElementById('withdrawalCount').textContent  = withdrawals.length;
+
+      // Users
+      var uel = document.getElementById('usersList');
+      if (!profiles.length) { uel.innerHTML = '<div class="empty">No users yet.</div>'; }
+      else {
+        uel.innerHTML = profiles.map(function(p) {
+          return '<div class="data-row">' +
+            '<div class="avatar-sm">'+getInitials(p.full_name)+'</div>' +
+            '<div class="data-info"><div class="data-title">'+(p.full_name||'No name')+'</div>' +
+            '<div class="data-sub">'+(p.email||'')+(p.phone?' · '+p.phone:'')+'<br>Score: '+(p.accountability_score||100)+' · Joined '+fmtDate(p.created_at||new Date())+'</div></div>' +
+            '<button class="btn-del" onclick="deleteUser(\''+p.id+'\',\''+(p.full_name||'user')+'\')">Delete</button>' +
+          '</div>';
+        }).join('');
+      }
+
+      // Chamas
+      var cel = document.getElementById('chamasList');
+      if (!chamas.length) { cel.innerHTML = '<div class="empty">No chamas yet.</div>'; }
+      else {
+        cel.innerHTML = chamas.map(function(c) {
+          return '<div class="data-row">' +
+            '<div class="data-info"><div class="data-title">'+c.name+'</div>' +
+            '<div class="data-sub">'+kes(c.contribution_amount)+' / '+(c.contribution_frequency||'month')+' · Code: '+(c.invite_code||'—')+'<br>Created '+fmtDate(c.created_at)+'</div></div>' +
+            '<button class="btn-del" onclick="deleteChama(\''+c.id+'\',\''+c.name+'\')">Delete</button>' +
+          '</div>';
+        }).join('');
+      }
+
+      // Contributions
+      var confEl = document.getElementById('contribsList');
+      if (!contribs.length) { confEl.innerHTML = '<div class="empty">No contributions yet.</div>'; }
+      else {
+        confEl.innerHTML = contribs.map(function(c) {
+          var pname = (profileMap[c.user_id]||{}).full_name || 'Unknown';
+          var cname = (chamaMap[c.chama_id]||{}).name || 'Unknown chama';
+          return '<div class="data-row">' +
+            '<div class="data-info"><div class="data-title">'+kes(c.amount)+' — '+pname+'</div>' +
+            '<div class="data-sub">'+cname+' · '+fmtDate(c.created_at)+(c.method?' · '+c.method:'')+'</div></div>' +
+            '<button class="btn-del" onclick="deleteContrib(\''+c.id+'\')">Delete</button>' +
+          '</div>';
+        }).join('');
+      }
+
+      // Withdrawals
+      var wdEl = document.getElementById('withdrawalsList');
+      if (!withdrawals.length) { wdEl.innerHTML = '<div class="empty">No withdrawals yet.</div>'; }
+      else {
+        wdEl.innerHTML = withdrawals.map(function(w) {
+          var pname = (profileMap[w.requested_by||w.user_id]||{}).full_name || 'Unknown';
+          var cname = (chamaMap[w.chama_id]||{}).name || 'Unknown chama';
+          var statusColor = w.status==='approved'?'color:var(--green-d)':w.status==='rejected'?'color:var(--error)':'color:var(--gold)';
+          return '<div class="data-row">' +
+            '<div class="data-info"><div class="data-title">'+kes(w.amount)+' — '+pname+'</div>' +
+            '<div class="data-sub">'+cname+' · '+fmtDate(w.created_at)+(w.reason?' · '+w.reason:'')+'</div>' +
+            '<div style="font-size:11px;font-weight:600;margin-top:3px;'+statusColor+'">'+w.status+'</div></div>' +
+            '<button class="btn-del" onclick="deleteWithdrawal(\''+w.id+'\')">Delete</button>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    // Load if already authenticated
+    if (sessionStorage.getItem('ichama_superadmin') === '1') { loadData(); }
+  </script>
+
+</body>
+</html>
