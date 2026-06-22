@@ -210,17 +210,21 @@
 
         document.getElementById('greetingText').textContent = getGreeting()+' 👋';
 
-        // Profile
-        var profiles = await sbGet('/rest/v1/profiles?id=eq.'+user.id+'&select=*&limit=1');
-        var profile  = Array.isArray(profiles)&&profiles.length>0 ? profiles[0] : null;
-        var name     = profile&&profile.full_name ? profile.full_name : (user.email||'there');
+        // Run profile + membership in parallel
+        var results = await Promise.all([
+          sbGet('/rest/v1/profiles?id=eq.'+user.id+'&select=*&limit=1'),
+          sbGet('/rest/v1/chama_members?user_id=eq.'+user.id+'&select=*,chamas(*)&limit=1')
+        ]);
+
+        var profiles    = results[0];
+        var memberships = results[1];
+        var profile     = Array.isArray(profiles)&&profiles.length>0 ? profiles[0] : null;
+        var membership  = Array.isArray(memberships)&&memberships.length>0 ? memberships[0] : null;
+
+        var name = profile&&profile.full_name ? profile.full_name : (user.email||'there');
         document.getElementById('greetingName').textContent = name.split(' ')[0];
         document.getElementById('avatarBtn').textContent    = name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
         animateScore(profile&&profile.accountability_score!=null ? profile.accountability_score : 100);
-
-        // Membership
-        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.'+user.id+'&select=*,chamas(*)&limit=1');
-        var membership  = Array.isArray(memberships)&&memberships.length>0 ? memberships[0] : null;
 
         if (!membership||!membership.chamas) {
           document.getElementById('noChamaSection').style.display='block';
@@ -231,17 +235,35 @@
         document.getElementById('chamaSection').style.display='block';
         document.getElementById('chamaNameBadge').textContent = chama.name;
         document.getElementById('nextContrib').textContent    = 'Contribution: '+kes(chama.contribution_amount)+' / '+(chama.contribution_frequency||'month');
+        hideSpinner(); // Show page immediately
 
-        // Members
-        var members = await sbGet('/rest/v1/chama_members?chama_id=eq.'+chama.id+'&select=user_id,role') || [];
-        var uids    = members.map(function(m){return m.user_id;});
-        var mProfs  = uids.length>0 ? await sbGet('/rest/v1/profiles?id=in.('+uids.join(',')+')'+'&select=id,full_name,accountability_score') || [] : [];
-        var pMap    = {}; mProfs.forEach(function(p){pMap[p.id]=p;});
+        // Run all chama queries in parallel
+        var som = new Date(); som.setDate(1); som.setHours(0,0,0,0);
+        var chamaResults = await Promise.all([
+          sbGet('/rest/v1/chama_members?chama_id=eq.'+chama.id+'&select=user_id,role'),
+          sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&created_at=gte.'+som.toISOString()+'&select=user_id,amount'),
+          sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&select=amount'),
+          sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=eq.approved&select=amount'),
+          sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&select=id,amount,status,created_at,user_id&order=created_at.desc&limit=5'),
+          sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=in.(approved,rejected)&select=id,amount,status,created_at,requested_by&order=created_at.desc&limit=5')
+        ]);
+
+        var members = chamaResults[0] || [];
+        var ctm     = chamaResults[1] || [];
+        var ac      = chamaResults[2] || [];
+        var aw      = chamaResults[3] || [];
+        var rc      = chamaResults[4] || [];
+        var rw      = chamaResults[5] || [];
+
+        // Fetch all profiles needed in one call
+        var uids = members.map(function(m){return m.user_id;});
+        var aids = rc.map(function(c){return c.user_id;}).concat(rw.map(function(w){return w.requested_by;})).filter(Boolean);
+        var allUids = uids.concat(aids).filter(function(id,i,a){return a.indexOf(id)===i;});
+        var allProfs = allUids.length>0 ? await sbGet('/rest/v1/profiles?id=in.('+allUids.join(',')+')'+'&select=id,full_name,accountability_score') || [] : [];
+        var pMap = {}; allProfs.forEach(function(p){pMap[p.id]=p;});
+
         var combined = members.map(function(m){ var p=pMap[m.user_id]||{}; return {user_id:m.user_id,role:m.role,full_name:p.full_name||null,score:p.accountability_score!=null?p.accountability_score:100}; });
 
-        // Paid this month
-        var som = new Date(); som.setDate(1); som.setHours(0,0,0,0);
-        var ctm = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&created_at=gte.'+som.toISOString()+'&select=user_id,amount') || [];
         var totals = {}; ctm.forEach(function(c){ totals[c.user_id]=(totals[c.user_id]||0)+Number(c.amount); });
         var req    = Number(chama.contribution_amount)||0;
         var paid   = Object.keys(totals).filter(function(uid){return totals[uid]>=req;}).length;
@@ -250,7 +272,6 @@
         document.getElementById('statPaid').textContent    = paid;
         document.getElementById('statPending').textContent = members.length-paid;
 
-        // Render members
         var mel = document.getElementById('membersList');
         mel.innerHTML = combined.slice(0,4).map(function(m){
           var n=m.full_name||'Unknown'; var ini=n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
@@ -259,18 +280,12 @@
           return '<div class="member-row"><div class="member-avatar">'+ini+'</div><div class="member-info"><div class="member-name">'+n+'</div><div class="member-status">'+(m.role==='admin'?'👑 Admin':'Member')+'</div></div><span class="paid-badge '+(p?'paid-yes':'paid-no')+'">'+(p?'Paid':'Pending')+'</span><div class="member-score '+sc+'">'+m.score+'</div></div>';
         }).join('') || '<div style="padding:18px;text-align:center;color:#5C6760;font-size:13px;">No members yet</div>';
 
-        // Balance
-        var ac = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&status=eq.paid&select=amount') || [];
-        var aw = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=eq.approved&select=amount') || [];
-        document.getElementById('chamaBalance').textContent = kes(ac.reduce(function(s,c){return s+Number(c.amount);},0) - aw.reduce(function(s,w){return s+Number(w.amount);},0));
+        document.getElementById('chamaBalance').textContent = kes(
+          ac.reduce(function(s,c){return s+Number(c.amount);},0) -
+          aw.reduce(function(s,w){return s+Number(w.amount);},0)
+        );
 
-        // Activity
-        var rc = await sbGet('/rest/v1/contributions?chama_id=eq.'+chama.id+'&select=id,amount,status,created_at,user_id&order=created_at.desc&limit=5') || [];
-        var rw = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chama.id+'&status=in.(approved,rejected)&select=id,amount,status,created_at,requested_by&order=created_at.desc&limit=5') || [];
-        var aids = rc.map(function(c){return c.user_id;}).concat(rw.map(function(w){return w.requested_by;})).filter(Boolean);
-        var uaids = aids.filter(function(id,i){return aids.indexOf(id)===i;});
-        var ap = uaids.length>0 ? await sbGet('/rest/v1/profiles?id=in.('+uaids.join(',')+')'+'&select=id,full_name') || [] : [];
-        var am = {}; ap.forEach(function(p){am[p.id]=p.full_name;});
+        var am = {}; allProfs.forEach(function(p){am[p.id]=p.full_name;});
         var activity = rc.map(function(c){return{created_at:c.created_at,actor_id:c.user_id,actor_name:am[c.user_id]||null,status:c.status,contribution_amount:c.amount};})
           .concat(rw.map(function(w){return{created_at:w.created_at,actor_id:w.requested_by,actor_name:am[w.requested_by]||null,status:w.status,withdrawal_amount:w.amount};}))
           .sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,6);
@@ -282,8 +297,6 @@
           var amt=ic?r.contribution_amount:r.withdrawal_amount;
           return '<div class="activity-row"><div class="activity-icon">'+(ic?'💰':'🏦')+'</div><div class="activity-info"><div class="activity-title">'+(me?'You':n)+(ic?' contributed':' withdrew')+'</div><div class="activity-time">'+d+(r.status?' · '+r.status:'')+'</div></div><div class="activity-amount '+(ic?'amount-in':'amount-out')+'">'+(ic?'+':'-')+kes(amt)+'</div></div>';
         }).join('') : '<div style="padding:18px;text-align:center;color:#5C6760;font-size:13px;">No activity yet</div>';
-
-        hideSpinner();
 
       } catch(err) {
         document.getElementById('spinner').innerHTML = '<div style="padding:30px;text-align:center;"><div style="font-size:32px;margin-bottom:12px;">⚠️</div><div style="font-weight:600;margin-bottom:8px;">Something went wrong</div><div style="font-size:12px;color:#5C6760;">'+String(err)+'</div><button onclick="doLogout()" style="margin-top:16px;background:#30B54A;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;">Sign in again</button></div>';
@@ -306,4 +319,3 @@
   </script>
 </body>
 </html>
-
