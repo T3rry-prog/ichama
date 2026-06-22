@@ -2,70 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Withdraw — iChama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#30B54A" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
-      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
-      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
-    }
-    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 40px; }
-    nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-    .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
-    nav h1 { font-weight: 600; font-size: 16px; }
-    main { padding: 20px 20px 48px; max-width: 480px; margin: 0 auto; }
-    .balance-card { background: var(--green); border-radius: 16px; padding: 22px 20px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .balance-left .lbl { font-size: 12.5px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
-    .balance-left .amt { font-weight: 800; font-size: 32px; color: #fff; letter-spacing: -0.5px; line-height: 1; }
-    .balance-left .sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 4px; }
-    .lock-icon { font-size: 36px; opacity: 0.9; }
-    .info-banner { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
-    .info-banner .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-    .info-banner p { font-size: 13px; color: #78350F; line-height: 1.5; }
-    .info-banner strong { font-weight: 600; }
-    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-    .panel-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 16px; }
-    .form-group { margin-bottom: 14px; }
-    .form-group:last-child { margin-bottom: 0; }
-    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
-    .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
-    input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
-    textarea { resize: vertical; min-height: 80px; }
-    input::placeholder, textarea::placeholder { color: #A7AFA9; }
-    input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
-    .amount-wrap { position: relative; }
-    .amount-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
-    .amount-wrap input { padding-left: 52px; }
-    .approval-info { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
-    .approval-icon { font-size: 24px; }
-    .approval-text .title { font-size: 14px; font-weight: 600; color: var(--ink); }
-    .approval-text .sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
-    .withdrawal-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
-    .withdrawal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .withdrawal-amount { font-weight: 800; font-size: 20px; color: var(--ink); }
-    .withdrawal-reason { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
-    .w-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
-    .w-pending { background: #FEF3C7; color: #92400E; }
-    .w-approved { background: var(--green-tint); color: var(--green-d); }
-    .withdrawal-meta { font-size: 12px; color: var(--ink-soft); margin-bottom: 12px; }
-    .approval-bar { background: var(--line); border-radius: 100px; height: 6px; margin-bottom: 6px; overflow: hidden; }
-    .approval-fill { background: var(--green); height: 100%; border-radius: 100px; transition: width 0.3s; }
-    .approval-count { font-size: 12px; color: var(--ink-soft); }
-    .btn-approve { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 14px; padding: 11px; border-radius: 9px; border: none; cursor: pointer; margin-top: 10px; transition: background 0.15s; font-family: 'Inter', sans-serif; }
-    .btn-approve:hover { background: var(--green-d); }
-    .btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
-    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
-    .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
-    .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
-    .msg.show { display: block; }
-    .btn-submit { width: 100%; background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; transition: opacity 0.15s; font-family: 'Inter', sans-serif; }
-    .btn-submit:hover { opacity: 0.85; }
-    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-    .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin: 20px 0 12px; }
-    .empty-state { text-align: center; padding: 28px; color: var(--ink-soft); font-size: 13.5px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+    :root { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; --error:#D14343; }
+    body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; font-size:16px; min-height:100vh; padding-bottom:40px; }
+    nav { display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+    .back-btn { background:var(--bg); border:1px solid var(--line); border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:var(--ink); text-decoration:none; font-size:16px; }
+    nav h1 { font-weight:600; font-size:16px; }
+    main { padding:20px 20px 48px; max-width:480px; margin:0 auto; }
+    .balance-card { background:var(--green); border-radius:16px; padding:22px 20px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+    .balance-left .lbl { font-size:12.5px; color:rgba(255,255,255,0.8); margin-bottom:4px; }
+    .balance-left .amt { font-weight:800; font-size:32px; color:#fff; letter-spacing:-0.5px; line-height:1; }
+    .balance-left .sub { font-size:12px; color:rgba(255,255,255,0.7); margin-top:4px; }
+    .lock-icon { font-size:36px; opacity:0.9; }
+    .info-banner { background:#FEF3C7; border:1px solid #FDE68A; border-radius:12px; padding:14px 16px; margin-bottom:16px; display:flex; gap:10px; align-items:flex-start; }
+    .info-banner .icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+    .info-banner p { font-size:13px; color:#78350F; line-height:1.5; }
+    .info-banner strong { font-weight:600; }
+    .panel { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:16px; }
+    .panel-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:16px; }
+    .form-group { margin-bottom:14px; }
+    .form-group:last-child { margin-bottom:0; }
+    label { display:block; font-size:13.5px; font-weight:500; color:var(--ink); margin-bottom:7px; }
+    .hint { font-size:12px; color:var(--ink-soft); margin-top:5px; line-height:1.45; }
+    input, textarea { width:100%; background:var(--bg); border:1px solid var(--line); border-radius:9px; color:var(--ink); font-family:inherit; font-size:15px; padding:12px 14px; outline:none; transition:border-color 0.15s; -webkit-appearance:none; }
+    textarea { resize:vertical; min-height:80px; }
+    input::placeholder, textarea::placeholder { color:#A7AFA9; }
+    input:focus, textarea:focus { border-color:var(--green); background:var(--card); }
+    .amount-wrap { position:relative; }
+    .amount-prefix { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--ink-soft); font-size:14px; font-weight:500; pointer-events:none; }
+    .amount-wrap input { padding-left:52px; }
+    .approval-info { background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+    .approval-icon { font-size:24px; }
+    .approval-text .title { font-size:14px; font-weight:600; color:var(--ink); }
+    .approval-text .sub { font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+    .withdrawal-card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:10px; }
+    .withdrawal-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+    .withdrawal-amount { font-weight:800; font-size:20px; color:var(--ink); }
+    .withdrawal-reason { font-size:13px; color:var(--ink-soft); margin-top:2px; }
+    .w-badge { font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; }
+    .w-pending { background:#FEF3C7; color:#92400E; }
+    .withdrawal-meta { font-size:12px; color:var(--ink-soft); margin-bottom:12px; }
+    .approval-bar { background:var(--line); border-radius:100px; height:6px; margin-bottom:6px; overflow:hidden; }
+    .approval-fill { background:var(--green); height:100%; border-radius:100px; transition:width 0.3s; }
+    .approval-count { font-size:12px; color:var(--ink-soft); }
+    .btn-approve { width:100%; background:var(--green); color:#fff; font-weight:600; font-size:14px; padding:11px; border-radius:9px; border:none; cursor:pointer; margin-top:10px; font-family:inherit; }
+    .btn-approve:disabled { opacity:0.5; cursor:not-allowed; }
+    .msg { border-radius:9px; padding:11px 14px; font-size:13px; margin-bottom:16px; display:none; }
+    .msg.error { background:#FDEDED; border:1px solid #F5C6C6; color:var(--error); }
+    .msg.success { background:var(--green-tint); border:1px solid rgba(48,181,74,0.3); color:var(--green-d); }
+    .msg.show { display:block; }
+    .btn-submit { width:100%; background:var(--ink); color:#fff; font-weight:600; font-size:15px; padding:14px; border-radius:10px; border:none; cursor:pointer; font-family:inherit; }
+    .btn-submit:disabled { opacity:0.5; cursor:not-allowed; }
+    .section-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin:20px 0 12px; }
+    .empty-state { text-align:center; padding:28px; color:var(--ink-soft); font-size:13.5px; background:var(--card); border:1px solid var(--line); border-radius:14px; }
   </style>
 </head>
 <body>
@@ -78,7 +72,6 @@
   <main>
     <div id="loadingState" style="text-align:center;padding:40px;color:#5C6760;">Loading...</div>
     <div id="mainContent" style="display:none">
-
       <div class="balance-card">
         <div class="balance-left">
           <div class="lbl">Group balance</div>
@@ -87,15 +80,12 @@
         </div>
         <div class="lock-icon">🔐</div>
       </div>
-
       <div class="info-banner">
         <div class="icon">⚠️</div>
         <p>Withdrawals require approval from <strong id="approvalsNeeded">—</strong> members before any funds move. No single person can approve alone.</p>
       </div>
-
       <div class="msg error" id="errorMsg"></div>
       <div class="msg success" id="successMsg"></div>
-
       <div class="panel">
         <div class="panel-title">New withdrawal request</div>
         <div class="form-group">
@@ -125,49 +115,75 @@
           </div>
         </div>
       </div>
-
-      <button class="btn-submit" id="submitBtn">Submit withdrawal request →</button>
-
+      <button class="btn-submit" onclick="submitWithdrawal()">Submit withdrawal request →</button>
       <div class="section-title">Pending approvals</div>
       <div id="pendingList"></div>
-
     </div>
   </main>
 
   <script>
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
+    var RESEND_KEY = 're_Ggunjeay_NcxX95pa9ysCuP8GoZDZfWf3';
 
-    var currentUser  = null;
-    var chamaData    = null;
+    var currentUser = null;
+    var chamaData   = null;
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
-    function authHeaders() {
-      return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json' };
-    }
-    function doLogout() {
-      localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user');
-      window.location.href = 'login.html';
-    }
-    if (!getToken()) { window.location.href = 'login.html'; }
+    function authHeaders() { return { 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+getToken(), 'Content-Type':'application/json' }; }
+    function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href='login.html'; }
+    if (!getToken()) { window.location.href='login.html'; }
 
-    function kes(n) { return 'KES ' + Number(n || 0).toLocaleString('en-KE'); }
-    function showError(msg) {
-      var el = document.getElementById('errorMsg');
-      el.textContent = msg; el.classList.add('show');
-      document.getElementById('successMsg').classList.remove('show');
-    }
-    function showSuccess(msg) {
-      var el = document.getElementById('successMsg');
-      el.textContent = msg; el.classList.add('show');
-      document.getElementById('errorMsg').classList.remove('show');
-    }
+    function kes(n) { return 'KES '+Number(n||0).toLocaleString('en-KE'); }
+    function showError(msg) { var el=document.getElementById('errorMsg'); el.textContent=msg; el.classList.add('show'); document.getElementById('successMsg').classList.remove('show'); }
+    function showSuccess(msg) { var el=document.getElementById('successMsg'); el.textContent=msg; el.classList.add('show'); document.getElementById('errorMsg').classList.remove('show'); }
 
     async function sbGet(path) {
-      var res = await fetch(SUPABASE_URL + path, { headers: authHeaders() });
-      if (res.status === 401) { doLogout(); return null; }
+      var res = await fetch(SUPABASE_URL+path, { headers:authHeaders() });
+      if (res.status===401) { doLogout(); return null; }
       return res.ok ? res.json() : null;
+    }
+
+    // Send email to all members when withdrawal is requested
+    async function notifyMembers(amount, reason, requesterName) {
+      try {
+        var members  = await sbGet('/rest/v1/chama_members?chama_id=eq.'+chamaData.id+'&select=user_id');
+        if (!members||members.length===0) return;
+        var uids = members.map(function(m){return m.user_id;}).filter(function(id){return id!==currentUser.id;});
+        if (uids.length===0) return;
+        var profiles = await sbGet('/rest/v1/profiles?id=in.('+uids.join(',')+')'+'&select=email,full_name');
+        if (!profiles||profiles.length===0) return;
+
+        var approvals = chamaData.approvals_required||2;
+        var voteUrl   = 'https://ichamaa.netlify.app/vote.html';
+
+        profiles.forEach(function(p) {
+          if (!p.email) return;
+          fetch('https://api.resend.com/emails', {
+            method:'POST',
+            headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},
+            body: JSON.stringify({
+              from: 'iChama <noreply@spotontickets.com>',
+              to: [p.email],
+              subject: '🗳️ Vote needed — withdrawal request in '+chamaData.name,
+              html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 20px;background:#F7F8F7;">'+
+                '<div style="background:#fff;border-radius:16px;padding:28px 24px;border:1px solid #E5E9E6;">'+
+                '<h1 style="font-size:20px;color:#1A1F1C;margin:0 0 8px;">Vote needed in <span style="color:#30B54A;">'+chamaData.name+'</span></h1>'+
+                '<p style="color:#5C6760;font-size:14px;margin:0 0 20px;">Hi '+(p.full_name?p.full_name.split(' ')[0]:'there')+', a withdrawal request needs your approval.</p>'+
+                '<div style="background:#F7F8F7;border-radius:10px;padding:16px;margin-bottom:20px;">'+
+                '<div style="font-size:26px;font-weight:800;color:#1A1F1C;margin-bottom:4px;">'+kes(amount)+'</div>'+
+                '<div style="font-size:13px;color:#5C6760;margin-bottom:6px;">Requested by '+requesterName+'</div>'+
+                '<div style="font-size:13px;color:#1A1F1C;"><strong>Reason:</strong> '+reason+'</div>'+
+                '</div>'+
+                '<p style="color:#5C6760;font-size:13px;margin:0 0 16px;">This needs <strong>'+approvals+' member approvals</strong> before any funds move.</p>'+
+                '<a href="'+voteUrl+'" style="display:block;background:#30B54A;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:13px;border-radius:9px;text-align:center;">Go to vote →</a>'+
+                '<p style="color:#A7AFA9;font-size:11px;margin:16px 0 0;text-align:center;">iChama · Bytecast Prime</p>'+
+                '</div></div>'
+            })
+          }).catch(function(){});
+        });
+      } catch(e) { console.log('Notify error:', e); }
     }
 
     async function loadPage() {
@@ -175,169 +191,121 @@
         currentUser = getUser();
         if (!currentUser) { doLogout(); return; }
 
-        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
-        var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
-        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
+        var results = await Promise.all([
+          fetch(SUPABASE_URL+'/rest/v1/chama_members?user_id=eq.'+currentUser.id+'&select=*,chamas(*)&limit=1', {headers:authHeaders()}).then(function(r){return r.json();}),
+          true
+        ]);
+
+        var memberships = results[0];
+        var membership  = Array.isArray(memberships)&&memberships.length>0?memberships[0]:null;
+        if (!membership||!membership.chamas) { window.location.href='dashboard.html'; return; }
 
         chamaData = membership.chamas;
 
-        // Balance
-        var contribs    = await sbGet('/rest/v1/contributions?chama_id=eq.' + chamaData.id + '&status=eq.paid&select=amount') || [];
-        var withdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.' + chamaData.id + '&status=eq.approved&select=amount') || [];
-        var totalIn     = contribs.reduce(function(s, c) { return s + Number(c.amount); }, 0);
-        var totalOut    = withdrawals.reduce(function(s, w) { return s + Number(w.amount); }, 0);
+        var balResults = await Promise.all([
+          sbGet('/rest/v1/contributions?chama_id=eq.'+chamaData.id+'&status=eq.paid&select=amount'),
+          sbGet('/rest/v1/withdrawals?chama_id=eq.'+chamaData.id+'&status=eq.approved&select=amount')
+        ]);
 
-        document.getElementById('groupBalance').textContent  = kes(totalIn - totalOut);
+        var totalIn  = (balResults[0]||[]).reduce(function(s,c){return s+Number(c.amount);},0);
+        var totalOut = (balResults[1]||[]).reduce(function(s,w){return s+Number(w.amount);},0);
+
+        document.getElementById('groupBalance').textContent   = kes(totalIn-totalOut);
         document.getElementById('chamaNameLabel').textContent = chamaData.name;
+        document.getElementById('approvalsNeeded').textContent   = chamaData.approvals_required||2;
+        document.getElementById('approvalsRequired').textContent = chamaData.approvals_required||2;
 
-        var approvals = chamaData.approvals_required || 2;
-        document.getElementById('approvalsNeeded').textContent    = approvals;
-        document.getElementById('approvalsRequired').textContent  = approvals;
+        await loadPending();
 
-        await loadPendingWithdrawals();
-
-        document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('mainContent').style.display  = 'block';
-
+        document.getElementById('loadingState').style.display='none';
+        document.getElementById('mainContent').style.display='block';
       } catch(err) {
-        document.getElementById('loadingState').textContent = 'Error loading page.';
+        document.getElementById('loadingState').textContent='Error loading page.';
       }
     }
 
-    async function loadPendingWithdrawals() {
-      var withdrawals = await sbGet(
-        '/rest/v1/withdrawals?chama_id=eq.' + chamaData.id +
-        '&status=eq.pending&select=*,profiles(full_name),withdrawal_approvals(user_id)&order=created_at.desc'
-      );
-      withdrawals = withdrawals || [];
-
+    async function loadPending() {
+      var withdrawals = await sbGet('/rest/v1/withdrawals?chama_id=eq.'+chamaData.id+'&status=eq.pending&select=*,profiles(full_name),withdrawal_approvals(user_id)&order=created_at.desc') || [];
       var el = document.getElementById('pendingList');
-      if (withdrawals.length === 0) {
-        el.innerHTML = '<div class="empty-state">No pending withdrawal requests</div>';
-        return;
-      }
-
-      var approvalsRequired = chamaData.approvals_required || 2;
-
+      if (!withdrawals.length) { el.innerHTML='<div class="empty-state">No pending withdrawal requests</div>'; return; }
+      var req = chamaData.approvals_required||2;
       el.innerHTML = withdrawals.map(function(w) {
-        var approvalCount  = w.withdrawal_approvals ? w.withdrawal_approvals.length : 0;
-        var pct            = Math.min(100, (approvalCount / approvalsRequired) * 100);
-        var hasApproved    = w.withdrawal_approvals && w.withdrawal_approvals.some(function(a) { return a.user_id === currentUser.id; });
-        var requesterName  = w.profiles && w.profiles.full_name ? w.profiles.full_name : 'Unknown';
-        var date           = new Date(w.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
-        var isRequester    = w.requested_by === currentUser.id;
-        var canApprove     = !hasApproved && !isRequester;
-
-        return '<div class="withdrawal-card">' +
-          '<div class="withdrawal-top">' +
-            '<div>' +
-              '<div class="withdrawal-amount">' + kes(w.amount) + '</div>' +
-              '<div class="withdrawal-reason">' + (w.reason || 'No reason given') + '</div>' +
-            '</div>' +
-            '<span class="w-badge w-pending">Pending</span>' +
-          '</div>' +
-          '<div class="withdrawal-meta">Requested by ' + requesterName + ' · ' + date +
-            (w.destination ? '<br>To: ' + w.destination : '') +
-          '</div>' +
-          '<div class="approval-bar"><div class="approval-fill" style="width:' + pct + '%"></div></div>' +
-          '<div class="approval-count">' + approvalCount + ' of ' + approvalsRequired + ' approvals</div>' +
-          (canApprove
-            ? '<button class="btn-approve" data-id="' + w.id + '">✓ Approve this withdrawal</button>'
-            : '<button class="btn-approve" disabled>' + (hasApproved ? '✓ You approved' : '⏳ Awaiting approvals') + '</button>'
-          ) +
+        var cnt   = w.withdrawal_approvals?w.withdrawal_approvals.length:0;
+        var pct   = Math.min(100,(cnt/req)*100);
+        var voted = w.withdrawal_approvals&&w.withdrawal_approvals.some(function(a){return a.user_id===currentUser.id;});
+        var isMe  = w.requested_by===currentUser.id;
+        var rname = w.profiles&&w.profiles.full_name?w.profiles.full_name:'Unknown';
+        var date  = new Date(w.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'short'});
+        return '<div class="withdrawal-card">'+
+          '<div class="withdrawal-top"><div>'+
+          '<div class="withdrawal-amount">'+kes(w.amount)+'</div>'+
+          '<div class="withdrawal-reason">'+(w.reason||'No reason given')+'</div>'+
+          '</div><span class="w-badge w-pending">Pending</span></div>'+
+          '<div class="withdrawal-meta">By '+rname+' · '+date+(w.destination?'<br>To: '+w.destination:'')+'</div>'+
+          '<div class="approval-bar"><div class="approval-fill" style="width:'+pct+'%"></div></div>'+
+          '<div class="approval-count">'+cnt+' of '+req+' approvals</div>'+
+          ((!voted&&!isMe)?'<button class="btn-approve" data-id="'+w.id+'">✓ Approve this withdrawal</button>':
+          '<button class="btn-approve" disabled>'+(voted?'✓ You approved':'⏳ Awaiting approvals')+'</button>')+
         '</div>';
       }).join('');
-
-      // Attach approve listeners
       el.querySelectorAll('.btn-approve[data-id]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          approveWithdrawal(this.getAttribute('data-id'), this);
-        });
+        btn.addEventListener('click', function() { approveWithdrawal(this.getAttribute('data-id'),this); });
       });
     }
 
-    async function approveWithdrawal(withdrawalId, btn) {
-      btn.disabled = true; btn.textContent = 'Approving...';
-
+    async function approveWithdrawal(wid, btn) {
+      btn.disabled=true; btn.textContent='Approving...';
       try {
-        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawal_approvals', {
-          method: 'POST',
-          headers: authHeaders(),
-          body: JSON.stringify({ withdrawal_id: withdrawalId, user_id: currentUser.id, chama_id: chamaData.id })
+        var res = await fetch(SUPABASE_URL+'/rest/v1/withdrawal_approvals', {
+          method:'POST', headers:authHeaders(),
+          body:JSON.stringify({withdrawal_id:wid,user_id:currentUser.id,chama_id:chamaData.id})
         });
-
-        if (!res.ok) {
-          var err = await res.json();
-          alert(err.message || 'Failed to approve.');
-          btn.disabled = false; btn.textContent = '✓ Approve this withdrawal'; return;
+        if (!res.ok) { var e=await res.json(); alert(e.message||'Failed.'); btn.disabled=false; btn.textContent='✓ Approve this withdrawal'; return; }
+        var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.'+wid+'&select=id');
+        if (approvals&&approvals.length>=(chamaData.approvals_required||2)) {
+          await fetch(SUPABASE_URL+'/rest/v1/withdrawals?id=eq.'+wid, {method:'PATCH',headers:authHeaders(),body:JSON.stringify({status:'approved'})});
         }
-
-        // Check if enough approvals
-        var approvals = await sbGet('/rest/v1/withdrawal_approvals?withdrawal_id=eq.' + withdrawalId + '&select=id');
-        if (approvals && approvals.length >= (chamaData.approvals_required || 2)) {
-          await fetch(SUPABASE_URL + '/rest/v1/withdrawals?id=eq.' + withdrawalId, {
-            method: 'PATCH',
-            headers: authHeaders(),
-            body: JSON.stringify({ status: 'approved' })
-          });
-        }
-
-        await loadPendingWithdrawals();
-
-      } catch(err) {
-        alert('Network error. Please try again.');
-        btn.disabled = false; btn.textContent = '✓ Approve this withdrawal';
-      }
+        await loadPending();
+      } catch(err) { alert('Network error.'); btn.disabled=false; btn.textContent='✓ Approve this withdrawal'; }
     }
 
-    document.getElementById('submitBtn').addEventListener('click', async function() {
+    window.submitWithdrawal = async function() {
       var amount      = parseFloat(document.getElementById('amount').value);
       var reason      = document.getElementById('reason').value.trim();
       var destination = document.getElementById('destination').value.trim();
-      var btn         = this;
+      var btn         = document.querySelector('.btn-submit');
 
-      if (!amount || amount <= 0) return showError('Please enter a valid amount.');
-      if (!reason)      return showError('Please provide a reason for the withdrawal.');
+      if (!amount||amount<=0) return showError('Please enter a valid amount.');
+      if (!reason)      return showError('Please provide a reason.');
       if (!destination) return showError('Please enter the destination account.');
 
-      btn.disabled = true; btn.textContent = 'Submitting...';
+      btn.disabled=true; btn.textContent='Submitting...';
 
       try {
-        var res = await fetch(SUPABASE_URL + '/rest/v1/withdrawals', {
-          method: 'POST',
-          headers: authHeaders(),
-          body: JSON.stringify({
-            chama_id:     chamaData.id,
-            requested_by: currentUser.id,
-            amount:       amount,
-            reason:       reason,
-            destination:  destination,
-            status:       'pending'
-          })
+        var res = await fetch(SUPABASE_URL+'/rest/v1/withdrawals', {
+          method:'POST', headers:authHeaders(),
+          body:JSON.stringify({chama_id:chamaData.id,requested_by:currentUser.id,amount:amount,reason:reason,destination:destination,status:'pending'})
         });
+        if (!res.ok) { var e=await res.json(); showError(e.message||'Failed.'); btn.disabled=false; btn.textContent='Submit withdrawal request →'; return; }
 
-        if (!res.ok) {
-          var err = await res.json();
-          showError(err.message || 'Failed to submit request.');
-          btn.disabled = false; btn.textContent = 'Submit withdrawal request →'; return;
-        }
+        // Notify all members by email
+        var profile  = await sbGet('/rest/v1/profiles?id=eq.'+currentUser.id+'&select=full_name&limit=1');
+        var myName   = Array.isArray(profile)&&profile.length>0&&profile[0].full_name ? profile[0].full_name : 'A member';
+        notifyMembers(amount, reason, myName);
 
-        showSuccess('Withdrawal request submitted. Members will now vote.');
-        document.getElementById('amount').value      = '';
-        document.getElementById('reason').value      = '';
-        document.getElementById('destination').value = '';
-        btn.disabled = false; btn.textContent = 'Submit withdrawal request →';
-        await loadPendingWithdrawals();
-
-      } catch(err) {
-        showError('Network error. Please try again.');
-        btn.disabled = false; btn.textContent = 'Submit withdrawal request →';
-      }
-    });
+        showSuccess('Request submitted! Members have been notified by email to vote.');
+        document.getElementById('amount').value='';
+        document.getElementById('reason').value='';
+        document.getElementById('destination').value='';
+        btn.disabled=false; btn.textContent='Submit withdrawal request →';
+        await loadPending();
+      } catch(err) { showError('Network error.'); btn.disabled=false; btn.textContent='Submit withdrawal request →'; }
+    };
 
     loadPage();
-  </script>
 
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function(){}); }
+  </script>
 </body>
 </html>
 
