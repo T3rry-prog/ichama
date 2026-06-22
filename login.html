@@ -7,51 +7,252 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
-      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
-      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
+      --green:      #30B54A;
+      --green-d:    #259A3D;
+      --green-tint: #EAF8ED;
+      --ink:        #1A1F1C;
+      --ink-soft:   #5C6760;
+      --bg:         #F7F8F7;
+      --card:       #FFFFFF;
+      --line:       #E5E9E6;
+      --error:      #D14343;
     }
-    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; display: flex; flex-direction: column; }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-    .logo { font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; letter-spacing: -0.3px; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
     .logo span { color: var(--green); }
-    .nav-link { font-size: 14px; color: var(--ink-soft); text-decoration: none; }
-    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 420px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-    .card-header { text-align: center; margin-bottom: 28px; }
-    .card-logo { font-weight: 700; font-size: 24px; color: var(--ink); margin-bottom: 14px; letter-spacing: -0.3px; }
+
+    .nav-link {
+      font-size: 14px;
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+
+    .nav-link:hover { color: var(--ink); }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .card-logo {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--ink);
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
+    }
+
     .card-logo span { color: var(--green); }
-    .card-header h1 { font-weight: 700; font-size: 20px; margin-bottom: 6px; letter-spacing: -0.3px; }
-    .card-header p { font-size: 14px; color: var(--ink-soft); }
+
+    .card-header h1 {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
     .form-group { margin-bottom: 16px; }
-    label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
-    .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 7px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+
     .label-row label { margin-bottom: 0; }
-    .forgot-link { font-size: 12.5px; color: var(--green); text-decoration: none; }
-    input { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; }
+
+    .forgot-link {
+      font-size: 12.5px;
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
     input::placeholder { color: #A7AFA9; }
     input:focus { border-color: var(--green); background: var(--card); }
+
     .pw-wrap { position: relative; }
     .pw-wrap input { padding-right: 46px; }
-    .pw-toggle { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 17px; padding: 0; line-height: 1; }
-    .btn-submit { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 13px; border-radius: 9px; border: none; cursor: pointer; margin-top: 6px; transition: background 0.15s; font-family: 'Inter', sans-serif; }
+
+    .pw-toggle {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 17px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .pw-toggle:hover { color: var(--ink); }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 13px;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
     .btn-submit:hover { background: var(--green-d); }
+    .btn-submit:active { transform: scale(0.98); }
     .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
-    .divider { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 18px 0; position: relative; }
-    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: var(--line); }
+
+    .divider {
+      text-align: center;
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin: 18px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: var(--line);
+    }
+
     .divider::before { left: 0; }
     .divider::after { right: 0; }
-    .signup-link { text-align: center; font-size: 14px; color: var(--ink-soft); }
+
+    .signup-link {
+      text-align: center;
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
     .signup-link a { color: var(--green); text-decoration: none; font-weight: 600; }
-    .msg { border-radius: 9px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+
+    .msg {
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
     .msg.success { background: var(--green-tint); border: 1px solid rgba(48,181,74,0.3); color: var(--green-d); }
     .msg.show { display: block; }
+
     .reset-panel { display: none; }
     .reset-panel.show { display: block; }
-    .back-link { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; }
-    footer { border-top: 1px solid var(--line); padding: 20px; text-align: center; color: var(--ink-soft); font-size: 12px; background: var(--card); }
+
+    .back-link {
+      background: none;
+      border: none;
+      color: var(--ink-soft);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .back-link:hover { color: var(--ink); }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 12px;
+      background: var(--card);
+    }
+
     footer strong { color: var(--ink); font-weight: 600; }
   </style>
 </head>
@@ -65,169 +266,153 @@
   <main>
     <div class="card">
 
+      <!-- LOGIN PANEL -->
       <div id="loginPanel">
         <div class="card-header">
           <div class="card-logo">i<span>Chama</span></div>
           <h1>Welcome back</h1>
           <p>Sign in to your iChama account</p>
         </div>
+
         <div class="msg error" id="errorMsg"></div>
         <div class="msg success" id="successMsg"></div>
+
         <div class="form-group">
           <label for="email">Email address</label>
           <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
         </div>
+
         <div class="form-group">
           <div class="label-row">
             <label for="password">Password</label>
-            <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+            <a href="#" class="forgot-link" onclick="showReset(event)">Forgot password?</a>
           </div>
           <div class="pw-wrap">
             <input type="password" id="password" placeholder="Your password" autocomplete="current-password" />
-            <button class="pw-toggle" type="button" id="pwToggle">👁</button>
+            <button class="pw-toggle" onclick="togglePassword()" type="button" id="pwToggle">👁</button>
           </div>
         </div>
-        <button class="btn-submit" id="loginBtn">Sign in →</button>
+
+        <button class="btn-submit" id="loginBtn" onclick="handleLogin()">Sign in →</button>
+
         <div class="divider">or</div>
-        <div class="signup-link">Don't have an account? <a href="signup.html">Sign up free</a></div>
+
+        <div class="signup-link">
+          Don't have an account? <a href="signup.html">Sign up free</a>
+        </div>
       </div>
 
+      <!-- FORGOT PASSWORD PANEL -->
       <div id="resetPanel" class="reset-panel">
-        <button class="back-link" id="backBtn">← Back to sign in</button>
+        <button class="back-link" onclick="showLogin()">← Back to sign in</button>
+
         <div class="card-header">
           <h1>Reset password</h1>
           <p>We'll send a reset link to your email</p>
         </div>
+
         <div class="msg error" id="resetErrorMsg"></div>
         <div class="msg success" id="resetSuccessMsg"></div>
+
         <div class="form-group">
           <label for="resetEmail">Email address</label>
           <input type="email" id="resetEmail" placeholder="you@example.com" autocomplete="email" />
         </div>
-        <button class="btn-submit" id="resetBtn">Send reset link →</button>
+
+        <button class="btn-submit" id="resetBtn" onclick="handleReset()">Send reset link →</button>
       </div>
 
     </div>
   </main>
 
-  <footer>© 2026 iChama · <strong>A product of Bytecast Prime</strong></footer>
+  <footer>
+    © 2026 iChama · <strong>A product of Bytecast Prime</strong>
+  </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
+    const SUPABASE_URL = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ── HELPERS ──
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const btn   = document.getElementById('pwToggle');
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁'; }
+    }
+
     function showError(msg) {
-      var el = document.getElementById('errorMsg');
+      const el = document.getElementById('errorMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('successMsg').classList.remove('show');
     }
+
     function showSuccess(msg) {
-      var el = document.getElementById('successMsg');
+      const el = document.getElementById('successMsg');
       el.textContent = msg; el.classList.add('show');
       document.getElementById('errorMsg').classList.remove('show');
     }
 
-    // ── PASSWORD TOGGLE ──
-    document.getElementById('pwToggle').addEventListener('click', function() {
-      var input = document.getElementById('password');
-      if (input.type === 'password') { input.type = 'text'; this.textContent = '🙈'; }
-      else { input.type = 'password'; this.textContent = '👁'; }
-    });
-
-    // ── FORGOT PASSWORD ──
-    document.getElementById('forgotLink').addEventListener('click', function(e) {
+    function showReset(e) {
       e.preventDefault();
       document.getElementById('loginPanel').style.display = 'none';
       document.getElementById('resetPanel').classList.add('show');
-    });
+    }
 
-    document.getElementById('backBtn').addEventListener('click', function() {
+    function showLogin() {
       document.getElementById('loginPanel').style.display = 'block';
       document.getElementById('resetPanel').classList.remove('show');
-    });
+    }
 
-    // ── LOGIN ──
-    document.getElementById('loginBtn').addEventListener('click', async function() {
-      var email    = document.getElementById('email').value.trim();
-      var password = document.getElementById('password').value;
-      var btn      = this;
+    async function handleLogin() {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('loginBtn');
       if (!email)    return showError('Please enter your email address.');
       if (!password) return showError('Please enter your password.');
       btn.disabled = true; btn.textContent = 'Signing in...';
-      try {
-        var res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-          method: 'POST',
-          headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, password: password })
-        });
-        var data = await res.json();
-        if (!res.ok) {
-          var msg = data.error_description || data.msg || data.message || 'Sign in failed.';
-          if (msg.toLowerCase().indexOf('not confirmed') !== -1) {
-            showError('Please confirm your email first. Check your inbox.');
-          } else {
-            showError('Incorrect email or password. Please try again.');
-          }
-          btn.disabled = false; btn.textContent = 'Sign in →'; return;
-        }
-        localStorage.setItem('ichama_token',   data.access_token);
-        localStorage.setItem('ichama_refresh',  data.refresh_token);
-        localStorage.setItem('ichama_user',     JSON.stringify(data.user));
-        showSuccess('Signed in! Redirecting...');
-        setTimeout(function() { window.location.href = 'dashboard.html'; }, 1200);
-      } catch(err) {
-        showError('Network error. Please check your connection and try again.');
-        btn.disabled = false; btn.textContent = 'Sign in →';
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        showError('Incorrect email or password. Please try again.');
+        btn.disabled = false; btn.textContent = 'Sign in →'; return;
       }
-    });
-
-    // ── RESET PASSWORD ──
-    document.getElementById('resetBtn').addEventListener('click', async function() {
-      var email  = document.getElementById('resetEmail').value.trim();
-      var btn    = this;
-      var errEl  = document.getElementById('resetErrorMsg');
-      var sucEl  = document.getElementById('resetSuccessMsg');
-      if (!email) { errEl.textContent = 'Please enter your email.'; errEl.classList.add('show'); return; }
-      btn.disabled = true; btn.textContent = 'Sending...';
-      try {
-        var res = await fetch(SUPABASE_URL + '/auth/v1/recover', {
-          method: 'POST',
-          headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, redirect_to: 'https://ichamaa.netlify.app/reset.html' })
-        });
-        if (!res.ok) {
-          var data = await res.json();
-          errEl.textContent = data.msg || data.message || 'Failed to send reset link.';
-          errEl.classList.add('show');
-          btn.disabled = false; btn.textContent = 'Send reset link →'; return;
-        }
-        sucEl.textContent = 'Reset link sent! Check your inbox.';
-        sucEl.classList.add('show'); errEl.classList.remove('show');
-        btn.textContent = 'Sent ✓';
-      } catch(err) {
-        errEl.textContent = 'Network error. Try again.';
-        errEl.classList.add('show');
-        btn.disabled = false; btn.textContent = 'Send reset link →';
-      }
-    });
-
-    // ── ENTER KEY ──
-    document.addEventListener('keydown', function(e) {
-      if (e.key !== 'Enter') return;
-      if (document.getElementById('resetPanel').classList.contains('show')) {
-        document.getElementById('resetBtn').click();
-      } else {
-        document.getElementById('loginBtn').click();
-      }
-    });
-
-    // ── AUTO REDIRECT IF ALREADY LOGGED IN ──
-    if (localStorage.getItem('ichama_token')) {
-      window.location.href = 'dashboard.html';
+      showSuccess('Signed in! Redirecting...');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
     }
+
+    async function handleReset() {
+      const email = document.getElementById('resetEmail').value.trim();
+      const btn   = document.getElementById('resetBtn');
+      const errEl = document.getElementById('resetErrorMsg');
+      const sucEl = document.getElementById('resetSuccessMsg');
+      if (!email) { errEl.textContent = 'Please enter your email address.'; errEl.classList.add('show'); return; }
+      btn.disabled = true; btn.textContent = 'Sending...';
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://ichamaa.netlify.app/reset.html'
+      });
+      if (error) {
+        errEl.textContent = error.message; errEl.classList.add('show');
+        btn.disabled = false; btn.textContent = 'Send reset link →'; return;
+      }
+      sucEl.textContent = 'Reset link sent! Check your email inbox.';
+      sucEl.classList.add('show'); errEl.classList.remove('show');
+      btn.textContent = 'Sent ✓';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('resetPanel').classList.contains('show')) handleReset();
+        else handleLogin();
+      }
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) window.location.href = 'dashboard.html';
+    });
   </script>
 
 </body>
 </html>
+
 
