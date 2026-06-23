@@ -213,7 +213,6 @@
   </nav>
 
   
-  <script src="/auth.js"></script>
   <script>
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
@@ -512,11 +511,15 @@
         currentUser = getUser();
         if (!currentUser) { doLogout(); return; }
 
-        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*,chamas(*)&limit=1');
+        // Fetch membership and chama separately to avoid nested join issues
+        var memberships = await sbGet('/rest/v1/chama_members?user_id=eq.' + currentUser.id + '&select=*&limit=1');
         var membership  = Array.isArray(memberships) && memberships.length > 0 ? memberships[0] : null;
-        if (!membership || !membership.chamas) { window.location.href = 'dashboard.html'; return; }
+        if (!membership) { window.location.href = 'dashboard.html'; return; }
 
-        chamaData = membership.chamas;
+        var chamas = await sbGet('/rest/v1/chamas?id=eq.' + membership.chama_id + '&select=*&limit=1');
+        chamaData = Array.isArray(chamas) && chamas.length > 0 ? chamas[0] : null;
+        if (!chamaData) { window.location.href = 'dashboard.html'; return; }
+
         await loadPolls();
         startPolling();
 
@@ -537,3 +540,4 @@
   </script>
 </body>
 </html>
+
