@@ -9,6 +9,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; --error:#D14343; }
+    @media (prefers-color-scheme: dark) {
+      :root { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+      body { background: var(--bg); color: var(--ink); }
+    }
+    [data-theme="dark"] { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+    [data-theme="light"] { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; }
     body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; font-size:16px; min-height:100vh; padding-bottom:40px; }
     nav { display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
     .back-btn { background:var(--bg); border:1px solid var(--line); border-radius:8px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:var(--ink); text-decoration:none; font-size:16px; }
@@ -61,6 +67,9 @@
     .section-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin:20px 0 12px; }
     .empty-state { text-align:center; padding:28px; color:var(--ink-soft); font-size:13.5px; background:var(--card); border:1px solid var(--line); border-radius:14px; }
   </style>
+  <script>
+    (function(){ var t=localStorage.getItem('ichama_theme'); if(t&&t!=='auto') document.documentElement.setAttribute('data-theme',t); })();
+  </script>
 </head>
 <body>
 
@@ -156,7 +165,7 @@
         if (!profiles||profiles.length===0) return;
 
         var approvals = chamaData.approvals_required||2;
-        var voteUrl   = 'https://ichamaa.netlify.app/vote.html';
+        var voteUrl   = 'https://ichama.africa/vote.html';
 
         profiles.forEach(function(p) {
           if (!p.email) return;
