@@ -5,7 +5,7 @@
   "start_url": "/dashboard.html",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#3D8C7A",
+  "background_color": "#0F1210",
   "theme_color": "#30B54A",
   "orientation": "portrait",
   "icons": [
