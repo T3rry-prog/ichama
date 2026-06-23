@@ -2,15 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#30B54A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="iChama" />
   <title>Vote — iChama</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
       --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
       --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; --gold: #D97706;
+    }
+    /* DARK MODE */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #30B54A;
+        --green-d: #38C45A;
+        --green-tint: #0D2E14;
+        --ink: #F0F2F0;
+        --ink-soft: #8A9E8D;
+        --bg: #0F1210;
+        --card: #1A1F1C;
+        --line: #2A332C;
+      }
+      body { background: var(--bg); color: var(--ink); }
+    }
+
+    /* MANUAL DARK MODE (via data-theme attribute) */
+    [data-theme="dark"] {
+      --green: #30B54A;
+      --green-d: #38C45A;
+      --green-tint: #0D2E14;
+      --ink: #F0F2F0;
+      --ink-soft: #8A9E8D;
+      --bg: #0F1210;
+      --card: #1A1F1C;
+      --line: #2A332C;
+    }
+    [data-theme="light"] {
+      --green: #30B54A;
+      --green-d: #259A3D;
+      --green-tint: #EAF8ED;
+      --ink: #1A1F1C;
+      --ink-soft: #5C6760;
+      --bg: #F7F8F7;
+      --card: #FFFFFF;
+      --line: #E5E9E6;
     }
     body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; padding-bottom: 80px; }
     .topbar { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
@@ -108,6 +151,9 @@
     .nav-label { font-size: 10px; color: var(--ink-soft); }
     .nav-item.active .nav-label { color: var(--green); font-weight: 600; }
   </style>
+  <script>
+    (function(){ var t=localStorage.getItem('ichama_theme'); if(t&&t!=='auto') document.documentElement.setAttribute('data-theme',t); })();
+  </script>
 </head>
 <body>
 
@@ -166,6 +212,8 @@
     <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
   </nav>
 
+  
+  <script src="/auth.js"></script>
   <script>
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
@@ -427,12 +475,35 @@
     }
 
     async function loadPolls() {
-      var polls = await sbGet(
-        '/rest/v1/polls?chama_id=eq.' + chamaData.id +
-        '&select=*,profiles(full_name),poll_votes(id,user_id,option_index,comment,created_at,profiles(full_name))' +
-        '&order=created_at.desc'
-      );
-      allPolls = polls || [];
+      // Fetch polls without nested joins
+      var polls = await sbGet('/rest/v1/polls?chama_id=eq.' + chamaData.id + '&select=*&order=created_at.desc') || [];
+
+      if (!polls.length) { allPolls = []; renderPolls(); return; }
+
+      // Fetch creator profiles
+      var creatorIds = polls.map(function(p){return p.created_by;}).filter(function(id,i,a){return a.indexOf(id)===i;});
+      var creators = creatorIds.length > 0 ? await sbGet('/rest/v1/profiles?id=in.('+creatorIds.join(',')+')'+'&select=id,full_name') || [] : [];
+      var creatorMap = {}; creators.forEach(function(p){creatorMap[p.id]=p;});
+
+      // Fetch votes for all polls
+      var pollIds = polls.map(function(p){return p.id;});
+      var votes = await sbGet('/rest/v1/poll_votes?poll_id=in.('+pollIds.join(',')+')'+'&select=*&order=created_at.desc') || [];
+
+      // Fetch voter profiles
+      var voterIds = votes.map(function(v){return v.user_id;}).filter(function(id,i,a){return a.indexOf(id)===i;});
+      var voterProfs = voterIds.length > 0 ? await sbGet('/rest/v1/profiles?id=in.('+voterIds.join(',')+')'+'&select=id,full_name') || [] : [];
+      var voterMap = {}; voterProfs.forEach(function(p){voterMap[p.id]=p;});
+
+      // Attach profiles and votes to polls
+      allPolls = polls.map(function(poll) {
+        poll.profiles = creatorMap[poll.created_by] || null;
+        poll.poll_votes = votes.filter(function(v){return v.poll_id===poll.id;}).map(function(v){
+          v.profiles = voterMap[v.user_id] || null;
+          return v;
+        });
+        return poll;
+      });
+
       renderPolls();
     }
 
@@ -458,6 +529,11 @@
 
     loadPage();
   </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function(e){console.log('SW error:',e);});
+    }
+  </script>
 </body>
 </html>
-
