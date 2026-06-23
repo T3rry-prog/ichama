@@ -19,6 +19,12 @@
       --line:       #E5E9E6;
       --error:      #D14343;
     }
+    @media (prefers-color-scheme: dark) {
+      :root { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+      body { background:var(--bg); color:var(--ink); }
+    }
+    [data-theme="dark"] { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+    [data-theme="light"] { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; }
 
     body {
       background: var(--bg);
@@ -264,55 +270,6 @@
 
     .terms a { color: var(--green); text-decoration: none; }
 
-    /* INVITE CODE FIELD */
-    .invite-field {
-      display: none;
-      margin-top: 12px;
-    }
-    .invite-field.show { display: block; }
-    .invite-input {
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      font-weight: 700;
-      font-size: 16px;
-      text-align: center;
-    }
-    .invite-hint { font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; text-align: center; }
-
-    /* INTENT SELECTOR */
-    .intent-label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      margin-bottom: 10px;
-    }
-
-    .intent-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .intent-opt {
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      padding: 14px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      background: var(--bg);
-    }
-
-    .intent-opt.selected {
-      border-color: var(--green);
-      background: var(--green-tint);
-    }
-
-    .intent-opt .opt-icon { font-size: 24px; display: block; margin-bottom: 6px; }
-    .intent-opt .opt-title { font-size: 13.5px; font-weight: 600; color: var(--ink); display: block; }
-    .intent-opt .opt-sub { font-size: 11.5px; color: var(--ink-soft); display: block; margin-top: 3px; line-height: 1.4; }
-
     footer {
       border-top: 1px solid var(--line);
       padding: 20px;
@@ -324,6 +281,7 @@
 
     footer strong { color: var(--ink); font-weight: 600; }
   </style>
+  <script>(function(){ var t=localStorage.getItem('ichama_theme'); if(t&&t!=='auto') document.documentElement.setAttribute('data-theme',t); })();</script>
 </head>
 <body>
 
@@ -434,26 +392,6 @@
         <div class="match-text" id="matchText"></div>
       </div>
 
-      <div class="form-group">
-        <span class="intent-label">What are you here to do?</span>
-        <div class="intent-options">
-          <div class="intent-opt selected" id="intentCreate" onclick="selectIntent('create')">
-            <span class="opt-icon">👑</span>
-            <span class="opt-title">I'm setting up a chama</span>
-            <span class="opt-sub">Create or register a group</span>
-          </div>
-          <div class="intent-opt" id="intentJoin" onclick="selectIntent('join')">
-            <span class="opt-icon">🤝</span>
-            <span class="opt-title">I was invited</span>
-            <span class="opt-sub">Join with an invite code</span>
-          </div>
-        </div>
-        <div class="invite-field" id="inviteField">
-          <input type="text" id="inviteCode" class="invite-input" placeholder="XXXXXX" maxlength="6" autocomplete="off" />
-          <p class="invite-hint">Enter the 6-character code shared by your chama admin.</p>
-        </div>
-      </div>
-
       <button class="btn-submit" id="signupBtn" onclick="handleSignup()">Create account →</button>
 
       <div class="divider">or</div>
@@ -463,7 +401,7 @@
       </div>
 
       <div class="terms">
-        By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        By signing up you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>
       </div>
     </div>
   </main>
@@ -531,15 +469,6 @@
       }
     }
 
-    var userIntent = 'create'; // default
-
-    function selectIntent(intent) {
-      userIntent = intent;
-      document.getElementById('intentCreate').classList.toggle('selected', intent === 'create');
-      document.getElementById('intentJoin').classList.toggle('selected', intent === 'join');
-      document.getElementById('inviteField').classList.toggle('show', intent === 'join');
-    }
-
     window.handleSignup = async function() {
       var fullname    = document.getElementById('fullname').value.trim();
       var countryCode = document.getElementById('countryCode').value;
@@ -554,12 +483,6 @@
       if (!email)              return showError('Please enter your email address.');
       if (password.length < 8) return showError('Password must be at least 8 characters.');
       if (password !== confirmPw) return showError('Passwords do not match.');
-
-      var inviteCode = '';
-      if (userIntent === 'join') {
-        inviteCode = document.getElementById('inviteCode').value.trim().toUpperCase();
-        if (!inviteCode || inviteCode.length !== 6) return showError('Please enter your 6-character invite code.');
-      }
 
       var phone = countryCode + phoneRaw.replace(/^0/, '');
 
@@ -593,31 +516,17 @@
           return;
         }
 
-        // Save profile — upsert to handle cases where profile already exists
-        var profileRes = await fetch(SUPABASE_URL + '/rest/v1/profiles', {
+        // Save profile
+        await fetch(SUPABASE_URL + '/rest/v1/profiles', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'apikey': SUPABASE_KEY,
             'Authorization': 'Bearer ' + accessToken,
-            'Prefer': 'return=minimal,resolution=merge-duplicates'
+            'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({ id: userId, full_name: fullname, phone: phone, email: email, accountability_score: 100 })
+          body: JSON.stringify({ id: userId, full_name: fullname, phone: phone, email: email })
         });
-        if (!profileRes.ok) {
-          var profileErr = await profileRes.json().catch(function(){return{};});
-          console.warn('Profile save issue:', profileErr);
-          // Try PATCH as fallback
-          await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + userId, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': SUPABASE_KEY,
-              'Authorization': 'Bearer ' + accessToken
-            },
-            body: JSON.stringify({ full_name: fullname, phone: phone, email: email, accountability_score: 100 })
-          });
-        }
 
         // Store session for dashboard
         localStorage.setItem('ichama_token', accessToken);
@@ -635,33 +544,12 @@
             from: 'iChama <noreply@spotontickets.com>',
             to: [email],
             subject: 'Welcome to iChama 🎉',
-            html: '<div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 20px;background:#F7F8F7;"><div style="background:#fff;border-radius:16px;padding:28px 24px;border:1px solid #E5E9E6;"><h1 style="font-size:22px;color:#1A1F1C;margin:0 0 8px;">Welcome to i<span style="color:#30B54A;">Chama</span> 👋</h1><p style="color:#5C6760;font-size:14px;margin:0 0 20px;">Hi ' + firstName + ', your account is ready. Here\'s what you can do:</p><div style="background:#EAF8ED;border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid rgba(48,181,74,0.2);"><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Create your chama and invite members</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Join an existing chama with an invite code</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Track contributions and accountability scores</p><p style="color:#5C6760;font-size:13px;margin:0;">✅ Multi-signature protection on all withdrawals</p></div><a href="https://ichama.netlify.app/dashboard.html" style="display:block;background:#30B54A;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:13px;border-radius:9px;text-align:center;">Go to my dashboard →</a><p style="color:#A7AFA9;font-size:11px;margin:16px 0 0;text-align:center;">iChama · Bytecast Prime · Kenya</p></div></div>'
+            html: '<div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;padding:32px 20px;background:#F7F8F7;"><div style="background:#fff;border-radius:16px;padding:28px 24px;border:1px solid #E5E9E6;"><h1 style="font-size:22px;color:#1A1F1C;margin:0 0 8px;">Welcome to i<span style="color:#30B54A;">Chama</span> 👋</h1><p style="color:#5C6760;font-size:14px;margin:0 0 20px;">Hi ' + firstName + ', your account is ready. Here\'s what you can do:</p><div style="background:#EAF8ED;border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid rgba(48,181,74,0.2);"><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Create your chama and invite members</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Join an existing chama with an invite code</p><p style="color:#5C6760;font-size:13px;margin:0 0 8px;">✅ Track contributions and accountability scores</p><p style="color:#5C6760;font-size:13px;margin:0;">✅ Multi-signature protection on all withdrawals</p></div><a href="https://ichamaa.netlify.app/dashboard.html" style="display:block;background:#30B54A;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:13px;border-radius:9px;text-align:center;">Go to my dashboard →</a><p style="color:#A7AFA9;font-size:11px;margin:16px 0 0;text-align:center;">iChama · Bytecast Prime · Kenya</p></div></div>'
           })
         }).catch(function(e) { console.log('Email error:', e); });
 
-        if (userIntent === 'join' && inviteCode) {
-          // Look up chama by invite code
-          var chamaRes = await fetch(SUPABASE_URL + '/rest/v1/chamas?invite_code=eq.' + inviteCode + '&select=id,name&limit=1', {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + accessToken }
-          });
-          var chamaList = await chamaRes.json();
-          if (!chamaList || chamaList.length === 0) {
-            showError('Invite code not found. Please check the code and try again.');
-            btn.disabled = false; btn.textContent = 'Create account →'; return;
-          }
-          var chama = chamaList[0];
-          // Add as member
-          await fetch(SUPABASE_URL + '/rest/v1/chama_members', {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chama_id: chama.id, user_id: userId, role: 'member' })
-          });
-          showSuccess('Account created! You have joined ' + chama.name + ' 🎉 Redirecting...');
-          setTimeout(function() { window.location.href = 'dashboard.html'; }, 2000);
-        } else {
-          showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
-          setTimeout(function() { window.location.href = 'create-chama.html'; }, 2000);
-        }
+        showSuccess('Account created! Welcome to iChama 🎉 Redirecting...');
+        setTimeout(function() { window.location.href = 'onboarding.html'; }, 2000);
 
       } catch(e) {
         showError('Network error: ' + e.message);
