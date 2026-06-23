@@ -2,20 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>iChama — Chama management without the theft</title>
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#30B54A" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="iChama" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
       --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
       --card: #FFFFFF; --line: #E5E9E6;
+    }
+    /* DARK MODE */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --green: #30B54A;
+        --green-d: #38C45A;
+        --green-tint: #0D2E14;
+        --ink: #F0F2F0;
+        --ink-soft: #8A9E8D;
+        --bg: #0F1210;
+        --card: #1A1F1C;
+        --line: #2A332C;
+      }
+      body { background: var(--bg); color: var(--ink); }
+    }
+
+    /* MANUAL DARK MODE (via data-theme attribute) */
+    [data-theme="dark"] {
+      --green: #30B54A;
+      --green-d: #38C45A;
+      --green-tint: #0D2E14;
+      --ink: #F0F2F0;
+      --ink-soft: #8A9E8D;
+      --bg: #0F1210;
+      --card: #1A1F1C;
+      --line: #2A332C;
+    }
+    [data-theme="light"] {
+      --green: #30B54A;
+      --green-d: #259A3D;
+      --green-tint: #EAF8ED;
+      --ink: #1A1F1C;
+      --ink-soft: #5C6760;
+      --bg: #F7F8F7;
+      --card: #FFFFFF;
+      --line: #E5E9E6;
     }
     body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; display: flex; flex-direction: column; }
     nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
@@ -141,9 +179,15 @@
   </section>
 
   <footer>
-    © 2026 iChama · <strong>A product of Bytecast Prime</strong>
+    © 2026 iChama · <strong>A product of Bytecast Prime</strong><br />
+    <span style="margin-top:6px;display:inline-block;">
+      <a href="privacy.html" style="color:var(--ink-soft);text-decoration:none;margin-right:16px;">Privacy Policy</a>
+      <a href="terms.html" style="color:var(--ink-soft);text-decoration:none;">Terms of Service</a>
+    </span>
   </footer>
 
+  
+  <script src="/auth.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(function(e){ console.log('SW error:', e); });
