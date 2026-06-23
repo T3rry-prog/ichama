@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Welcome — iChama</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#30B54A" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; }
+    @media (prefers-color-scheme: dark) {
+      :root { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+    }
+    [data-theme="dark"] { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
+    [data-theme="light"] { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; }
+
+    body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; font-size:16px; min-height:100vh; display:flex; flex-direction:column; }
+
+    .slides { flex:1; position:relative; overflow:hidden; }
+    .slide { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 28px; text-align:center; transition:transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s; opacity:0; transform:translateX(100%); }
+    .slide.active { opacity:1; transform:translateX(0); }
+    .slide.exit { opacity:0; transform:translateX(-100%); }
+
+    .slide-icon { font-size:72px; margin-bottom:28px; animation:iconBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both; }
+    @keyframes iconBounce { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+
+    .slide h1 { font-weight:800; font-size:26px; line-height:1.25; letter-spacing:-0.5px; margin-bottom:14px; color:var(--ink); }
+    .slide h1 span { color:var(--green); }
+    .slide p { font-size:15px; color:var(--ink-soft); line-height:1.65; max-width:320px; }
+
+    .feature-list { list-style:none; text-align:left; margin-top:20px; width:100%; max-width:320px; }
+    .feature-list li { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); font-size:14px; color:var(--ink); }
+    .feature-list li:last-child { border-bottom:none; }
+    .feature-list li .fi { font-size:20px; flex-shrink:0; margin-top:1px; }
+    .feature-list li .ft { font-weight:600; display:block; margin-bottom:2px; }
+    .feature-list li .fs { font-size:12.5px; color:var(--ink-soft); }
+
+    .choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:340px; margin-top:24px; }
+    .choice-card { background:var(--card); border:2px solid var(--line); border-radius:16px; padding:22px 14px; text-align:center; cursor:pointer; transition:border-color 0.15s, transform 0.1s; }
+    .choice-card:active { transform:scale(0.97); }
+    .choice-card.selected { border-color:var(--green); background:var(--green-tint); }
+    .choice-icon { font-size:36px; display:block; margin-bottom:10px; }
+    .choice-title { font-size:14px; font-weight:700; color:var(--ink); display:block; margin-bottom:4px; }
+    .choice-sub { font-size:12px; color:var(--ink-soft); line-height:1.4; }
+
+    .bottom { padding:24px 28px 40px; }
+    .dots { display:flex; justify-content:center; gap:6px; margin-bottom:20px; }
+    .dot { width:6px; height:6px; border-radius:50%; background:var(--line); transition:all 0.3s; }
+    .dot.active { width:20px; border-radius:3px; background:var(--green); }
+
+    .btn-next { width:100%; background:var(--green); color:#fff; font-weight:700; font-size:16px; padding:15px; border-radius:12px; border:none; cursor:pointer; font-family:inherit; transition:opacity 0.15s; }
+    .btn-next:active { opacity:0.85; }
+    .btn-skip { display:block; text-align:center; font-size:13px; color:var(--ink-soft); margin-top:14px; cursor:pointer; background:none; border:none; font-family:inherit; width:100%; }
+  </style>
+  <script>(function(){ var t=localStorage.getItem('ichama_theme'); if(t&&t!=='auto') document.documentElement.setAttribute('data-theme',t); })();</script>
+</head>
+<body>
+
+  <div class="slides">
+    <!-- SLIDE 1 — Welcome -->
+    <div class="slide active" id="slide0">
+      <div class="slide-icon">🤝</div>
+      <h1>Welcome to <span>iChama</span></h1>
+      <p>The chama platform built to protect your group's money, enforce your rules, and build your credit score.</p>
+      <ul class="feature-list">
+        <li><span class="fi">🔒</span><span><span class="ft">No single person can withdraw alone</span><span class="fs">Every withdrawal needs group approval</span></span></li>
+        <li><span class="fi">⚖️</span><span><span class="ft">Rules enforce themselves</span><span class="fs">Penalties and deadlines are automatic</span></span></li>
+        <li><span class="fi">📈</span><span><span class="ft">Build your credit score</span><span class="fs">Pay on time, score goes up</span></span></li>
+      </ul>
+    </div>
+
+    <!-- SLIDE 2 — How it works -->
+    <div class="slide" id="slide1">
+      <div class="slide-icon">⚡</div>
+      <h1>Set up in <span>under 3 minutes</span></h1>
+      <p>iChama handles everything automatically so you can focus on growing your savings.</p>
+      <ul class="feature-list">
+        <li><span class="fi">1️⃣</span><span><span class="ft">Create your chama</span><span class="fs">Set contribution amount, frequency, and penalty rules</span></span></li>
+        <li><span class="fi">2️⃣</span><span><span class="ft">Invite members</span><span class="fs">Share a 6-character invite code — they join instantly</span></span></li>
+        <li><span class="fi">3️⃣</span><span><span class="ft">Start contributing</span><span class="fs">Track payments, run votes, schedule meetings</span></span></li>
+      </ul>
+    </div>
+
+    <!-- SLIDE 3 — Choose path -->
+    <div class="slide" id="slide2">
+      <div class="slide-icon">🚀</div>
+      <h1>How do you want to <span>get started?</span></h1>
+      <p>Choose what you want to do first. You can always change this later.</p>
+      <div class="choice-grid">
+        <div class="choice-card selected" id="choiceCreate" onclick="selectChoice('create')">
+          <span class="choice-icon">👑</span>
+          <span class="choice-title">Create a chama</span>
+          <span class="choice-sub">Set up a new group and invite members</span>
+        </div>
+        <div class="choice-card" id="choiceJoin" onclick="selectChoice('join')">
+          <span class="choice-icon">🤝</span>
+          <span class="choice-title">Join a chama</span>
+          <span class="choice-sub">I have an invite code from my group</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="dots">
+      <div class="dot active" id="dot0"></div>
+      <div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="nextSlide()">Next →</button>
+    <button class="btn-skip" id="btnSkip" onclick="skipOnboarding()">Skip for now</button>
+  </div>
+
+  <script>
+    var currentSlide = 0;
+    var totalSlides  = 3;
+    var userChoice   = 'create';
+
+    window.selectChoice = function(choice) {
+      userChoice = choice;
+      document.getElementById('choiceCreate').classList.toggle('selected', choice==='create');
+      document.getElementById('choiceJoin').classList.toggle('selected', choice==='join');
+    };
+
+    window.nextSlide = function() {
+      if (currentSlide < totalSlides - 1) {
+        document.getElementById('slide'+currentSlide).classList.remove('active');
+        document.getElementById('slide'+currentSlide).classList.add('exit');
+        currentSlide++;
+        document.getElementById('slide'+currentSlide).classList.add('active');
+
+        // Update dots
+        for (var i=0; i<totalSlides; i++) {
+          document.getElementById('dot'+i).classList.toggle('active', i===currentSlide);
+        }
+
+        // Last slide
+        if (currentSlide === totalSlides - 1) {
+          document.getElementById('btnNext').textContent = "Let's go →";
+          document.getElementById('btnSkip').style.display = 'none';
+        }
+      } else {
+        // Done — mark onboarding complete
+        localStorage.setItem('ichama_onboarded', '1');
+        if (userChoice === 'join') {
+          window.location.href = 'join-chama.html';
+        } else {
+          window.location.href = 'create-chama.html';
+        }
+      }
+    };
+
+    window.skipOnboarding = function() {
+      localStorage.setItem('ichama_onboarded', '1');
+      window.location.href = 'dashboard.html';
+    };
+
+    // Remove exit class after animation
+    document.querySelectorAll('.slide').forEach(function(s) {
+      s.addEventListener('transitionend', function() {
+        if (this.classList.contains('exit')) this.classList.remove('exit');
+      });
+    });
+
+    // If already onboarded, redirect to dashboard
+    if (localStorage.getItem('ichama_onboarded') === '1') {
+      window.location.href = 'dashboard.html';
+    }
+
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function(){}); }
+  </script>
+</body>
+</html>
