@@ -88,11 +88,42 @@
     .nav-icon { font-size:19px; }
     .nav-label { font-size:10px; color:var(--ink-soft); }
     .nav-item.active .nav-label { color:var(--green); font-weight:600; }
+
+    /* SPLASH SCREEN */
+    .splash { position:fixed; inset:0; background:#0F1210; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; }
+    .splash.fade-out { animation:splashFade 0.5s ease forwards; }
+    @keyframes splashFade { to { opacity:0; pointer-events:none; } }
+    .splash-ring { width:120px; height:120px; border-radius:28px; background:#1A1F1C; display:flex; align-items:center; justify-content:center; animation:splashPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; opacity:0; }
+    @keyframes splashPop { 0%{opacity:0;transform:scale(0.5)} 100%{opacity:1;transform:scale(1)} }
+    .splash-ring img { width:90px; height:90px; border-radius:18px; }
+    .splash-wordmark { margin-top:20px; font-size:32px; font-weight:800; color:#fff; letter-spacing:-1px; animation:splashSlide 0.5s ease 0.3s forwards; opacity:0; transform:translateY(10px); }
+    .splash-wordmark span { color:#30B54A; }
+    .splash-tagline { font-size:13px; color:#5C6760; margin-top:6px; animation:splashSlide 0.5s ease 0.45s forwards; opacity:0; transform:translateY(10px); }
+    @keyframes splashSlide { to { opacity:1; transform:translateY(0); } }
+    .splash-dots { display:flex; gap:6px; margin-top:48px; animation:splashSlide 0.5s ease 0.6s forwards; opacity:0; transform:translateY(10px); }
+    .splash-dot { width:6px; height:6px; border-radius:50%; background:#2A332C; animation:dotPulse 1.2s ease infinite; }
+    .splash-dot:nth-child(2) { animation-delay:0.2s; }
+    .splash-dot:nth-child(3) { animation-delay:0.4s; }
+    @keyframes dotPulse { 0%,100%{background:#2A332C;transform:scale(1)} 50%{background:#30B54A;transform:scale(1.3)} }
   </style>
 </head>
 <body>
 
-  <div class="spinner-wrap" id="spinner">
+  <!-- Animated splash screen -->
+  <div class="splash" id="splash">
+    <div class="splash-ring">
+      <img src="/icon-192.png" alt="iChama" onerror="this.style.display='none'" />
+    </div>
+    <div class="splash-wordmark">i<span>Chama</span></div>
+    <div class="splash-tagline">Chama management without the theft</div>
+    <div class="splash-dots">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+
+  <div class="spinner-wrap hidden" id="spinner">
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
@@ -177,6 +208,8 @@
     <a href="profile.html" class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
   </nav>
 
+  
+  <script src="/auth.js"></script>
   <script>
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
@@ -185,7 +218,14 @@
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
     function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href='login.html'; }
     function kes(n) { return 'KES '+Number(n||0).toLocaleString('en-KE'); }
-    function hideSpinner() { document.getElementById('spinner').classList.add('hidden'); }
+    function hideSpinner() {
+      document.getElementById('spinner').classList.add('hidden');
+      var splash = document.getElementById('splash');
+      if (splash && !splash.classList.contains('fade-out')) {
+        splash.classList.add('fade-out');
+        setTimeout(function(){ splash.style.display='none'; }, 500);
+      }
+    }
 
     var token = getToken();
     if (!token) { window.location.href='login.html'; }
@@ -302,6 +342,15 @@
         document.getElementById('spinner').innerHTML = '<div style="padding:30px;text-align:center;"><div style="font-size:32px;margin-bottom:12px;">⚠️</div><div style="font-weight:600;margin-bottom:8px;">Something went wrong</div><div style="font-size:12px;color:#5C6760;">'+String(err)+'</div><button onclick="doLogout()" style="margin-top:16px;background:#30B54A;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;">Sign in again</button></div>';
       }
     }
+
+    // Dismiss splash after max 3 seconds regardless
+    setTimeout(function(){
+      var splash = document.getElementById('splash');
+      if (splash && !splash.classList.contains('fade-out')) {
+        splash.classList.add('fade-out');
+        setTimeout(function(){ splash.style.display='none'; }, 500);
+      }
+    }, 3000);
 
     // Timeout safety
     setTimeout(function(){
