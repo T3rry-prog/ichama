@@ -8,16 +8,28 @@
   "background_color": "#0F1210",
   "theme_color": "#30B54A",
   "orientation": "portrait",
+  "id": "ichama-africa-app",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "https://ichama.africa/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://ichama.africa/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://ichama.africa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "iChama dashboard"
     }
   ]
 }
