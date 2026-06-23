@@ -101,6 +101,13 @@
       .feature-grid .feature-card:last-child { grid-column: 1 / -1; }
     }
   </style>
+  <script>
+    // Apply saved theme instantly before render
+    (function(){
+      var t = localStorage.getItem('ichama_theme');
+      if (t && t !== 'auto') document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 <body>
 
@@ -187,7 +194,6 @@
   </footer>
 
   
-  <script src="/auth.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(function(e){ console.log('SW error:', e); });
