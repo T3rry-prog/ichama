@@ -223,6 +223,7 @@
     var currentTab  = 'open';
     var pollInterval = null;
     var selectedOptions = {};
+    var isAdmin = false;
 
     function getToken() { return localStorage.getItem('ichama_token'); }
     function getUser()  { try { return JSON.parse(localStorage.getItem('ichama_user')); } catch(e) { return null; } }
@@ -336,8 +337,6 @@
     });
 
     // ── RENDER ──
-    var isAdmin = false;
-
     function renderPolls() {
       var filtered = allPolls.filter(function(p) { return p.status === currentTab; });
       var el = document.getElementById('pollList');
@@ -418,7 +417,7 @@
 
         var closeBtn = '';
         if (isOpen && (isCreator || isAdmin)) {
-          closeBtn = '<button onclick="closePoll('' + poll.id + '')" style="width:100%;margin-top:10px;background:none;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;">Close poll</button>';
+          closeBtn = '<button class="close-poll-btn" data-id="' + poll.id + '" style="width:100%;margin-top:10px;background:none;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;">Close poll</button>';
         }
 
         return '<div class="poll-card">' +
@@ -429,6 +428,13 @@
           optionsHtml + feedHtml + closeBtn +
         '</div>';
       }).join('');
+
+      // Attach close poll listeners
+      document.querySelectorAll('.close-poll-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          window.closePoll(this.getAttribute('data-id'));
+        });
+      });
 
       // Attach option button listeners
       document.querySelectorAll('.option-btn').forEach(function(btn) {
@@ -560,3 +566,4 @@
   </script>
 </body>
 </html>
+
