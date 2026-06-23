@@ -336,6 +336,8 @@
     });
 
     // ── RENDER ──
+    var isAdmin = false;
+
     function renderPolls() {
       var filtered = allPolls.filter(function(p) { return p.status === currentTab; });
       var el = document.getElementById('pollList');
@@ -414,12 +416,17 @@
           '</div>';
         }
 
+        var closeBtn = '';
+        if (isOpen && (isCreator || isAdmin)) {
+          closeBtn = '<button onclick="closePoll('' + poll.id + '')" style="width:100%;margin-top:10px;background:none;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;">Close poll</button>';
+        }
+
         return '<div class="poll-card">' +
           '<div class="poll-header"><div class="poll-title">' + poll.title + '</div><span class="poll-badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '">' + (isOpen ? 'Open' : 'Closed') + '</span></div>' +
           (poll.description ? '<div class="poll-desc">' + poll.description + '</div>' : '') +
           '<div class="poll-meta">By ' + (isCreator ? 'you' : creator) + (deadline ? ' · Closes ' + deadline : '') + '</div>' +
           (isOpen ? '<div class="live-indicator"><div class="live-dot"></div>Live</div>' : '') +
-          optionsHtml + feedHtml +
+          optionsHtml + feedHtml + closeBtn +
         '</div>';
       }).join('');
 
@@ -447,6 +454,18 @@
         });
       });
     }
+
+    window.closePoll = async function(pollId) {
+      if (!confirm('Close this poll? Members will no longer be able to vote.')) return;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/polls?id=eq.' + pollId, {
+          method: 'PATCH',
+          headers: authHeaders(),
+          body: JSON.stringify({ status: 'closed' })
+        });
+        await loadPolls();
+      } catch(e) { alert('Network error.'); }
+    };
 
     async function submitVote(pollId, optionIndex, comment, btn) {
       btn.disabled = true; btn.textContent = 'Submitting...';
@@ -519,6 +538,7 @@
         var chamas = await sbGet('/rest/v1/chamas?id=eq.' + membership.chama_id + '&select=*&limit=1');
         chamaData = Array.isArray(chamas) && chamas.length > 0 ? chamas[0] : null;
         if (!chamaData) { window.location.href = 'dashboard.html'; return; }
+        isAdmin = membership.role === 'admin';
 
         await loadPolls();
         startPolling();
@@ -540,4 +560,3 @@
   </script>
 </body>
 </html>
-
