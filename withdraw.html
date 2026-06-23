@@ -133,7 +133,7 @@
   <script>
     var SUPABASE_URL      = 'https://zdijvyqkoiekwylxbjll.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWp2eXFrb2lla3d5bHhiamxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzAxNDUsImV4cCI6MjA5NzMwNjE0NX0.7C7hnKmpIRMnrNU9VJWO-lWp4tu00wF8atxzCNYfi6E';
-    var RESEND_KEY = 're_Ggunjeay_NcxX95pa9ysCuP8GoZDZfWf3';
+    var RESEND_KEY = 're_6ybjcqqx_JKFPjWLqTbSsTz8tDZZJusj6';
 
     var currentUser = null;
     var chamaData   = null;
@@ -173,7 +173,7 @@
             method:'POST',
             headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},
             body: JSON.stringify({
-              from: 'iChama <noreply@spotontickets.com>',
+              from: 'iChama <noreply@ichama.africa>',
               to: [p.email],
               subject: '🗳️ Vote needed — withdrawal request in '+chamaData.name,
               html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 20px;background:#F7F8F7;">'+
