@@ -6,22 +6,13 @@
   <title>Create a chama — iChama</title>
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#30B54A" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED;
-      --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7;
-      --card: #FFFFFF; --line: #E5E9E6; --error: #D14343;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
-    }
+    :root { --green: #30B54A; --green-d: #259A3D; --green-tint: #EAF8ED; --ink: #1A1F1C; --ink-soft: #5C6760; --bg: #F7F8F7; --card: #FFFFFF; --line: #E5E9E6; --error: #D14343; }
+    @media (prefers-color-scheme: dark) { :root { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; } }
     [data-theme="dark"] { --green:#30B54A; --green-d:#38C45A; --green-tint:#0D2E14; --ink:#F0F2F0; --ink-soft:#8A9E8D; --bg:#0F1210; --card:#1A1F1C; --line:#2A332C; }
     [data-theme="light"] { --green:#30B54A; --green-d:#259A3D; --green-tint:#EAF8ED; --ink:#1A1F1C; --ink-soft:#5C6760; --bg:#F7F8F7; --card:#FFFFFF; --line:#E5E9E6; }
-    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px; min-height: 100vh; }
+    body { background: var(--bg); color: var(--ink); font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; font-size: 16px; min-height: 100vh; }
     nav { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
     .back-btn { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; font-size: 16px; }
     nav h1 { font-weight: 600; font-size: 16px; }
@@ -35,7 +26,7 @@
     label { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
     .optional { color: var(--ink-soft); font-weight: 400; font-size: 12.5px; }
     .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
-    input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
+    input, select, textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; color: var(--ink); font-family: inherit; font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; appearance: none; -webkit-appearance: none; }
     textarea { resize: vertical; min-height: 64px; }
     input::placeholder, textarea::placeholder { color: #A7AFA9; }
     input:focus, select:focus, textarea:focus { border-color: var(--green); background: var(--card); }
@@ -46,11 +37,10 @@
     .amount-wrap .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-soft); font-size: 14px; font-weight: 500; pointer-events: none; }
     .amount-wrap input { padding-left: 50px; }
     .stepper { display: flex; align-items: center; gap: 16px; }
-    .stepper button { width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); font-size: 20px; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; }
+    .stepper button { width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); font-size: 20px; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; }
     .stepper button:active { background: var(--green-tint); border-color: var(--green); }
     .stepper-val { font-weight: 800; font-size: 24px; min-width: 40px; text-align: center; color: var(--green-d); }
-    .btn-submit { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; margin-top: 4px; transition: background 0.15s; font-family: 'Inter', sans-serif; }
-    .btn-submit:hover { background: var(--green-d); }
+    .btn-submit { width: 100%; background: var(--green); color: #fff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; border: none; cursor: pointer; margin-top: 4px; font-family: inherit; }
     .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
     .msg { border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-bottom: 16px; display: none; }
     .msg.error { background: #FDEDED; border: 1px solid #F5C6C6; color: var(--error); }
@@ -59,19 +49,15 @@
   <script>(function(){ var t=localStorage.getItem('ichama_theme'); if(t) document.documentElement.setAttribute('data-theme',t); })();</script>
 </head>
 <body>
-
   <nav>
     <a href="dashboard.html" class="back-btn">←</a>
     <h1>Create a chama</h1>
   </nav>
-
   <main>
     <div class="intro-card">
       <p>Set up your chama's rules once. Contributions, penalties, and withdrawal approvals are enforced automatically from here on — no member, including admins, can override them.</p>
     </div>
-
     <div class="msg error" id="errorMsg"></div>
-
     <div class="panel">
       <div class="panel-title">Chama details</div>
       <div class="form-group">
@@ -83,7 +69,6 @@
         <textarea id="chamaDesc" placeholder="What is this chama for?"></textarea>
       </div>
     </div>
-
     <div class="panel">
       <div class="panel-title">Contribution rules</div>
       <div class="row-2" style="margin-bottom:16px;">
@@ -118,7 +103,6 @@
       </div>
       <p class="hint" style="margin-top:8px;">Penalty is applied automatically after the deadline day each month.</p>
     </div>
-
     <div class="panel">
       <div class="panel-title">Withdrawal security</div>
       <div class="form-group">
@@ -131,7 +115,6 @@
         <p class="hint">No single member can withdraw funds without this many approvals.</p>
       </div>
     </div>
-
     <button class="btn-submit" id="createBtn">Create chama</button>
   </main>
 
@@ -147,6 +130,15 @@
     function doLogout() { localStorage.removeItem('ichama_token'); localStorage.removeItem('ichama_refresh'); localStorage.removeItem('ichama_user'); window.location.href = 'login.html'; }
     if (!getToken()) { window.location.href = 'login.html'; }
 
+    // Get fresh user ID from JWT token
+    function getFreshUserId() {
+      try {
+        var token = getToken();
+        var payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.sub || null;
+      } catch(e) { return null; }
+    }
+
     function showError(msg) { var el=document.getElementById('errorMsg'); el.textContent=msg; el.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); }
 
     function generateInviteCode() {
@@ -156,18 +148,11 @@
       return code;
     }
 
-    // Stepper
     document.getElementById('btnMinus').addEventListener('click', function() {
-      if (approvalsRequired > 1) {
-        approvalsRequired--;
-        document.getElementById('approvalsVal').textContent = approvalsRequired;
-      }
+      if (approvalsRequired > 1) { approvalsRequired--; document.getElementById('approvalsVal').textContent = approvalsRequired; }
     });
     document.getElementById('btnPlus').addEventListener('click', function() {
-      if (approvalsRequired < 10) {
-        approvalsRequired++;
-        document.getElementById('approvalsVal').textContent = approvalsRequired;
-      }
+      if (approvalsRequired < 10) { approvalsRequired++; document.getElementById('approvalsVal').textContent = approvalsRequired; }
     });
 
     document.getElementById('createBtn').addEventListener('click', async function() {
@@ -183,8 +168,9 @@
       if (!contribAmount || Number(contribAmount) <= 0) return showError('Please enter a valid contribution amount.');
       if (contribDay < 1 || contribDay > 28) return showError('Deadline day must be between 1 and 28.');
 
-      var user = getUser();
-      if (!user) { doLogout(); return; }
+      // Get user ID directly from JWT token — avoids RLS mismatch
+      var userId = getFreshUserId();
+      if (!userId) { doLogout(); return; }
 
       btn.disabled = true; btn.textContent = 'Creating...';
 
@@ -203,7 +189,7 @@
             penalty_amount:         Number(penaltyAmount),
             approvals_required:     approvalsRequired,
             invite_code:            inviteCode,
-            created_by:             user.id
+            created_by:             userId
           })
         });
 
@@ -219,7 +205,7 @@
         var memberRes = await fetch(SUPABASE_URL + '/rest/v1/chama_members', {
           method: 'POST',
           headers: authHeaders(),
-          body: JSON.stringify({ chama_id: chama.id, user_id: user.id, role: 'admin' })
+          body: JSON.stringify({ chama_id: chama.id, user_id: userId, role: 'admin' })
         });
 
         if (!memberRes.ok) {
@@ -237,10 +223,9 @@
     });
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(function(e){ console.log('SW error:', e); });
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
     }
   </script>
-
 </body>
 </html>
 
